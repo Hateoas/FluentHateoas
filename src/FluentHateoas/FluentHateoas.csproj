@@ -53,6 +53,7 @@
     <Compile Include="Registration\HateoasExpressionFactory.cs" />
     <Compile Include="Registration\HateoasRegistration.cs" />
     <Compile Include="Registration\HrefStyle.cs" />
+    <Compile Include="Registration\IHateoasRegistration.cs" />
     <Compile Include="Registration\LinkStyle.cs" />
     <Compile Include="Registration\TemplateStyle.cs" />
   </ItemGroup>

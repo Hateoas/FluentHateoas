@@ -1,4 +1,6 @@
-﻿using FluentHateoas.Contracts;
+﻿using System;
+using System.Linq.Expressions;
+using FluentHateoas.Contracts;
 
 namespace FluentHateoas.Registration
 {
@@ -10,5 +12,9 @@ namespace FluentHateoas.Registration
         {
             _registration = registration;
         }
+
+        public Type Controller { get; set; }
+        public string Relation { get; set; }
+        public LambdaExpression TargetAction { get; set; }
     }
 }
