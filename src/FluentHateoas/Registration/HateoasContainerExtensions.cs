@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Dynamic;
-using System.Diagnostics.Contracts;
 using FluentHateoas.Contracts;
 
 namespace FluentHateoas.Registration
@@ -19,7 +18,7 @@ namespace FluentHateoas.Registration
             if (container == null)
                 throw new ArgumentException();
 
-            container.Configuration.Extend(vars as ExpandoObject);
+            container.Configuration.Extend(vars as ExpandoObject); // TODO NULL
         }
     }
 }
