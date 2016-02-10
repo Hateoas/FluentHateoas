@@ -1,7 +1,9 @@
-﻿namespace FluentHateoas.Registration
+﻿using FluentHateoas.Contracts;
+
+namespace FluentHateoas.Registration
 {
-    public class HateoasContainer
+    public class HateoasContainer : IHateoasContainer
     {
-         
+        public HateoasConfiguration Configuration { get; set; }
     }
 }

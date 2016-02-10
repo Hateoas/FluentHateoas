@@ -1,4 +1,7 @@
-﻿using FluentHateoas.Contracts;
+﻿using System;
+using System.Dynamic;
+using System.Diagnostics.Contracts;
+using FluentHateoas.Contracts;
 
 namespace FluentHateoas.Registration
 {
@@ -6,7 +9,17 @@ namespace FluentHateoas.Registration
     {
         public static HateoasExpression Register(this IHateoasContainer container)
         {
-            return new HateoasExpression();
+            return HateoasExpressionFactory.Create(container);
+        }
+
+        public static void Configure(this IHateoasContainer source, dynamic vars)
+        {
+            var container = source as HateoasContainer;
+
+            if (container == null)
+                throw new ArgumentException();
+
+            container.Configuration.Extend(vars as ExpandoObject);
         }
     }
 }
