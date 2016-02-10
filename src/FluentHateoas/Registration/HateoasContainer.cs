@@ -4,6 +4,11 @@ namespace FluentHateoas.Registration
 {
     public class HateoasContainer : IHateoasContainer
     {
-        public HateoasConfiguration Configuration { get; set; }
+        internal HateoasContainer(HateoasConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public HateoasConfiguration Configuration { get; private set; }
     }
 }
