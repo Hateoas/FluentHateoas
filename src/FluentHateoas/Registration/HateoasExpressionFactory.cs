@@ -4,9 +4,9 @@ namespace FluentHateoas.Registration
 {
     public static class HateoasExpressionFactory
     {
-        public static HateoasExpression Create(IHateoasContainer container)
+        public static HateoasExpression<TModel> Create<TModel>(HateoasRegistration<TModel> registration)
         {
-            return new HateoasExpression(container);
+            return new HateoasExpression<TModel>(registration);
         }
     }
 }

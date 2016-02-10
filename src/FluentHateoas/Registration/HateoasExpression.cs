@@ -2,13 +2,13 @@
 
 namespace FluentHateoas.Registration
 {
-    public class HateoasExpression
+    public class HateoasExpression<TModel>
     {
-        private readonly IHateoasContainer _hateoasContainer;
+        private readonly HateoasRegistration<TModel> _registration;
 
-        public HateoasExpression(IHateoasContainer hateoasContainer)
+        public HateoasExpression(HateoasRegistration<TModel> registration)
         {
-            _hateoasContainer = hateoasContainer;
+            _registration = registration;
         }
     }
 }

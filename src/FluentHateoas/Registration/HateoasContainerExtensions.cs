@@ -6,12 +6,14 @@ namespace FluentHateoas.Registration
 {
     public static class HateoasContainerExtensions
     {
-        public static HateoasExpression Register(this IHateoasContainer container)
+        public static HateoasExpression<TModel> Register<TModel>(this IHateoasContainer container)
         {
-            return HateoasExpressionFactory.Create(container);
+            var registration = new HateoasRegistration<TModel>();
+            container.Registrations.Add(registration);
+            return HateoasExpressionFactory.Create<TModel>(registration);
         }
 
-        public static void Configure(this IHateoasContainer source, dynamic vars)
+        public static void Configure<TModel>(this IHateoasContainer source, dynamic vars)
         {
             var container = source as HateoasContainer;
 
