@@ -47,6 +47,7 @@
     <Compile Include="Registration\HateoasConfigurationExtensions.cs" />
     <Compile Include="Registration\HateoasContainer.cs" />
     <Compile Include="Registration\HateoasContainerExtensions.cs" />
+    <Compile Include="Registration\HateoasContainerFactory.cs" />
     <Compile Include="Registration\HateoasExpression.cs" />
     <Compile Include="Registration\HateoasExpressionExtensions.cs" />
     <Compile Include="Registration\HateoasExpressionFactory.cs" />
