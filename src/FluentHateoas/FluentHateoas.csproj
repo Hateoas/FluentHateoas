@@ -40,7 +40,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\IHateoasContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Registration\HateoasConfiguration.cs" />
+    <Compile Include="Registration\HateoasContainer.cs" />
+    <Compile Include="Registration\HateoasContainerExtensions.cs" />
+    <Compile Include="Registration\HateoasExpression.cs" />
+    <Compile Include="Registration\HateoasExpressionExtensions.cs" />
+    <Compile Include="Registration\HrefStyle.cs" />
+    <Compile Include="Registration\LinkStyle.cs" />
+    <Compile Include="Registration\TemplateStyle.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Handling\Handlers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
