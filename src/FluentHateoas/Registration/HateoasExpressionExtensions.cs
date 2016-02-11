@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http;
 
@@ -39,6 +40,13 @@ namespace FluentHateoas.Registration
         public static IHateoasExpression AsCollection(this IHateoasExpression expression)
         {
             expression.Collection = true;
+            return expression;
+        }
+
+        public static IHateoasExpression AsTemplate<TModel>(this IHateoasExpression expression, params Expression<Func<TModel, object>>[] args)
+        {
+            expression.Template = true;
+            expression.TemplateParameters = args;
             return expression;
         }
 

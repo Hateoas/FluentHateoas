@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Net.Http;
 using FluentHateoas.Contracts;
@@ -13,6 +14,7 @@ namespace FluentHateoas.Registration
         HttpMethod HttpMethod { get; set; }
         bool Template { get; set; }
         bool Collection { get; set; }
+        IEnumerable<LambdaExpression> TemplateParameters { get; set; }
     }
 
     public class HateoasExpression<TModel> : IHateoasExpression
@@ -30,5 +32,6 @@ namespace FluentHateoas.Registration
         public HttpMethod HttpMethod { get; set; }
         public bool Template { get; set; }
         public bool Collection { get; set; }
+        public IEnumerable<LambdaExpression> TemplateParameters { get; set; }
     }
 }

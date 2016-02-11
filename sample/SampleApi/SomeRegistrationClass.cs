@@ -33,8 +33,8 @@ namespace SampleApi
             container
                 .Register<Person>("item")
                 .AsCollection()
-                .Get<PersonController>();
-                //.AsTemplate(p => p.Id, p => p.Slug);
+                .Get<PersonController>()
+                .AsTemplate<Person>(p => p.Id, p => p.Slug);
 
             //container
             //    .Register<Person>("self", p => p.Id)
