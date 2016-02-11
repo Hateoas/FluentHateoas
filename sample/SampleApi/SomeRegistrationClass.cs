@@ -30,10 +30,10 @@ namespace SampleApi
                 .Get<PersonController>()
                 .AsTemplate();
 
-            //container
-            //    .Register<IEnumerable<Person>>("item", p => p.Id)
-            //    .Get<PersonController>()
-            //    .AsTemplate(p => p.Id, p => p.Slug);
+            container
+                .Register<IEnumerable<Person>>("item")
+                .Get<PersonController>();
+                //.AsTemplate(p => p.Id, p => p.Slug);
 
             //container
             //    .Register<Person>("self", p => p.Id)

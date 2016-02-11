@@ -1,4 +1,5 @@
-﻿using FluentHateoas.Contracts;
+﻿using System.Collections.Generic;
+using FluentHateoas.Contracts;
 
 namespace FluentHateoas.Registration
 {

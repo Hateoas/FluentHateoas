@@ -7,6 +7,7 @@ namespace FluentHateoas.Registration
     {
         private readonly string _relation;
         private readonly Expression<Func<TModel, object>> _expression;
+        private readonly bool _isCollection;
 
         public HateoasRegistration() : this("self")
         { }
@@ -14,10 +15,11 @@ namespace FluentHateoas.Registration
         public HateoasRegistration(string relation) : this (relation, null)
         { }
 
-        public HateoasRegistration(string relation, Expression<Func<TModel, object>> expression)
+        public HateoasRegistration(string relation, Expression<Func<TModel, object>> expression, bool isCollection = false)
         {
             _relation = relation;
             _expression = expression;
+            _isCollection = isCollection;
         }
     }
 }
