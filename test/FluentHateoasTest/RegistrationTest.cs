@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using FluentHateoas.Registration;
@@ -24,6 +25,14 @@ namespace FluentHateoasTest
             _container.Register<TestModel>();
 
             _container.Registrations.Count.Should().Be(1);
+        }
+
+        [TestMethod]
+        public void RegisterIEnumerableShouldThrowArgumentException()
+        {
+            Action registration = () => _container.Register<IEnumerable<TestModel>>();
+
+            registration.ShouldThrow<ArgumentException>();
         }
     }
 }

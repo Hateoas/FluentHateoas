@@ -36,6 +36,11 @@ namespace FluentHateoas.Registration
             return expression;
         }
 
+        public static IHateoasExpression AsCollection(this IHateoasExpression expression)
+        {
+            expression.Collection = true;
+            return expression;
+        }
 
         private static void SetMethod<TController>(HttpMethod method, IHateoasExpression expression, LambdaExpression actionSelector)
         {

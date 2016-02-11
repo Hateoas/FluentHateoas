@@ -12,6 +12,7 @@ namespace FluentHateoas.Registration
         LambdaExpression TargetAction { get; set; }
         HttpMethod HttpMethod { get; set; }
         bool Template { get; set; }
+        bool Collection { get; set; }
     }
 
     public class HateoasExpression<TModel> : IHateoasExpression
@@ -28,5 +29,6 @@ namespace FluentHateoas.Registration
         public LambdaExpression TargetAction { get; set; }
         public HttpMethod HttpMethod { get; set; }
         public bool Template { get; set; }
+        public bool Collection { get; set; }
     }
 }

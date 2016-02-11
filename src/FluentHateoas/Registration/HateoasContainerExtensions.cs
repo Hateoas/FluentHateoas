@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq.Expressions;
 using FluentHateoas.Contracts;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FluentHateoas.Registration
 {
@@ -11,7 +12,7 @@ namespace FluentHateoas.Registration
     {
         public static HateoasExpression<TModel> Register<TModel>(this IHateoasContainer container, string relation = null, Expression<Func<TModel, object>> idGetter = null)
         {
-            if (typeof(TModel) == typeof(IEnumerable))
+            if (typeof(TModel).GetInterfaces().Contains(typeof(IEnumerable)))
                 throw new ArgumentException("Cannot register collections; user .AsCollection() instead");
 
             var registration = new HateoasRegistration<TModel>(relation, idGetter);

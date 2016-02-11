@@ -31,7 +31,8 @@ namespace SampleApi
                 .AsTemplate();
 
             container
-                .Register<IEnumerable<Person>>("item")
+                .Register<Person>("item")
+                .AsCollection()
                 .Get<PersonController>();
                 //.AsTemplate(p => p.Id, p => p.Slug);
 
