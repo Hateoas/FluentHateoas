@@ -18,7 +18,7 @@ namespace FluentHateoasTest
         [TestCategory("UnitTest")]
         public void ConfigureTestMergeWithDefault()
         {
-            _hateoasContainer.Configure<TestObject>(new
+            _hateoasContainer.Configure(new
             {
                 HrefStyle = HrefStyle.Relative,
                 LinkStyle = LinkStyle.Array,
@@ -37,7 +37,7 @@ namespace FluentHateoasTest
         {
             Assert.Inconclusive("Not implemented");
 
-            _hateoasContainer.Configure<TestObject>(new
+            _hateoasContainer.Configure(new
             {
 
             });

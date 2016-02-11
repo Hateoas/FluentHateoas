@@ -2,6 +2,6 @@
 {
     public interface IHateoasRegistrationProfile
     {
-        void Register<TModel>(IHateoasContainer container);
+        void Register(IHateoasContainer container);
     }
 }
