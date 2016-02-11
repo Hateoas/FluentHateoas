@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentHateoas", "src\Fluent
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentHateoasTest", "test\FluentHateoasTest\FluentHateoasTest.csproj", "{722DFF56-945E-433F-AA39-2431CC4FDE90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApi", "sample\SampleApi\SampleApi.csproj", "{EA4D547A-EB29-4373-9B6F-4A32D68B3347}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{722DFF56-945E-433F-AA39-2431CC4FDE90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{722DFF56-945E-433F-AA39-2431CC4FDE90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{722DFF56-945E-433F-AA39-2431CC4FDE90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA4D547A-EB29-4373-9B6F-4A32D68B3347}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA4D547A-EB29-4373-9B6F-4A32D68B3347}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA4D547A-EB29-4373-9B6F-4A32D68B3347}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA4D547A-EB29-4373-9B6F-4A32D68B3347}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -34,5 +40,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F7857E78-29AE-4EDF-99B6-147113462BA4} = {1E4F555B-DD07-4BD6-B9BF-C06D82E9DDD3}
 		{722DFF56-945E-433F-AA39-2431CC4FDE90} = {303F696C-6CED-4229-AC48-F2F13A75CED0}
+		{EA4D547A-EB29-4373-9B6F-4A32D68B3347} = {D887A4F4-7DD9-47E1-9C8C-985571FD6F54}
 	EndGlobalSection
 EndGlobal
