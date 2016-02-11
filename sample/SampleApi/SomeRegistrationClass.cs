@@ -18,6 +18,11 @@ namespace SampleApi
             container
                 .Register<Person>("self")
                 .Get<PersonController>();
+
+            container
+                .Register<Person>("self", p => p.Id)
+                .Get<PersonController>();
+
         }
     }
 }

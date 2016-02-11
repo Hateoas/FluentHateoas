@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Dynamic;
+using System.Linq.Expressions;
 using FluentHateoas.Contracts;
 
 namespace FluentHateoas.Registration
 {
     public static class HateoasContainerExtensions
     {
-        public static HateoasExpression<TModel> Register<TModel>(this IHateoasContainer container, string relation = null)
+        public static HateoasExpression<TModel> Register<TModel>(this IHateoasContainer container, string relation = null, Expression<Func<TModel, object>> idGetter = null)
         {
-            var registration = new HateoasRegistration<TModel>(relation);
+            var registration = new HateoasRegistration<TModel>(relation, idGetter);
             container.Registrations.Add(registration);
             return HateoasExpressionFactory.Create<TModel>(registration);
         }
