@@ -50,6 +50,18 @@ namespace FluentHateoas.Registration
             return expression;
         }
 
+        public static IHateoasExpression When<TProvider>(this IHateoasExpression expression, Expression<Func<TProvider, object, bool>> when)
+        {
+            expression.WhenExpression = when;
+            return expression;
+        }
+
+        public static IHateoasExpression With<TProvider>(this IHateoasExpression expression, Expression<Func<TProvider, object, object>> with)
+        {
+            expression.WithExpression = with;
+            return expression;
+        }
+
         private static void SetMethod<TController>(HttpMethod method, IHateoasExpression expression, LambdaExpression actionSelector)
         {
             expression.Controller = typeof(TController);

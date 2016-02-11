@@ -4,6 +4,7 @@ using FluentHateoas.Contracts;
 using FluentHateoas.Registration;
 using SampleApi.ApiController;
 using SampleApi.Model;
+using SampleApi.Providers;
 
 namespace SampleApi
 {
@@ -40,15 +41,15 @@ namespace SampleApi
             //    .Register<Person>("self", p => p.Id)
             //    .Get<PersonController>(p => p.GetPerson);
 
-            //container
-            //    .Register<Person>("self", p => p.Id)
-            //    .Post<PersonController>();
+            container
+                .Register<Person>("self", p => p.Id)
+                .Post<PersonController>();
 
-            //container
-            //    .Register<Person>("next")
-            //    .Get<PersonController>()
-            //    .When<IPersonProvider>((provider, person) => provider.HasNextId(person.id))
-            //    .With<IPersonProvider>((provider, person) => provider.GetNextId(person.id));
+            container
+                .Register<Person>("next")
+                .Get<PersonController>()
+                .When<IPersonProvider>((provider, person) => provider.HasNextId(person))
+                .With<IPersonProvider>((provider, person) => provider.GetNextId(person));
 
             //container
             //    .Register<Person>("self", p => p.Id)

@@ -15,6 +15,8 @@ namespace FluentHateoas.Registration
         bool Template { get; set; }
         bool Collection { get; set; }
         IEnumerable<LambdaExpression> TemplateParameters { get; set; }
+        LambdaExpression WhenExpression { get; set; }
+        LambdaExpression WithExpression { get; set; }
     }
 
     public class HateoasExpression<TModel> : IHateoasExpression
@@ -33,5 +35,7 @@ namespace FluentHateoas.Registration
         public bool Template { get; set; }
         public bool Collection { get; set; }
         public IEnumerable<LambdaExpression> TemplateParameters { get; set; }
+        public LambdaExpression WhenExpression { get; set; }
+        public LambdaExpression WithExpression { get; set; }
     }
 }
