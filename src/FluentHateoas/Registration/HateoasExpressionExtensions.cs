@@ -62,6 +62,18 @@ namespace FluentHateoas.Registration
             return expression;
         }
 
+        public static IHateoasExpression WithCommand<TCommand>(this IHateoasExpression expression)
+        {
+            expression.Command = typeof(TCommand);
+            return expression;
+        }
+
+        public static IHateoasExpression WithCommand<TCommandFactory>(this IHateoasExpression expression, Expression<Func<TCommandFactory,object>> commandFactory)
+        {
+            expression.CommandFactory = commandFactory;
+            return expression;
+        }
+
         private static void SetMethod<TController>(HttpMethod method, IHateoasExpression expression, LambdaExpression actionSelector)
         {
             expression.Controller = typeof(TController);

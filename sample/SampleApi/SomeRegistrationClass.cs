@@ -55,15 +55,15 @@ namespace SampleApi
             //    .Register<Person>("self", p => p.Id)
             //    .Post<PersonController>(p => p.AddPerson);
 
-            //container
-            //    .Register<Person>("self", p => p.Id)
-            //    .Post<PersonController>()
-            //    .Command<PersonPostCommand>();
+            container
+                .Register<Person>("self", p => p.Id)
+                .Post<PersonController>()
+                .WithCommand<PersonPostCommand>();
 
-            //container
-            //    .Register<Person>("add-address", p => p.Id)
-            //    .Post<AddressController>()
-            //    .Command<ITemplateFactory>(p => p.Create());
+            container
+                .Register<Person>("add-address", p => p.Id)
+                .Post<AddressController>()
+                .WithCommand<ITemplateFactory>(p => p.Create());
         }
     }
 }

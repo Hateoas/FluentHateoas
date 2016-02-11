@@ -17,6 +17,8 @@ namespace FluentHateoas.Registration
         IEnumerable<LambdaExpression> TemplateParameters { get; set; }
         LambdaExpression WhenExpression { get; set; }
         LambdaExpression WithExpression { get; set; }
+        Type Command { get; set; }
+        LambdaExpression CommandFactory { get; set; }
     }
 
     public class HateoasExpression<TModel> : IHateoasExpression
@@ -37,5 +39,7 @@ namespace FluentHateoas.Registration
         public IEnumerable<LambdaExpression> TemplateParameters { get; set; }
         public LambdaExpression WhenExpression { get; set; }
         public LambdaExpression WithExpression { get; set; }
+        public Type Command { get; set; }
+        public LambdaExpression CommandFactory { get; set; }
     }
 }
