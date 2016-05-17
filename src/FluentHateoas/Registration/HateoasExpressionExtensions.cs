@@ -5,80 +5,87 @@ using System.Net.Http;
 
 namespace FluentHateoas.Registration
 {
-    public static class HateoasExpressionExtensions
+    public class HateoasExpressionBuilder<TModel>
     {
-        public static IHateoasExpression Get<TController>(this IHateoasExpression expression, LambdaExpression methodSelector = null)
+        private readonly HateoasExpression<TModel> _expression;
+
+        public HateoasExpressionBuilder(HateoasRegistration<TModel> registration)
         {
-            SetMethod<TController>(HttpMethod.Get, expression, methodSelector);
-            return expression;
+            _expression = new HateoasExpression<TModel>(registration);
         }
 
-        public static IHateoasExpression Post<TController>(this IHateoasExpression expression, LambdaExpression methodSelector = null)
+        public HateoasExpressionBuilder<TModel> Get<TController>(LambdaExpression methodSelector = null)
         {
-            SetMethod<TController>(HttpMethod.Post, expression, methodSelector);
-            return expression;
+            SetMethod<TController>(HttpMethod.Get, methodSelector);
+            return this;
         }
 
-        public static IHateoasExpression Put<TController>(this IHateoasExpression expression, LambdaExpression methodSelector = null)
+        public HateoasExpressionBuilder<TModel> Post<TController>(LambdaExpression methodSelector = null)
         {
-            SetMethod<TController>(HttpMethod.Put, expression, methodSelector);
-            return expression;
+            SetMethod<TController>(HttpMethod.Post, null);
+            return this;
         }
 
-        public static IHateoasExpression Delete<TController>(this IHateoasExpression expression, LambdaExpression methodSelector = null)
+        public HateoasExpressionBuilder<TModel> Put<TController>(LambdaExpression methodSelector = null)
         {
-            SetMethod<TController>(HttpMethod.Delete, expression, methodSelector);
-            return expression;
+            SetMethod<TController>(HttpMethod.Put, methodSelector);
+            return this;
         }
 
-        public static IHateoasExpression AsTemplate(this IHateoasExpression expression)
+        public HateoasExpressionBuilder<TModel> Delete<TController>(LambdaExpression methodSelector = null)
         {
-            expression.Template = true;
-            return expression;
+            SetMethod<TController>(HttpMethod.Delete, methodSelector);
+            return this;
         }
 
-        public static IHateoasExpression AsCollection(this IHateoasExpression expression)
+        public HateoasExpressionBuilder<TModel> AsTemplate()
         {
-            expression.Collection = true;
-            return expression;
+            _expression.Template = true;
+            return this;
         }
 
-        public static IHateoasExpression AsTemplate<TModel>(this IHateoasExpression expression, params Expression<Func<TModel, object>>[] args)
+        public HateoasExpressionBuilder<TModel> AsCollection()
         {
-            expression.Template = true;
-            expression.TemplateParameters = args;
-            return expression;
+            _expression.Collection = true;
+            return this;
         }
 
-        public static IHateoasExpression When<TProvider>(this IHateoasExpression expression, Expression<Func<TProvider, object, bool>> when)
+        public HateoasExpressionBuilder<TModel> AsTemplate(params Expression<Func<TModel, object>>[] args)
         {
-            expression.WhenExpression = when;
-            return expression;
+            _expression.Template = true;
+            _expression.TemplateParameters = args;
+            return this;
         }
 
-        public static IHateoasExpression With<TProvider>(this IHateoasExpression expression, Expression<Func<TProvider, object, object>> with)
+        public HateoasExpressionBuilder<TModel> When<TProvider>(Expression<Func<TProvider, object, bool>> when)
         {
-            expression.WithExpression = with;
-            return expression;
+            _expression.WhenExpression = when;
+            return this;
         }
 
-        public static IHateoasExpression WithCommand<TCommand>(this IHateoasExpression expression)
+        public HateoasExpressionBuilder<TModel> With<TProvider>(Expression<Func<TProvider, object, object>> with)
         {
-            expression.Command = typeof(TCommand);
-            return expression;
+            _expression.WithExpression = with;
+            return this;
         }
 
-        public static IHateoasExpression WithCommand<TCommandFactory>(this IHateoasExpression expression, Expression<Func<TCommandFactory,object>> commandFactory)
+        public HateoasExpressionBuilder<TModel> WithCommand<TCommand>()
         {
-            expression.CommandFactory = commandFactory;
-            return expression;
+            _expression.Command = typeof(TCommand);
+            return this;
         }
 
-        private static void SetMethod<TController>(HttpMethod method, IHateoasExpression expression, LambdaExpression actionSelector)
+        public HateoasExpressionBuilder<TModel> WithCommand<TCommandFactory>(Expression<Func<TCommandFactory, object>> commandFactory)
         {
-            expression.Controller = typeof(TController);
-            expression.HttpMethod = method;
-            expression.TargetAction = actionSelector;
+            _expression.CommandFactory = commandFactory;
+            return this;
+        }
+
+        private void SetMethod<TController>(HttpMethod method, LambdaExpression actionSelector)
+        {
+            _expression.Controller = typeof(TController);
+            _expression.HttpMethod = method;
+            _expression.TargetAction = actionSelector;
         }
     }
 }

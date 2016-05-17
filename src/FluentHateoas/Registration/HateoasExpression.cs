@@ -6,7 +6,7 @@ using FluentHateoas.Contracts;
 
 namespace FluentHateoas.Registration
 {
-    public interface IHateoasExpression
+    public interface IHateoasExpression<T>
     {
         Type Controller { get; set; }
         string Relation { get; set; }
@@ -21,7 +21,7 @@ namespace FluentHateoas.Registration
         LambdaExpression CommandFactory { get; set; }
     }
 
-    public class HateoasExpression<TModel> : IHateoasExpression
+    public class HateoasExpression<TModel> : IHateoasExpression<TModel>
     {
         private readonly HateoasRegistration<TModel> _registration;
 

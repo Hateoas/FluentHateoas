@@ -9,5 +9,10 @@ namespace FluentHateoas.Registration
         {
             return new HateoasExpression<TModel>(registration);
         }
+
+        public static HateoasExpressionBuilder<TModel> CreateBuilder<TModel>(HateoasRegistration<TModel> registration)
+        {
+            return new HateoasExpressionBuilder<TModel>(registration);
+        }
     }
 }
