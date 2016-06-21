@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using FluentHateoas.Builder;
 
 namespace FluentHateoas
 {
@@ -9,10 +10,16 @@ namespace FluentHateoas
 
     public class ResponseProvider : IResponseProvider
     {
+        public ResponseProvider()
+        { }
+
         public HttpResponseMessage Create(HttpResponseMessage response)
         {
-            if (!response.StatusCode.IsSuccess())
+            ObjectContent content;
+            if (!response.StatusCode.IsSuccess() && !response.TryGetContent(out content))
                 return response;
+
+            // todo: Create ResponseMessage
 
             return response;
         }
