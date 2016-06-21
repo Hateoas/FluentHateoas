@@ -59,6 +59,7 @@
     <Compile Include="Registration\LinkStyle.cs" />
     <Compile Include="Registration\TemplateStyle.cs" />
     <Compile Include="ResponseProvider.cs" />
+    <Compile Include="StatusCodeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Handling\Handlers\" />

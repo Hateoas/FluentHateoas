@@ -11,7 +11,10 @@ namespace FluentHateoas
     {
         public HttpResponseMessage Create(HttpResponseMessage response)
         {
-            throw new System.NotImplementedException();
+            if (!response.StatusCode.IsSuccess())
+                return response;
+
+            return response;
         }
     }
 }
