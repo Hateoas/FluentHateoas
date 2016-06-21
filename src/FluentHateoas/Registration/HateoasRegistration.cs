@@ -3,23 +3,27 @@ using System.Linq.Expressions;
 
 namespace FluentHateoas.Registration
 {
-    public class HateoasRegistration<TModel> : IHateoasRegistration
+    public class HateoasRegistration<TModel> : IHateoasRegistration<TModel>
     {
-        private readonly string _relation;
-        private readonly Expression<Func<TModel, object>> _expression;
-        private readonly bool _isCollection;
+        public string Relation { get; }
+        public Expression<Func<TModel, object>> IdentityDefinition { get; }
+        public bool IsCollection { get; }
 
-        public HateoasRegistration() : this("self")
-        { }
-
-        public HateoasRegistration(string relation) : this (relation, null)
-        { }
-
-        public HateoasRegistration(string relation, Expression<Func<TModel, object>> expression, bool isCollection = false)
+        public HateoasRegistration()
+            : this("self", null, false)
         {
-            _relation = relation;
-            _expression = expression;
-            _isCollection = isCollection;
+        }
+
+        public HateoasRegistration(string relation)
+            : this(relation, null, false)
+        {
+        }
+
+        public HateoasRegistration(string relation, Expression<Func<TModel, object>> identityDefinition, bool isCollection = false)
+        {
+            Relation = relation;
+            IdentityDefinition = identityDefinition;
+            IsCollection = isCollection;
         }
     }
 }

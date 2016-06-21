@@ -18,26 +18,32 @@ namespace SampleApi
                 TemplateStyle = TemplateStyle.Rendered
             });
 
+            // get all persons link
             container
                 .Register<Person>("self")
                 .Get<PersonController>();
 
+            // get all persons link with custom function registration
             container
                 .Register<Person>("self")
                 .Get<PersonController>(p => p.GetAll);
 
+            // get all persons link with custom function implementation registration (TODO: invent provider to make this one useful)
             container
                 .Register<Person>("self")
                 .Get<PersonController>(p => p.GetAllWithParams(string.Empty));
 
+            // get single person link
             container
                 .Register<Person>("self", p => p.Id)
                 .Get<PersonController>();
 
+            // get single person link with custom function registration
             container
                 .Register<Person>("self", p => p.Id)
                 .Get<PersonController>(p => p.GetPerson);
 
+            // get single person link as template (e.g. '/persons/:id')
             container
                 .Register<Person>("self", p => p.Id)
                 .Get<PersonController>()

@@ -6,40 +6,67 @@ using FluentHateoas.Contracts;
 
 namespace FluentHateoas.Registration
 {
-    public interface IHateoasExpression<T>
+    public interface IHateoasExpression
     {
-        Type Controller { get; set; }
-        string Relation { get; set; }
-        LambdaExpression TargetAction { get; set; }
-        HttpMethod HttpMethod { get; set; }
-        bool Template { get; set; }
-        bool Collection { get; set; }
-        IEnumerable<LambdaExpression> TemplateParameters { get; set; }
-        LambdaExpression WhenExpression { get; set; }
-        LambdaExpression WithExpression { get; set; }
-        Type Command { get; set; }
-        LambdaExpression CommandFactory { get; set; }
+        Type Controller { get; }
+        string Relation { get; }
+        bool IsCollection { get; }
+        LambdaExpression TargetAction { get; }
+        HttpMethod HttpMethod { get; }
+        bool Template { get; }
+        bool Collection { get; }
+        IEnumerable<LambdaExpression> TemplateParameters { get; }
+        LambdaExpression WhenExpression { get; }
+        LambdaExpression WithExpression { get; }
+        Type Command { get; }
+        LambdaExpression CommandFactory { get; }
     }
 
-    public class HateoasExpression<TModel> : IHateoasExpression<TModel>
+    public interface IHateoasExpression<TModel> : IHateoasExpression
     {
-        private readonly HateoasRegistration<TModel> _registration;
+        Expression<Func<TModel, object>> IdentityDefinition { get; }
+    }
 
-        public HateoasExpression(HateoasRegistration<TModel> registration)
+    public class HateoasExpression : IHateoasExpression
+    {
+        protected HateoasExpression()
         {
-            _registration = registration;
         }
 
-        public Type Controller { get; set; }
-        public string Relation { get; set; }
-        public LambdaExpression TargetAction { get; set; }
-        public HttpMethod HttpMethod { get; set; }
-        public bool Template { get; set; }
-        public bool Collection { get; set; }
-        public IEnumerable<LambdaExpression> TemplateParameters { get; set; }
-        public LambdaExpression WhenExpression { get; set; }
-        public LambdaExpression WithExpression { get; set; }
-        public Type Command { get; set; }
-        public LambdaExpression CommandFactory { get; set; }
+        public Type Controller { get; internal set; }
+
+        public string Relation { get; internal set; }
+        public bool IsCollection { get; internal set; }
+
+        public LambdaExpression TargetAction { get; internal set; }
+        public HttpMethod HttpMethod { get; internal set; }
+        public bool Template { get; internal set; }
+        public bool Collection { get; internal set; }
+        public IEnumerable<LambdaExpression> TemplateParameters { get; internal set; }
+        public LambdaExpression WhenExpression { get; internal set; }
+        public LambdaExpression WithExpression { get; internal set; }
+        public Type Command { get; internal set; }
+        public LambdaExpression CommandFactory { get; internal set; }
+    }
+
+    public sealed class HateoasExpression<TModel> : HateoasExpression, IHateoasExpression<TModel>
+    {
+        private HateoasExpression() : base()
+        {
+        }
+
+        public static HateoasExpression<TModel> Create(IHateoasRegistration<TModel> registration)
+        {
+            var expression = new HateoasExpression<TModel>
+            {
+                Relation = registration.Relation,
+                IdentityDefinition = registration.IdentityDefinition,
+                IsCollection = registration.IsCollection
+            };
+
+            return expression;
+        }
+
+        public Expression<Func<TModel, object>> IdentityDefinition { get; private set; }
     }
 }

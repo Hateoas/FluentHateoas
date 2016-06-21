@@ -2,10 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Web.Http;
 
     using SampleApi.Model;
 
-    public class PersonController
+    public class PersonController : ApiController
     {
         public void AddSimplePerson()
         {

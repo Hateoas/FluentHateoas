@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using FluentHateoas.Registration;
 using FluentHateoasTest.Model;
@@ -8,13 +7,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FluentHateoasTest
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    using FluentHateoas.Contracts;
+
     [TestClass]
+    [ExcludeFromCodeCoverage]
     public class RegistrationTest
     {
-        private HateoasContainer _container;
+        private IHateoasContainer _container;
 
         [TestInitialize]
-        public void Initialize()
+        public void TestInitialize()
         {
             _container = HateoasContainerFactory.Create();
         }
@@ -28,11 +32,17 @@ namespace FluentHateoasTest
         }
 
         [TestMethod]
-        public void RegisterIEnumerableShouldThrowArgumentException()
+        public void RegisterIEnumerableAsModelShouldThrowArgumentException()
         {
-            Action registration = () => _container.Register<IEnumerable<TestModel>>();
-
-            registration.ShouldThrow<ArgumentException>();
+            try
+            {
+                _container.Register<IEnumerable<TestModel>>();
+                Assert.Fail("Expected exception has not been thrown.");
+            }
+            catch (ArgumentException exc)
+            {
+                Assert.AreEqual("Cannot register collections; use .AsCollection() instead", exc.Message);
+            }
         }
     }
 }
