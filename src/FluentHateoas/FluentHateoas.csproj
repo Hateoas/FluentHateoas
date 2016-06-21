@@ -40,8 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builder\ResponseBuilder.cs" />
     <Compile Include="Contracts\IHateoasContainer.cs" />
     <Compile Include="Contracts\IHateoasRegistrationProfile.cs" />
+    <Compile Include="HateoasHttpHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registration\HateoasConfiguration.cs" />
     <Compile Include="Registration\HateoasConfigurationExtensions.cs" />
@@ -56,6 +58,7 @@
     <Compile Include="Registration\IHateoasRegistration.cs" />
     <Compile Include="Registration\LinkStyle.cs" />
     <Compile Include="Registration\TemplateStyle.cs" />
+    <Compile Include="ResponseProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Handling\Handlers\" />
