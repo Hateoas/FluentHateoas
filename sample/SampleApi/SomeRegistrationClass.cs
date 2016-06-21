@@ -23,8 +23,20 @@ namespace SampleApi
                 .Get<PersonController>();
 
             container
+                .Register<Person>("self")
+                .Get<PersonController>(p => p.GetAll);
+
+            container
+                .Register<Person>("self")
+                .Get<PersonController>(p => p.GetAllWithParams(string.Empty));
+
+            container
                 .Register<Person>("self", p => p.Id)
                 .Get<PersonController>();
+
+            container
+                .Register<Person>("self", p => p.Id)
+                .Get<PersonController>(p => p.GetPerson);
 
             container
                 .Register<Person>("self", p => p.Id)
@@ -36,10 +48,6 @@ namespace SampleApi
                 .AsCollection()
                 .Get<PersonController>()
                 .AsTemplate(p => p.Id, p => p.Slug);
-
-            //container
-            //    .Register<Person>("self", p => p.Id)
-            //    .Get<PersonController>(p => p.GetPerson);
 
             container
                 .Register<Person>("self", p => p.Id)

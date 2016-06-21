@@ -5,6 +5,8 @@ using System.Net.Http;
 
 namespace FluentHateoas.Registration
 {
+    using System.Collections.Generic;
+
     public class HateoasExpressionBuilder<TModel>
     {
         private readonly HateoasExpression<TModel> _expression;
@@ -12,6 +14,24 @@ namespace FluentHateoas.Registration
         public HateoasExpressionBuilder(HateoasRegistration<TModel> registration)
         {
             _expression = new HateoasExpression<TModel>(registration);
+        }
+
+        public HateoasExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Func<IEnumerable<TModel>>>> methodSelector)
+        {
+            SetMethod<TController>(HttpMethod.Get, methodSelector);
+            return this;
+        }
+
+        public HateoasExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, IEnumerable<TModel>>> methodSelector)
+        {
+            SetMethod<TController>(HttpMethod.Get, methodSelector);
+            return this;
+        }
+
+        public HateoasExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Func<Guid, TModel>>> methodSelector)
+        {
+            SetMethod<TController>(HttpMethod.Get, methodSelector);
+            return this;
         }
 
         public HateoasExpressionBuilder<TModel> Get<TController>(LambdaExpression methodSelector = null)
