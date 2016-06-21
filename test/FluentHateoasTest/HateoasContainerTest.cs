@@ -14,6 +14,7 @@ namespace FluentHateoasTest
             _hateoasContainer = HateoasContainerFactory.Create();
         }
 
+        [Ignore]
         [TestMethod]
         [TestCategory("UnitTest")]
         public void ConfigureTestMergeWithDefault()
