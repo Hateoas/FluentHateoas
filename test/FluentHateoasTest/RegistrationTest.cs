@@ -26,23 +26,52 @@ namespace FluentHateoasTest
         [TestMethod]
         public void RegisterShouldRegisterModel()
         {
+            // arrange
+
+            // act
             _container.Register<TestModel>();
 
+            // assert
             _container.Registrations.Count.Should().Be(1);
         }
 
         [TestMethod]
         public void RegisterIEnumerableAsModelShouldThrowArgumentException()
         {
+            // arrange
+
             try
             {
+                // act
                 _container.Register<IEnumerable<TestModel>>();
+
+                // assert
                 Assert.Fail("Expected exception has not been thrown.");
             }
             catch (ArgumentException exc)
             {
+                // assert
                 Assert.AreEqual("Cannot register collections; use .AsCollection() instead", exc.Message);
             }
+        }
+
+        [TestMethod]
+        public void ConfigureShouldMergeDefaultAndProvidedParameters()
+        {
+            // arrange
+
+            // act
+            _container.Configure(new
+            {
+                HrefStyle = HrefStyle.Relative,
+                LinkStyle = LinkStyle.Array,
+                TemplateStyle = TemplateStyle.Rendered
+            });
+
+            // assert
+            Assert.AreEqual(HrefStyle.Relative, _container.Configuration.HrefStyle);
+            Assert.AreEqual(LinkStyle.Array, _container.Configuration.LinkStyle);
+            Assert.AreEqual(TemplateStyle.Rendered, _container.Configuration.TemplateStyle);
         }
     }
 }

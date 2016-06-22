@@ -57,6 +57,7 @@
     <Compile Include="Contracts\IHateoasRegistrationProfile.cs" />
     <Compile Include="HateoasHttpHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Helpers\DynamicObjectHelper.cs" />
     <Compile Include="Registration\HateoasConfiguration.cs" />
     <Compile Include="Registration\HateoasConfigurationExtensions.cs" />
     <Compile Include="Registration\HateoasContainer.cs" />

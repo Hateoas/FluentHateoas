@@ -7,6 +7,8 @@ using FluentHateoas.Contracts;
 
 namespace FluentHateoas.Registration
 {
+    using FluentHateoas.Helpers;
+
     public static class HateoasContainerExtensions
     {
         public static HateoasExpressionBuilder<TModel> Register<TModel>(this IHateoasContainer container, string relation = null, Expression<Func<TModel, object>> identityDefinition = null)
@@ -26,7 +28,7 @@ namespace FluentHateoas.Registration
             if (container == null)
                 throw new ArgumentException();
 
-            container.Configuration.Extend(vars as ExpandoObject); // TODO NULL
+            container.Configuration.Extend((ExpandoObject)DynamicObjectHelper.ToExpandoObject(vars));
         }
     }
 }

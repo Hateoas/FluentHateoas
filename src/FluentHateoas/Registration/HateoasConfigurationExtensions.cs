@@ -7,11 +7,11 @@ namespace FluentHateoas.Registration
     {
         public static void Extend(this HateoasConfiguration configuration, ExpandoObject vars)
         {
-            var varsDictionary = (IDictionary<string, object>) vars;
+            var varsDictionary = (IDictionary<string, object>)vars;
 
             object hrefStyle;
             if (varsDictionary.TryGetValue("HrefStyle", out hrefStyle) && hrefStyle is HrefStyle)
-                configuration.HrefStyle = (HrefStyle) hrefStyle;
+                configuration.HrefStyle = (HrefStyle)hrefStyle;
 
             object linkStyle;
             if (varsDictionary.TryGetValue("LinkStyle", out linkStyle) && linkStyle is LinkStyle)
