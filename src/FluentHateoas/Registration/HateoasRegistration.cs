@@ -3,6 +3,8 @@ using System.Linq.Expressions;
 
 namespace FluentHateoas.Registration
 {
+    using FluentHateoas.Interfaces;
+
     public class HateoasRegistration<TModel> : IHateoasRegistration<TModel>
     {
         public string Relation { get; }

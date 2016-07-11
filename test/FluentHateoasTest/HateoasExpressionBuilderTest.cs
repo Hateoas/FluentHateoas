@@ -1,3 +1,5 @@
+// ReSharper disable RedundantTypeArgumentsOfMethod
+
 namespace FluentHateoasTest
 {
     using System;
@@ -56,7 +58,7 @@ namespace FluentHateoasTest
         }
 
         [TestMethod]
-        public void GetWithCustomActionShouldSaveControllerAndSetHttpMethodGet()
+        public void GetWithCustomGetAllActionShouldSaveControllerAndSetHttpMethodGet()
         {
             // arrange
             var registration = new HateoasRegistration<TestModel>(null, null);
@@ -76,6 +78,46 @@ namespace FluentHateoasTest
         }
 
         [TestMethod]
+        public void GetWithCustomGetAllMethodSelectorShouldSaveControllerAndSetHttpMethodGet()
+        {
+            // arrange
+            var registration = new HateoasRegistration<TestModel>(null, null);
+            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+
+            // act
+            Expression<Func<TestModelController, IEnumerable<TestModel>>> getAllExpression = c => c.GetAll();
+            builder.Get<TestModelController>(getAllExpression);
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+
+            Assert.AreEqual(typeof(TestModelController), expression.Controller);
+            Assert.AreEqual(HttpMethod.Get, expression.HttpMethod);
+            Assert.AreEqual(getAllExpression, expression.TargetAction);
+        }
+
+        [TestMethod]
+        public void GetWithCustomGetSingleMethodSelectorShouldSaveControllerAndSetHttpMethodGet()
+        {
+            // arrange
+            var registration = new HateoasRegistration<TestModel>(null, null);
+            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+
+            // act
+            Expression<Func<TestModelController, Func<Guid, TestModel>>> getSingleExpression = c => c.GetSingle;
+            builder.Get<TestModelController>(getSingleExpression);
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+
+            Assert.AreEqual(typeof(TestModelController), expression.Controller);
+            Assert.AreEqual(HttpMethod.Get, expression.HttpMethod);
+            Assert.AreEqual(getSingleExpression, expression.TargetAction);
+        }
+
+        [TestMethod]
         public void PostShouldSaveControllerAndSetHttpMethodPost()
         {
             // arrange
@@ -92,6 +134,62 @@ namespace FluentHateoasTest
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Post, expression.HttpMethod);
             Assert.IsNull(expression.TargetAction);
+        }
+
+        [TestMethod]
+        public void PutShouldSaveControllerAndSetHttpMethodPut()
+        {
+            // arrange
+            var registration = new HateoasRegistration<TestModel>(null, null);
+            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+
+            // act
+            builder.Put<TestModelController>();
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+
+            Assert.AreEqual(typeof(TestModelController), expression.Controller);
+            Assert.AreEqual(HttpMethod.Put, expression.HttpMethod);
+            Assert.IsNull(expression.TargetAction);
+        }
+
+        [TestMethod]
+        public void DeleteShouldSaveControllerAndSetHttpMethodDelete()
+        {
+            // arrange
+            var registration = new HateoasRegistration<TestModel>(null, null);
+            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+
+            // act
+            builder.Delete<TestModelController>();
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+
+            Assert.AreEqual(typeof(TestModelController), expression.Controller);
+            Assert.AreEqual(HttpMethod.Delete, expression.HttpMethod);
+            Assert.IsNull(expression.TargetAction);
+        }
+
+        [TestMethod]
+        public void AsTemplateShouldSetTemplateProperty()
+        {
+            // arrange
+            var registration = new HateoasRegistration<TestModel>(null, null);
+            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var fluentResult = builder.Get<TestModelController>();
+
+            // act
+            fluentResult.AsTemplate();
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+
+            Assert.IsNull(expression.Template);
         }
     }
 }

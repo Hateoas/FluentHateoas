@@ -1,22 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using FluentHateoas.Contracts;
-using FluentHateoas.Registration;
-using SampleApi.ApiController;
-using SampleApi.Model;
-using SampleApi.Providers;
-
-namespace SampleApi
+﻿namespace SampleApi
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    using FluentHateoas.Contracts;
+    using FluentHateoas.Registration;
+
+    using SampleApi.ApiController;
+    using SampleApi.Model;
+    using SampleApi.Providers;
+
+    [ExcludeFromCodeCoverage]
     public class SomeRegistrationClass : IHateoasRegistrationProfile
     {
         public void Register(IHateoasContainer container)
         {
-            container.Configure(new {
-                HrefStyle = HrefStyle.Relative,
-                LinkStyle = LinkStyle.Array,
-                TemplateStyle = TemplateStyle.Rendered
-            });
+            container.Configure(
+                new
+                {
+                    HrefStyle = HrefStyle.Relative,
+                    LinkStyle = LinkStyle.Array,
+                    TemplateStyle = TemplateStyle.Rendered
+                });
 
             // get all persons link
             container
@@ -51,8 +55,8 @@ namespace SampleApi
 
             container
                 .Register<Person>("item")
-                .AsCollection()
                 .Get<PersonController>()
+                .AsCollection()
                 .AsTemplate(p => p.Id, p => p.Slug);
 
             container

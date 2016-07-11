@@ -22,6 +22,11 @@ namespace FluentHateoasTest.Model
             throw new NotImplementedException();
         }
 
+        public TestModel GetSingle(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();

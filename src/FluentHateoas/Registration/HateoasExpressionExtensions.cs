@@ -6,7 +6,7 @@ namespace FluentHateoas.Registration
 
     public static class HateoasExpressionExtensions
     {
-        public static void SetMethod<TController>(this HateoasExpression expression, HttpMethod method, LambdaExpression actionSelector) where TController : IHttpController
+        internal static void SetMethod<TController>(this HateoasExpression expression, HttpMethod method, LambdaExpression actionSelector) where TController : IHttpController
         {
             expression.Controller = typeof(TController);
             expression.HttpMethod = method;

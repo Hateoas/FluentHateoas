@@ -2,37 +2,13 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Net.Http;
-using FluentHateoas.Contracts;
 
 namespace FluentHateoas.Registration
 {
-    public interface IHateoasExpression
-    {
-        Type Controller { get; }
-        string Relation { get; }
-        bool IsCollection { get; }
-        LambdaExpression TargetAction { get; }
-        HttpMethod HttpMethod { get; }
-        bool Template { get; }
-        bool Collection { get; }
-        IEnumerable<LambdaExpression> TemplateParameters { get; }
-        LambdaExpression WhenExpression { get; }
-        LambdaExpression WithExpression { get; }
-        Type Command { get; }
-        LambdaExpression CommandFactory { get; }
-    }
+    using FluentHateoas.Interfaces;
 
-    public interface IHateoasExpression<TModel> : IHateoasExpression
+    internal abstract class HateoasExpression : IHateoasExpression
     {
-        Expression<Func<TModel, object>> IdentityDefinition { get; }
-    }
-
-    public class HateoasExpression : IHateoasExpression
-    {
-        protected HateoasExpression()
-        {
-        }
-
         public Type Controller { get; internal set; }
 
         public string Relation { get; internal set; }
@@ -49,13 +25,13 @@ namespace FluentHateoas.Registration
         public LambdaExpression CommandFactory { get; internal set; }
     }
 
-    public sealed class HateoasExpression<TModel> : HateoasExpression, IHateoasExpression<TModel>
+    internal sealed class HateoasExpression<TModel> : HateoasExpression, IHateoasExpression<TModel>
     {
-        private HateoasExpression() : base()
+        private HateoasExpression()
         {
         }
 
-        public static HateoasExpression<TModel> Create(IHateoasRegistration<TModel> registration)
+        internal static HateoasExpression<TModel> Create(IHateoasRegistration<TModel> registration)
         {
             var expression = new HateoasExpression<TModel>
             {

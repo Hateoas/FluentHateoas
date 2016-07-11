@@ -1,4 +1,4 @@
-﻿namespace FluentHateoas.Registration
+﻿namespace FluentHateoas.Interfaces
 {
     using System;
     using System.Linq.Expressions;

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using FluentHateoas.Contracts;
-
-namespace FluentHateoas.Registration
+﻿namespace FluentHateoas.Registration
 {
     public static class HateoasExpressionFactory
     {

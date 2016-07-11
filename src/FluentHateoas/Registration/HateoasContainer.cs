@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using FluentHateoas.Contracts;
-
-namespace FluentHateoas.Registration
+﻿namespace FluentHateoas.Registration
 {
+    using System.Collections.Generic;
+    using FluentHateoas.Contracts;
+    using FluentHateoas.Interfaces;
+
     public class HateoasContainer : IHateoasContainer
     {
         internal HateoasContainer(HateoasConfiguration configuration)

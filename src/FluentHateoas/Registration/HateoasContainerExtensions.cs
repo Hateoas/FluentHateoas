@@ -8,10 +8,11 @@ using FluentHateoas.Contracts;
 namespace FluentHateoas.Registration
 {
     using FluentHateoas.Helpers;
+    using FluentHateoas.Interfaces;
 
     public static class HateoasContainerExtensions
     {
-        public static HateoasExpressionBuilder<TModel> Register<TModel>(this IHateoasContainer container, string relation = null, Expression<Func<TModel, object>> identityDefinition = null)
+        public static IHateoasExpressionBuilder<TModel> Register<TModel>(this IHateoasContainer container, string relation = null, Expression<Func<TModel, object>> identityDefinition = null)
         {
             if (typeof(TModel).GetInterfaces().Contains(typeof(IEnumerable)))
                 throw new ArgumentException("Cannot register collections; use .AsCollection() instead");

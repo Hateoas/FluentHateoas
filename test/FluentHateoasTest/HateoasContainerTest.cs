@@ -14,7 +14,6 @@ namespace FluentHateoasTest
             _hateoasContainer = HateoasContainerFactory.Create();
         }
 
-        [Ignore]
         [TestMethod]
         [TestCategory("UnitTest")]
         public void ConfigureTestMergeWithDefault()
@@ -34,19 +33,19 @@ namespace FluentHateoasTest
 
         [TestMethod]
         [TestCategory("UnitTest")]
-        public void ConfigureTestMergeWithDefaultUsingInvalidOptions()
+        public void ConfigureTestMergeWithDefaultUsingValidStringOptions()
         {
-            Assert.Inconclusive("Not implemented");
-
             _hateoasContainer.Configure(new
             {
-
+                HrefStyle = "Absolute",
+                LinkStyle = "Array",
+                TemplateStyle = "Rendered"
             });
-        }
-    }
 
-    public class TestObject
-    {
-        // Go away ;) ...
+            Assert.IsNotNull(_hateoasContainer.Configuration);
+            Assert.AreEqual(HrefStyle.Absolute, _hateoasContainer.Configuration.HrefStyle);
+            Assert.AreEqual(LinkStyle.Array, _hateoasContainer.Configuration.LinkStyle);
+            Assert.AreEqual(TemplateStyle.Rendered, _hateoasContainer.Configuration.TemplateStyle);
+        }
     }
 }
