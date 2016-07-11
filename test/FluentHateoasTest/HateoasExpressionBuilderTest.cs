@@ -1,15 +1,16 @@
 namespace FluentHateoasTest
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using System.Net.Http;
 
     using FluentHateoas.Registration;
 
-    using FluentHateoasTest.Model;
-
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using Model;
 
     [TestClass]
     [ExcludeFromCodeCoverage]
@@ -55,6 +56,26 @@ namespace FluentHateoasTest
         }
 
         [TestMethod]
+        public void GetWithCustomActionShouldSaveControllerAndSetHttpMethodGet()
+        {
+            // arrange
+            var registration = new HateoasRegistration<TestModel>(null, null);
+            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+
+            // act
+            Expression<Func<TestModelController, Func<IEnumerable<TestModel>>>> getAllExpression = c => c.GetAll;
+            builder.Get<TestModelController>(getAllExpression);
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+
+            Assert.AreEqual(typeof(TestModelController), expression.Controller);
+            Assert.AreEqual(HttpMethod.Get, expression.HttpMethod);
+            Assert.AreEqual(getAllExpression, expression.TargetAction);
+        }
+
+        [TestMethod]
         public void PostShouldSaveControllerAndSetHttpMethodPost()
         {
             // arrange
@@ -72,30 +93,5 @@ namespace FluentHateoasTest
             Assert.AreEqual(HttpMethod.Post, expression.HttpMethod);
             Assert.IsNull(expression.TargetAction);
         }
-
-        //[TestMethod]
-        //public void RegisterShouldRegisterModelWithGetController()
-        //{
-        //    // arrange
-        //    var registration = new HateoasRegistration<TestModel>(null, null);
-        //    var builder = new HateoasExpressionBuilder<TestModel>(registration);
-
-        //    // act
-        //    builder.Get<TestModelController>();
-
-        //    // assert
-        //    _container.Registrations.Count.Should().Be(1);
-        //}
-
-        //[TestMethod]
-        //public void RegisterGetAllWithCustomMethodGroup()
-        //{
-        //    // get all test models link with custom method group registration
-        //    _container
-        //        .Register<TestModel>("self")
-        //        .Get<TestModelController>(controller => controller.GetAll);
-
-        //    _container.Registrations.Count.Should().Be(1);
-        //}
     }
 }

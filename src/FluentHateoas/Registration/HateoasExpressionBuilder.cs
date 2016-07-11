@@ -1,10 +1,12 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Net.Http;
+﻿// ReSharper disable UnusedMethodReturnValue.Global
+// ReSharper disable UnusedParameter.Global
 
 namespace FluentHateoas.Registration
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
+    using System.Net.Http;
     using System.Web.Http.Controllers;
 
     public class HateoasExpressionBuilder<TModel>
