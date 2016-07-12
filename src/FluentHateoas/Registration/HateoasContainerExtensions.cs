@@ -27,7 +27,9 @@ namespace FluentHateoas.Registration
             var container = source as HateoasContainer;
 
             if (container == null)
-                throw new ArgumentException();
+            {
+                throw new ArgumentNullException(nameof(container));
+            }
 
             container.Configuration.Extend((ExpandoObject)DynamicObjectHelper.ToExpandoObject(vars));
         }

@@ -2,10 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Web.Http;
 
     using SampleApi.Model;
 
+    [ExcludeFromCodeCoverage]
     public class PersonController : ApiController
     {
         public void AddSimplePerson()

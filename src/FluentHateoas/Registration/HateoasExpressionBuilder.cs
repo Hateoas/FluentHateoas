@@ -86,24 +86,28 @@ namespace FluentHateoas.Registration
             return this;
         }
 
-        public HateoasExpressionBuilder<TModel> When<TProvider>(Expression<Func<TProvider, object, bool>> when)
+        // TODO BL Add TProvider constraint(s)
+        public HateoasExpressionBuilder<TModel> When<TProvider>(Expression<Func<TProvider, TModel, bool>> when)
         {
             _expression.WhenExpression = when;
             return this;
         }
 
-        public HateoasExpressionBuilder<TModel> With<TProvider>(Expression<Func<TProvider, object, object>> with)
+        // TODO BL Add TProvider constraint(s)
+        public HateoasExpressionBuilder<TModel> With<TProvider>(Expression<Func<TProvider, TModel, object>> with)
         {
             _expression.WithExpression = with;
             return this;
         }
 
+        // TODO BL Add TCommand constraint(s)
         public HateoasExpressionBuilder<TModel> WithCommand<TCommand>()
         {
             _expression.Command = typeof(TCommand);
             return this;
         }
 
+        // TODO BL Add TCommandFactory constraint(s)
         public HateoasExpressionBuilder<TModel> WithCommand<TCommandFactory>(Expression<Func<TCommandFactory, object>> commandFactory)
         {
             _expression.CommandFactory = commandFactory;

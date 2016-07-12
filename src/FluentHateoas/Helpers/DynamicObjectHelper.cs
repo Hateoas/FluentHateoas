@@ -8,7 +8,18 @@
     {
         public static ExpandoObject ToExpandoObject(dynamic dynamicObject)
         {
-            var expandoObject = new ExpandoObject();
+            if (dynamicObject == null)
+            {
+                return null;
+            }
+
+            var expandoObject = dynamicObject as ExpandoObject;
+            if (expandoObject != null)
+            {
+                return expandoObject;
+            }
+
+            expandoObject = new ExpandoObject();
             var expandoDictionary = (IDictionary<string, object>)expandoObject;
 
             Type dynamicType = dynamicObject.GetType();
@@ -21,13 +32,18 @@
             return expandoObject;
         }
 
-        public static bool HasProperty(dynamic obj, string name)
+        public static bool HasProperty(dynamic dynamicObject, string name)
         {
-            Type objType = obj.GetType();
+            if (dynamicObject == null)
+            {
+                return false;
+            }
+
+            Type objType = dynamicObject.GetType();
 
             if (objType == typeof(ExpandoObject))
             {
-                return ((IDictionary<string, object>)obj).ContainsKey(name);
+                return ((IDictionary<string, object>)dynamicObject).ContainsKey(name);
             }
 
             return objType.GetProperty(name) != null;

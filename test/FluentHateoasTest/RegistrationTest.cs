@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using FluentHateoas.Registration;
-using FluentHateoasTest.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FluentHateoasTest
@@ -73,5 +72,15 @@ namespace FluentHateoasTest
             Assert.AreEqual(LinkStyle.Array, _container.Configuration.LinkStyle);
             Assert.AreEqual(TemplateStyle.Rendered, _container.Configuration.TemplateStyle);
         }
+
+        #region Internal test objects
+        // ReSharper disable ClassNeverInstantiated.Local
+
+        private class TestModel
+        {
+        }
+
+        // ReSharper restore ClassNeverInstantiated.Local
+        #endregion
     }
 }

@@ -2,6 +2,9 @@
 
 namespace SampleApi.Model
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
     public class Person
     {
         public Guid Id { get; set; }

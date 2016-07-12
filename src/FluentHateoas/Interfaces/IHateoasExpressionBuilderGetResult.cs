@@ -10,7 +10,7 @@
         IHateoasExpressionBuilderBase<TModel>
     {
         // TODO Do not return HateoasExpressionBuilder<TModel>
-        HateoasExpressionBuilder<TModel> When<TProvider>(Expression<Func<TProvider, object, bool>> when);
+        HateoasExpressionBuilder<TModel> When<TProvider>(Expression<Func<TProvider, TModel, bool>> when);
         IHateoasExpressionBuilderTemplatableResult<TModel> AsCollection();
     }
 }

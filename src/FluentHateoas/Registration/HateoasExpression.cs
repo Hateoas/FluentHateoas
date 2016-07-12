@@ -7,7 +7,7 @@ namespace FluentHateoas.Registration
 {
     using FluentHateoas.Interfaces;
 
-    internal abstract class HateoasExpression : IHateoasExpression
+    public abstract class HateoasExpression : IHateoasExpression
     {
         public Type Controller { get; internal set; }
 
@@ -25,7 +25,7 @@ namespace FluentHateoas.Registration
         public LambdaExpression CommandFactory { get; internal set; }
     }
 
-    internal sealed class HateoasExpression<TModel> : HateoasExpression, IHateoasExpression<TModel>
+    public sealed class HateoasExpression<TModel> : HateoasExpression, IHateoasExpression<TModel>
     {
         private HateoasExpression()
         {

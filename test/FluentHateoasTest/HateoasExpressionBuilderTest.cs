@@ -5,14 +5,16 @@ namespace FluentHateoasTest
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Web.Http.Controllers;
 
     using FluentHateoas.Registration;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-    using Model;
 
     [TestClass]
     [ExcludeFromCodeCoverage]
@@ -175,6 +177,23 @@ namespace FluentHateoasTest
         }
 
         [TestMethod]
+        public void AsCollectionShouldSetCollectionProperty()
+        {
+            // arrange
+            var registration = new HateoasRegistration<TestModel>(null, null);
+            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var fluentResult = builder.Get<TestModelController>();
+
+            // act
+            fluentResult.AsCollection();
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+            Assert.IsTrue(expression.Collection);
+        }
+
+        [TestMethod]
         public void AsTemplateShouldSetTemplateProperty()
         {
             // arrange
@@ -188,8 +207,163 @@ namespace FluentHateoasTest
 
             // assert
             Assert.IsNotNull(expression);
-
-            Assert.IsNull(expression.Template);
+            Assert.IsTrue(expression.Template);
+            Assert.IsNull(expression.TemplateParameters);
         }
+
+        [TestMethod]
+        public void AsTemplateWithParametersShouldSetTemplateProperty()
+        {
+            // arrange
+            var registration = new HateoasRegistration<TestModel>(null, null);
+            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var fluentResult = builder.Get<TestModelController>();
+
+            // act
+            Expression<Func<TestModel, object>> idExpression = m => m.Id;
+            Expression<Func<TestModel, object>> nameExpression = m => m.Name;
+            fluentResult.AsTemplate(idExpression, nameExpression);
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+            Assert.IsTrue(expression.Template);
+            var parameters = expression.TemplateParameters.ToList();
+            Assert.AreEqual(2, parameters.Count);
+            Assert.AreEqual(idExpression, parameters[0]);
+            Assert.AreEqual(nameExpression, parameters[1]);
+        }
+
+        [TestMethod]
+        public void WhenShouldSetWhenProperty()
+        {
+            // arrange
+            var registration = new HateoasRegistration<TestModel>(null, null);
+            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var fluentResult = builder.Get<TestModelController>();
+
+            // act
+            Expression<Func<ITestModelProvider, TestModel, bool>> hasNextExpression = (provider, testModel) => provider.HasNextId(testModel);
+            fluentResult.When<ITestModelProvider>(hasNextExpression);
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+            Assert.AreEqual(hasNextExpression, expression.WhenExpression);
+        }
+
+        [TestMethod]
+        public void WithShouldSetWithProperty()
+        {
+            // arrange
+            var registration = new HateoasRegistration<TestModel>(null, null);
+            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var fluentResult = builder
+                .Get<TestModelController>()
+                .When<ITestModelProvider>((provider, testModel) => provider.HasNextId(testModel));
+
+            // act
+            Expression<Func<ITestModelProvider, TestModel, object>> getNextExpression = (provider, testModel) => provider.GetNextId(testModel);
+            fluentResult.With<ITestModelProvider>(getNextExpression);
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+            Assert.AreEqual(getNextExpression, expression.WithExpression);
+        }
+
+        [TestMethod]
+        public void WithCommandShouldSaveCommandType()
+        {
+            // arrange
+            var registration = new HateoasRegistration<TestModel>(null, null);
+            var fluentResult = 
+                new HateoasExpressionBuilder<TestModel>(registration)
+                    .Post<TestModelController>();
+
+            // act
+            fluentResult.WithCommand<PostCommand>();
+            var expression = fluentResult.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+
+            Assert.AreEqual(typeof(PostCommand), expression.Command);
+            Assert.IsNull(expression.CommandFactory);
+        }
+
+        [TestMethod]
+        public void WithCommandUsingFactoryExpressionShouldSaveCommandTypeAndCommandExpression()
+        {
+            // arrange
+            var registration = new HateoasRegistration<TestModel>(null, null);
+            var fluentResult =
+                new HateoasExpressionBuilder<TestModel>(registration)
+                    .Post<TestModelController>();
+
+            // act
+            Expression<Func<PostCommandFactory, object>> commandFactory = factory => factory.Create();
+            fluentResult.WithCommand<PostCommandFactory>(commandFactory);
+            var expression = fluentResult.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+
+            Assert.IsNull(expression.Command);
+            Assert.IsNotNull(expression.CommandFactory);
+            Assert.AreEqual(commandFactory, expression.CommandFactory);
+        }
+
+        #region Internal test objects
+        // ReSharper disable ClassNeverInstantiated.Local
+        // ReSharper disable MemberCanBeMadeStatic.Local
+        // ReSharper disable UnusedAutoPropertyAccessor.Local
+
+        private class TestModel
+        {
+            public Guid Id { get; set; }
+            public string Name { get; set; }
+        }
+
+        private class TestModelController : IHttpController
+        {
+            public IEnumerable<TestModel> GetAll()
+            {
+                throw new InvalidOperationException();
+            }
+
+            public TestModel GetSingle(Guid id)
+            {
+                throw new InvalidOperationException();
+            }
+
+            public Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
+            {
+                throw new InvalidOperationException();
+            }
+        }
+
+        private interface ITestModelProvider
+        {
+            bool HasNextId(TestModel testModel);
+            object GetNextId(TestModel testModel);
+        }
+
+        private class PostCommand
+        {
+        }
+
+        private class PostCommandFactory
+        {
+            public object Create()
+            {
+                throw new InvalidOperationException();
+            }
+        }
+
+        // ReSharper restore UnusedAutoPropertyAccessor.Local
+        // ReSharper restore MemberCanBeMadeStatic.Local
+        // ReSharper restore ClassNeverInstantiated.Local
+        #endregion
     }
 }

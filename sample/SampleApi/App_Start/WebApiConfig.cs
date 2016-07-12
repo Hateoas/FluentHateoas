@@ -5,6 +5,9 @@ using System.Web.Http;
 
 namespace SampleApi
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
     public static class WebApiConfig
     {
         public static void Register(HttpConfiguration config)
