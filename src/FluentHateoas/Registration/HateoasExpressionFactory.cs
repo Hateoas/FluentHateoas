@@ -7,9 +7,9 @@
         //     return new HateoasExpression<TModel>(registration);
         // }
 
-        public static HateoasExpressionBuilder<TModel> CreateBuilder<TModel>(HateoasRegistration<TModel> registration)
+        public static ExpressionBuilder<TModel> CreateBuilder<TModel>(HateoasRegistration<TModel> registration)
         {
-            return new HateoasExpressionBuilder<TModel>(registration);
+            return new ExpressionBuilder<TModel>(registration);
         }
     }
 }

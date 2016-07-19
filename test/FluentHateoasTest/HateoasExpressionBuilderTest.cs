@@ -29,7 +29,7 @@ namespace FluentHateoasTest
             var registration = new HateoasRegistration<TestModel>(Relation, identityDefinition);
 
             // act
-            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var builder = new ExpressionBuilder<TestModel>(registration);
             var expression = builder.GetExpression();
 
             // assert
@@ -45,7 +45,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var registration = new HateoasRegistration<TestModel>(null, null);
-            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var builder = new ExpressionBuilder<TestModel>(registration);
 
             // act
             builder.Get<TestModelController>();
@@ -64,7 +64,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var registration = new HateoasRegistration<TestModel>(null, null);
-            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var builder = new ExpressionBuilder<TestModel>(registration);
 
             // act
             Expression<Func<TestModelController, Func<IEnumerable<TestModel>>>> getAllExpression = c => c.GetAll;
@@ -84,7 +84,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var registration = new HateoasRegistration<TestModel>(null, null);
-            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var builder = new ExpressionBuilder<TestModel>(registration);
 
             // act
             Expression<Func<TestModelController, IEnumerable<TestModel>>> getAllExpression = c => c.GetAll();
@@ -104,7 +104,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var registration = new HateoasRegistration<TestModel>(null, null);
-            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var builder = new ExpressionBuilder<TestModel>(registration);
 
             // act
             Expression<Func<TestModelController, Func<Guid, TestModel>>> getSingleExpression = c => c.GetSingle;
@@ -124,7 +124,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var registration = new HateoasRegistration<TestModel>(null, null);
-            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var builder = new ExpressionBuilder<TestModel>(registration);
 
             // act
             builder.Post<TestModelController>();
@@ -143,7 +143,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var registration = new HateoasRegistration<TestModel>(null, null);
-            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var builder = new ExpressionBuilder<TestModel>(registration);
 
             // act
             builder.Put<TestModelController>();
@@ -162,7 +162,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var registration = new HateoasRegistration<TestModel>(null, null);
-            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var builder = new ExpressionBuilder<TestModel>(registration);
 
             // act
             builder.Delete<TestModelController>();
@@ -181,7 +181,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var registration = new HateoasRegistration<TestModel>(null, null);
-            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var builder = new ExpressionBuilder<TestModel>(registration);
             var fluentResult = builder.Get<TestModelController>();
 
             // act
@@ -198,7 +198,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var registration = new HateoasRegistration<TestModel>(null, null);
-            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var builder = new ExpressionBuilder<TestModel>(registration);
             var fluentResult = builder.Get<TestModelController>();
 
             // act
@@ -216,7 +216,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var registration = new HateoasRegistration<TestModel>(null, null);
-            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var builder = new ExpressionBuilder<TestModel>(registration);
             var fluentResult = builder.Get<TestModelController>();
 
             // act
@@ -239,7 +239,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var registration = new HateoasRegistration<TestModel>(null, null);
-            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var builder = new ExpressionBuilder<TestModel>(registration);
             var fluentResult = builder.Get<TestModelController>();
 
             // act
@@ -257,7 +257,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var registration = new HateoasRegistration<TestModel>(null, null);
-            var builder = new HateoasExpressionBuilder<TestModel>(registration);
+            var builder = new ExpressionBuilder<TestModel>(registration);
             var fluentResult = builder
                 .Get<TestModelController>()
                 .When<ITestModelProvider>((provider, testModel) => provider.HasNextId(testModel));
@@ -278,7 +278,7 @@ namespace FluentHateoasTest
             // arrange
             var registration = new HateoasRegistration<TestModel>(null, null);
             var fluentResult = 
-                new HateoasExpressionBuilder<TestModel>(registration)
+                new ExpressionBuilder<TestModel>(registration)
                     .Post<TestModelController>();
 
             // act
@@ -298,7 +298,7 @@ namespace FluentHateoasTest
             // arrange
             var registration = new HateoasRegistration<TestModel>(null, null);
             var fluentResult =
-                new HateoasExpressionBuilder<TestModel>(registration)
+                new ExpressionBuilder<TestModel>(registration)
                     .Post<TestModelController>();
 
             // act

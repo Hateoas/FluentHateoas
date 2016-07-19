@@ -9,77 +9,77 @@ namespace FluentHateoas.Registration
     using System.Net.Http;
     using System.Web.Http.Controllers;
 
-    using FluentHateoas.Interfaces;
+    using Interfaces;
 
-    public class HateoasExpressionBuilder<TModel> : 
-        IHateoasExpressionBuilder<TModel>,
-        IHateoasExpressionBuilderGetResult<TModel>,
-        IHateoasExpressionBuilderPostResult<TModel>,
-        IHateoasExpressionBuilderPutResult<TModel>,
-        IHateoasExpressionBuilderDeleteResult<TModel>
+    public class ExpressionBuilder<TModel> : 
+        IExpressionBuilder<TModel>,
+        IGetExpressionBuilder<TModel>,
+        IPostExpressionBuilder<TModel>,
+        IPutExpressionBuilder<TModel>,
+        IDeleteExpressionBuilder<TModel>
     {
         private readonly HateoasExpression<TModel> _expression;
 
-        public HateoasExpressionBuilder(HateoasRegistration<TModel> registration)
+        public ExpressionBuilder(HateoasRegistration<TModel> registration)
         {
             _expression = HateoasExpression<TModel>.Create(registration);
         }
 
-        public IHateoasExpressionBuilderGetResult<TModel> Get<TController>(Expression<Func<TController, Func<IEnumerable<TModel>>>> methodSelector) where TController : IHttpController
+        public IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Func<IEnumerable<TModel>>>> methodSelector) where TController : IHttpController
         {
             _expression.SetMethod<TController>(HttpMethod.Get, methodSelector);
             return this;
         }
 
-        public IHateoasExpressionBuilderGetResult<TModel> Get<TController>(Expression<Func<TController, IEnumerable<TModel>>> methodSelector) where TController : IHttpController
+        public IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, IEnumerable<TModel>>> methodSelector) where TController : IHttpController
         {
             _expression.SetMethod<TController>(HttpMethod.Get, methodSelector);
             return this;
         }
 
-        public IHateoasExpressionBuilderGetResult<TModel> Get<TController>(Expression<Func<TController, Func<Guid, TModel>>> methodSelector) where TController : IHttpController
+        public IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Func<Guid, TModel>>> methodSelector) where TController : IHttpController
         {
             _expression.SetMethod<TController>(HttpMethod.Get, methodSelector);
             return this;
         }
 
-        public IHateoasExpressionBuilderGetResult<TModel> Get<TController>(LambdaExpression methodSelector = null) where TController : IHttpController
+        public IGetExpressionBuilder<TModel> Get<TController>(LambdaExpression methodSelector = null) where TController : IHttpController
         {
             _expression.SetMethod<TController>(HttpMethod.Get, methodSelector);
             return this;
         }
 
-        public IHateoasExpressionBuilderPostResult<TModel> Post<TController>(LambdaExpression methodSelector = null) where TController : IHttpController
+        public IPostExpressionBuilder<TModel> Post<TController>(LambdaExpression methodSelector = null) where TController : IHttpController
         {
             _expression.SetMethod<TController>(HttpMethod.Post, null);
             return this;
         }
 
-        public IHateoasExpressionBuilderPutResult<TModel> Put<TController>(LambdaExpression methodSelector = null) where TController : IHttpController
+        public IPutExpressionBuilder<TModel> Put<TController>(LambdaExpression methodSelector = null) where TController : IHttpController
         {
             _expression.SetMethod<TController>(HttpMethod.Put, methodSelector);
             return this;
         }
 
-        public IHateoasExpressionBuilderDeleteResult<TModel> Delete<TController>(LambdaExpression methodSelector = null) where TController : IHttpController
+        public IDeleteExpressionBuilder<TModel> Delete<TController>(LambdaExpression methodSelector = null) where TController : IHttpController
         {
             _expression.SetMethod<TController>(HttpMethod.Delete, methodSelector);
             return this;
         }
 
-        public IHateoasExpressionBuilderTemplatableResult<TModel> AsCollection()
+        public ITemplateExpressionBuilder<TModel> AsCollection()
         {
             _expression.Collection = true;
             return this;
         }
 
-        HateoasExpressionBuilder<TModel> IHateoasExpressionBuilderTemplatableResult<TModel>.AsTemplate()
+        ExpressionBuilder<TModel> ITemplateExpressionBuilder<TModel>.AsTemplate()
         {
             _expression.Template = true;
             return this;
         }
 
-        HateoasExpressionBuilder<TModel> IHateoasExpressionBuilderTemplatableResult<TModel>.AsTemplate(params Expression<Func<TModel, object>>[] args)
+        ExpressionBuilder<TModel> ITemplateExpressionBuilder<TModel>.AsTemplate(params Expression<Func<TModel, object>>[] args)
         {
             _expression.Template = true;
             _expression.TemplateParameters = args;
@@ -87,28 +87,28 @@ namespace FluentHateoas.Registration
         }
 
         // TODO BL Add TProvider constraint(s)
-        public HateoasExpressionBuilder<TModel> When<TProvider>(Expression<Func<TProvider, TModel, bool>> when)
+        public ExpressionBuilder<TModel> When<TProvider>(Expression<Func<TProvider, TModel, bool>> when)
         {
             _expression.WhenExpression = when;
             return this;
         }
 
         // TODO BL Add TProvider constraint(s)
-        public HateoasExpressionBuilder<TModel> With<TProvider>(Expression<Func<TProvider, TModel, object>> with)
+        public ExpressionBuilder<TModel> With<TProvider>(Expression<Func<TProvider, TModel, object>> with)
         {
             _expression.WithExpression = with;
             return this;
         }
 
         // TODO BL Add TCommand constraint(s)
-        public HateoasExpressionBuilder<TModel> WithCommand<TCommand>()
+        public ExpressionBuilder<TModel> WithCommand<TCommand>()
         {
             _expression.Command = typeof(TCommand);
             return this;
         }
 
         // TODO BL Add TCommandFactory constraint(s)
-        public HateoasExpressionBuilder<TModel> WithCommand<TCommandFactory>(Expression<Func<TCommandFactory, object>> commandFactory)
+        public ExpressionBuilder<TModel> WithCommand<TCommandFactory>(Expression<Func<TCommandFactory, object>> commandFactory)
         {
             _expression.CommandFactory = commandFactory;
             return this;

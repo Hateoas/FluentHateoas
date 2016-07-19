@@ -1,6 +1,6 @@
 namespace FluentHateoas.Interfaces
 {
-    public interface IHateoasExpressionBuilderBase<TModel>
+    public interface IExpressionBuilderBase<TModel>
     {
         IHateoasExpression<TModel> GetExpression();
     }

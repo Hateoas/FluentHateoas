@@ -12,7 +12,7 @@ namespace FluentHateoas.Registration
 
     public static class HateoasContainerExtensions
     {
-        public static IHateoasExpressionBuilder<TModel> Register<TModel>(this IHateoasContainer container, string relation = null, Expression<Func<TModel, object>> identityDefinition = null)
+        public static IExpressionBuilder<TModel> Register<TModel>(this IHateoasContainer container, string relation = null, Expression<Func<TModel, object>> identityDefinition = null)
         {
             if (typeof(TModel).GetInterfaces().Contains(typeof(IEnumerable)))
                 throw new ArgumentException("Cannot register collections; use .AsCollection() instead");
