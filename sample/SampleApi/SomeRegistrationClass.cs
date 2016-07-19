@@ -22,6 +22,10 @@
                     TemplateStyle = TemplateStyle.Rendered
                 });
 
+            ////
+            //// GET REGISTRATIONS
+            ////
+
             // get all persons link
             container
                 .Register<Person>("self")
@@ -60,18 +64,22 @@
                 .AsTemplate(p => p.Id, p => p.Slug);
 
             container
-                .Register<Person>("self", p => p.Id)
-                .Post<PersonController>();
-
-            container
                 .Register<Person>("next")
                 .Get<PersonController>()
                 .When<IPersonProvider>((provider, person) => provider.HasNextId(person))
                 .With<IPersonProvider>((provider, person) => provider.GetNextId(person));
 
-            //container
-            //    .Register<Person>("self", p => p.Id)
-            //    .Post<PersonController>(p => p.AddPerson);
+            ////
+            //// POST REGISTRATIONS
+            ////
+
+            container
+                .Register<Person>("self", p => p.Id)
+                .Post<PersonController>();
+
+            ////container
+            ////    .Register<Person>("self", p => p.Id)
+            ////    .Post<PersonController>(p => p.AddPerson);
 
             container
                 .Register<Person>("self", p => p.Id)
@@ -82,6 +90,27 @@
                 .Register<Person>("add-address", p => p.Id)
                 .Post<AddressController>()
                 .WithCommand<ITemplateFactory>(p => p.Create());
+
+            ////
+            //// PUT REGISTRATIONS
+            ////
+
+            container
+                .Register<Person>("self", p => p.Id)
+                .Put<PersonController>();
+
+            container
+                .Register<Person>("self", p => p.Id)
+                .Put<PersonController>()
+                .WithCommand<PersonPostCommand>();
+
+            ////
+            //// DELETE REGISTRATIONS
+            ////
+
+            container
+                .Register<Person>("self", p => p.Id)
+                .Delete<PersonController>();
         }
     }
 }

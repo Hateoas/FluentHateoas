@@ -16,7 +16,10 @@ namespace FluentHateoas.Registration
         IGetExpressionBuilder<TModel>,
         IPostExpressionBuilder<TModel>,
         IPutExpressionBuilder<TModel>,
-        IDeleteExpressionBuilder<TModel>
+        IDeleteExpressionBuilder<TModel>,
+        IWhenExpressionBuilder<TModel>,
+        IWithExpressionBuilder<TModel>,
+        IWithCommandExpressionBuilder<TModel>
     {
         private readonly HateoasExpression<TModel> _expression;
 
@@ -73,13 +76,13 @@ namespace FluentHateoas.Registration
             return this;
         }
 
-        ExpressionBuilder<TModel> ITemplateExpressionBuilder<TModel>.AsTemplate()
+        IExpressionBuilderBase<TModel> ITemplateExpressionBuilder<TModel>.AsTemplate()
         {
             _expression.Template = true;
             return this;
         }
 
-        ExpressionBuilder<TModel> ITemplateExpressionBuilder<TModel>.AsTemplate(params Expression<Func<TModel, object>>[] args)
+        IExpressionBuilderBase<TModel> ITemplateExpressionBuilder<TModel>.AsTemplate(params Expression<Func<TModel, object>>[] args)
         {
             _expression.Template = true;
             _expression.TemplateParameters = args;
@@ -87,28 +90,28 @@ namespace FluentHateoas.Registration
         }
 
         // TODO BL Add TProvider constraint(s)
-        public ExpressionBuilder<TModel> When<TProvider>(Expression<Func<TProvider, TModel, bool>> when)
+        public IWhenExpressionBuilder<TModel> When<TProvider>(Expression<Func<TProvider, TModel, bool>> when)
         {
             _expression.WhenExpression = when;
             return this;
         }
 
         // TODO BL Add TProvider constraint(s)
-        public ExpressionBuilder<TModel> With<TProvider>(Expression<Func<TProvider, TModel, object>> with)
+        public IWithExpressionBuilder<TModel> With<TProvider>(Expression<Func<TProvider, TModel, object>> with)
         {
             _expression.WithExpression = with;
             return this;
         }
 
         // TODO BL Add TCommand constraint(s)
-        public ExpressionBuilder<TModel> WithCommand<TCommand>()
+        public IWithCommandExpressionBuilder<TModel> WithCommand<TCommand>()
         {
             _expression.Command = typeof(TCommand);
             return this;
         }
 
         // TODO BL Add TCommandFactory constraint(s)
-        public ExpressionBuilder<TModel> WithCommand<TCommandFactory>(Expression<Func<TCommandFactory, object>> commandFactory)
+        public IWithCommandExpressionBuilder<TModel> WithCommand<TCommandFactory>(Expression<Func<TCommandFactory, object>> commandFactory)
         {
             _expression.CommandFactory = commandFactory;
             return this;

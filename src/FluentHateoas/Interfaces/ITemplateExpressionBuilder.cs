@@ -3,11 +3,18 @@
     using System;
     using System.Linq.Expressions;
 
-    using FluentHateoas.Registration;
+    public interface IWithExpressionBuilder<TModel> : ITemplateExpressionBuilder<TModel>
+    {
+    }
+
+    public interface IWhenExpressionBuilder<TModel> : ITemplateExpressionBuilder<TModel>
+    {
+        IWithExpressionBuilder<TModel> With<TProvider>(Expression<Func<TProvider, TModel, object>> with);
+    }
 
     public interface ITemplateExpressionBuilder<TModel> : IExpressionBuilderBase<TModel>
     {
-        ExpressionBuilder<TModel> AsTemplate();
-        ExpressionBuilder<TModel> AsTemplate(params Expression<Func<TModel, object>>[] args);
+        IExpressionBuilderBase<TModel> AsTemplate();
+        IExpressionBuilderBase<TModel> AsTemplate(params Expression<Func<TModel, object>>[] args);
     }
 }

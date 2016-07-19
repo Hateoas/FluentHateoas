@@ -5,10 +5,14 @@ namespace FluentHateoas.Interfaces
 
     using FluentHateoas.Registration;
 
+    public interface IWithCommandExpressionBuilder<TModel> : IExpressionBuilderBase<TModel>
+    {
+    }
+
     public interface IPostExpressionBuilder<TModel> : IExpressionBuilderBase<TModel>
     {
         // TODO Do not return HateoasExpressionBuilder<TModel>
-        ExpressionBuilder<TModel> WithCommand<TCommandFactory>();
-        ExpressionBuilder<TModel> WithCommand<TCommandFactory>(Expression<Func<TCommandFactory, object>> commandFactory);
+        IWithCommandExpressionBuilder<TModel> WithCommand<TCommandFactory>();
+        IWithCommandExpressionBuilder<TModel> WithCommand<TCommandFactory>(Expression<Func<TCommandFactory, object>> commandFactory);
     }
 }

@@ -9,7 +9,7 @@
         ITemplateExpressionBuilder<TModel>
     {
         // TODO Do not return HateoasExpressionBuilder<TModel>
-        ExpressionBuilder<TModel> When<TProvider>(Expression<Func<TProvider, TModel, bool>> when);
+        IWhenExpressionBuilder<TModel> When<TProvider>(Expression<Func<TProvider, TModel, bool>> when);
         ITemplateExpressionBuilder<TModel> AsCollection();
     }
 }
