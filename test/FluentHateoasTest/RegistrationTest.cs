@@ -1,48 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using FluentHateoas.Registration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Web.Http;
 
 namespace FluentHateoasTest
 {
     using System.Diagnostics.CodeAnalysis;
 
-    using FluentHateoas.Contracts;
+    using Moq;
 
     [TestClass]
     [ExcludeFromCodeCoverage]
     public class RegistrationTest
     {
-        private IHateoasContainer _container;
-
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            _container = HateoasContainerFactory.Create();
-        }
-
         [TestMethod]
         public void RegisterShouldRegisterModel()
         {
             // arrange
+            var httpConfiguration = new Mock<HttpConfiguration>().Object;
+            var container = HateoasContainerFactory.Create(httpConfiguration);
 
             // act
-            _container.Register<TestModel>();
+            container.Register<TestModel>();
 
             // assert
-            _container.Registrations.Count.Should().Be(1);
+            Assert.AreEqual(1, httpConfiguration.GetRegistrationsFor(typeof(TestModel)).Count);
         }
 
         [TestMethod]
         public void RegisterIEnumerableAsModelShouldThrowArgumentException()
         {
             // arrange
+            var httpConfiguration = new Mock<HttpConfiguration>().Object;
+            var container = HateoasContainerFactory.Create(httpConfiguration);
 
             try
             {
                 // act
-                _container.Register<IEnumerable<TestModel>>();
+                container.Register<IEnumerable<TestModel>>();
 
                 // assert
                 Assert.Fail("Expected exception has not been thrown.");
@@ -58,9 +54,11 @@ namespace FluentHateoasTest
         public void ConfigureShouldMergeDefaultAndProvidedParameters()
         {
             // arrange
+            var httpConfiguration = new Mock<HttpConfiguration>().Object;
+            var container = HateoasContainerFactory.Create(httpConfiguration);
 
             // act
-            _container.Configure(new
+            container.Configure(new
             {
                 HrefStyle = HrefStyle.Relative,
                 LinkStyle = LinkStyle.Array,
@@ -68,9 +66,9 @@ namespace FluentHateoasTest
             });
 
             // assert
-            Assert.AreEqual(HrefStyle.Relative, _container.Configuration.HrefStyle);
-            Assert.AreEqual(LinkStyle.Array, _container.Configuration.LinkStyle);
-            Assert.AreEqual(TemplateStyle.Rendered, _container.Configuration.TemplateStyle);
+            Assert.AreEqual(HrefStyle.Relative, container.Configuration.HrefStyle);
+            Assert.AreEqual(LinkStyle.Array, container.Configuration.LinkStyle);
+            Assert.AreEqual(TemplateStyle.Rendered, container.Configuration.TemplateStyle);
         }
 
         #region Internal test objects

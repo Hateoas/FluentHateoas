@@ -4,12 +4,11 @@ using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using FluentHateoas.Contracts;
+using FluentHateoas.Helpers;
+using FluentHateoas.Interfaces;
 
 namespace FluentHateoas.Registration
 {
-    using FluentHateoas.Helpers;
-    using FluentHateoas.Interfaces;
-
     public static class HateoasContainerExtensions
     {
         public static IExpressionBuilder<TModel> Register<TModel>(this IHateoasContainer container, string relation = null, Expression<Func<TModel, object>> identityDefinition = null)
@@ -17,9 +16,11 @@ namespace FluentHateoas.Registration
             if (typeof(TModel).GetInterfaces().Contains(typeof(IEnumerable)))
                 throw new ArgumentException("Cannot register collections; use .AsCollection() instead");
 
-            var registration = new HateoasRegistration<TModel>(relation, identityDefinition);
-            container.Registrations.Add(registration);
-            return HateoasExpressionFactory.CreateBuilder(registration);
+            // TODO The relation between (container,) registration and expression builder feels weird 
+            var registration = new HateoasRegistration<TModel>(relation, identityDefinition, container);
+            var builder = HateoasExpressionFactory.CreateBuilder(registration);
+            container.Add(registration);
+            return builder;
         }
 
         public static void Configure(this IHateoasContainer source, dynamic vars)
@@ -32,6 +33,7 @@ namespace FluentHateoas.Registration
             }
 
             container.Configuration.Extend((ExpandoObject)DynamicObjectHelper.ToExpandoObject(vars));
+            container.Update();
         }
     }
 }

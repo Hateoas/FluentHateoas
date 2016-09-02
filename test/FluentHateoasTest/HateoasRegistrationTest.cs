@@ -19,7 +19,7 @@ namespace FluentHateoasTest
             const string Relation = "self";
 
             // act
-            var registration = new HateoasRegistration<TestModel>();
+            var registration = new HateoasRegistration<TestModel>(null);
 
             // assert
             Assert.AreEqual(Relation, registration.Relation);
@@ -34,7 +34,7 @@ namespace FluentHateoasTest
             const string Relation = "relation";
 
             // act
-            var registration = new HateoasRegistration<TestModel>(Relation);
+            var registration = new HateoasRegistration<TestModel>(Relation, null);
 
             // assert
             Assert.AreEqual(Relation, registration.Relation);
@@ -50,7 +50,7 @@ namespace FluentHateoasTest
             Expression<Func<TestModel, object>> identityDefinition = m => m.Id;
 
             // act
-            var registration = new HateoasRegistration<TestModel>(Relation, identityDefinition);
+            var registration = new HateoasRegistration<TestModel>(Relation, identityDefinition, null);
 
             // assert
             Assert.AreEqual(Relation, registration.Relation);
@@ -66,7 +66,7 @@ namespace FluentHateoasTest
             Expression<Func<TestModel, object>> identityDefinition = m => m.Id;
 
             // act
-            var registration = new HateoasRegistration<TestModel>(Relation, identityDefinition, true);
+            var registration = new HateoasRegistration<TestModel>(Relation, identityDefinition, null, true);
 
             // assert
             Assert.AreEqual(Relation, registration.Relation);

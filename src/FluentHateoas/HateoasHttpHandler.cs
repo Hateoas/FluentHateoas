@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 
 namespace FluentHateoas
 {
+    using System.Web.Http;
+
+    using FluentHateoas.Contracts;
+
     public class HateoasHttpHandler : DelegatingHandler
     {
         private readonly IResponseProvider _responseProvider;
@@ -22,5 +26,23 @@ namespace FluentHateoas
 
             return result;
         }
+    }
+
+    public class HateOasConfiguration : IHateOasConfiguration
+    {
+        private readonly HttpConfiguration _configuration;
+
+        private readonly IHateoasContainer _container;
+
+        public HateOasConfiguration(HttpConfiguration configuration, IHateoasContainer container)
+        {
+            _configuration = configuration;
+            _container = container;
+        }
+
+    }
+
+    public interface IHateOasConfiguration
+    {
     }
 }

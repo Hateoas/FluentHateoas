@@ -5,6 +5,9 @@ namespace FluentHateoasTest
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Web.Http;
+
+    using Moq;
 
     [TestClass]
     [ExcludeFromCodeCoverage]
@@ -15,7 +18,8 @@ namespace FluentHateoasTest
         public void ConfigureMergeTypedOptionsWithDefault()
         {
             // arrange
-            var hateoasContainer = HateoasContainerFactory.Create();
+            var httpConfigurationMock = new Mock<HttpConfiguration>();
+            var hateoasContainer = HateoasContainerFactory.Create(httpConfigurationMock.Object);
             var configuration = new { HrefStyle = HrefStyle.Relative, LinkStyle = LinkStyle.Array, TemplateStyle = TemplateStyle.Rendered };
 
             // act
@@ -33,7 +37,8 @@ namespace FluentHateoasTest
         public void ConfigureMergeStringOptionsWithDefault()
         {
             // arrange
-            var hateoasContainer = HateoasContainerFactory.Create();
+            var httpConfigurationMock = new Mock<HttpConfiguration>();
+            var hateoasContainer = HateoasContainerFactory.Create(httpConfigurationMock.Object);
             var configuration = new { HrefStyle = "Absolute", LinkStyle = "Array", TemplateStyle = "Rendered" };
             
             // act
@@ -51,7 +56,8 @@ namespace FluentHateoasTest
         public void ConfigureMergeEmptyOptionsWithDefault()
         {
             // arrange
-            var hateoasContainer = HateoasContainerFactory.Create();
+            var httpConfigurationMock = new Mock<HttpConfiguration>();
+            var hateoasContainer = HateoasContainerFactory.Create(httpConfigurationMock.Object);
             var configuration = new { };
 
             // act

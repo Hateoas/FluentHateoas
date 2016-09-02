@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using FluentHateoas.Contracts;
 
 namespace FluentHateoas.Registration
 {
@@ -7,25 +8,44 @@ namespace FluentHateoas.Registration
 
     public class HateoasRegistration<TModel> : IHateoasRegistration<TModel>
     {
+        public Type Model { get; }
         public string Relation { get; }
         public Expression<Func<TModel, object>> IdentityDefinition { get; }
         public bool IsCollection { get; }
 
-        public HateoasRegistration()
-            : this("self", null, false)
+        IHateoasExpression IHateoasRegistration.Expression
+        {
+            get { return Expression; }
+            set { Expression = (IHateoasExpression<TModel>)value; }
+        }
+
+        public IHateoasExpression<TModel> Expression { get; set; }
+
+        private readonly IHateoasContainer _container;
+
+        public HateoasRegistration(IHateoasContainer container)
+            : this("self", null, container, false)
         {
         }
 
-        public HateoasRegistration(string relation)
-            : this(relation, null, false)
+        public HateoasRegistration(string relation, IHateoasContainer container)
+            : this(relation, null, container, false)
         {
         }
 
-        public HateoasRegistration(string relation, Expression<Func<TModel, object>> identityDefinition, bool isCollection = false)
+        public HateoasRegistration(string relation, Expression<Func<TModel, object>> identityDefinition, IHateoasContainer container, bool isCollection = false)
         {
+            Model = typeof(TModel);
             Relation = relation;
             IdentityDefinition = identityDefinition;
             IsCollection = isCollection;
+
+            _container = container;
+        }
+
+        public void Update()
+        {
+            _container.Update(this);
         }
     }
 }

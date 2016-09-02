@@ -78,6 +78,8 @@
     <Compile Include="Interfaces\IPostExpressionBuilder.cs" />
     <Compile Include="Interfaces\IPutExpressionBuilder.cs" />
     <Compile Include="Interfaces\IHateoasRegistration.cs" />
+    <Compile Include="Registration\HttpConfigurationExtensions.cs" />
+    <Compile Include="Registration\IHateoasConfiguration.cs" />
     <Compile Include="Registration\LinkStyle.cs" />
     <Compile Include="Registration\TemplateStyle.cs" />
     <Compile Include="ResponseMessageExtensions.cs" />

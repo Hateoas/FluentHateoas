@@ -111,6 +111,9 @@
             container
                 .Register<Person>("self", p => p.Id)
                 .Delete<PersonController>();
+
+            // store container
+
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace FluentHateoas.Contracts
+﻿using System;
+
+namespace FluentHateoas.Contracts
 {
     using System.Collections.Generic;
 
@@ -7,7 +9,11 @@
 
     public interface IHateoasContainer
     {
-        HateoasConfiguration Configuration { get; }
-        IList<IHateoasRegistration> Registrations { get; }
+        IHateoasConfiguration Configuration { get; }
+        //IList<IHateoasRegistration> Registrations { get; }
+
+        void Add(IHateoasRegistration registration);
+        void Update();
+        void Update(IHateoasRegistration registration);
     }
 }
