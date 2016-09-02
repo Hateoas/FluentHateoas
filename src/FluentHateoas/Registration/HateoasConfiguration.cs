@@ -1,6 +1,6 @@
 ﻿namespace FluentHateoas.Registration
 {
-    public class HateoasConfiguration : IHateoasConfiguration
+    public class HateoasConfiguration : Interfaces.IHateoasConfiguration
     {
         public HrefStyle HrefStyle { get; set; } = HrefStyle.Relative;
         public LinkStyle LinkStyle { get; set; } = LinkStyle.Array;

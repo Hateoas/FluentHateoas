@@ -7,7 +7,7 @@ namespace FluentHateoas.Registration
 
     public static class HateoasConfigurationExtensions
     {
-        public static void Extend(this IHateoasConfiguration configuration, ExpandoObject vars)
+        public static void Extend(this Interfaces.IHateoasConfiguration configuration, ExpandoObject vars)
         {
             var varsDictionary = (IDictionary<string, object>)vars;
 
@@ -16,7 +16,7 @@ namespace FluentHateoas.Registration
             TryExtendTemplateStyle(configuration, varsDictionary);
         }
 
-        private static void TryExtendHrefStyle(IHateoasConfiguration configuration, IDictionary<string, object> varsDictionary)
+        private static void TryExtendHrefStyle(Interfaces.IHateoasConfiguration configuration, IDictionary<string, object> varsDictionary)
         {
             object hrefStyle;
             if (!varsDictionary.TryGetValue("HrefStyle", out hrefStyle))
@@ -38,7 +38,7 @@ namespace FluentHateoas.Registration
             }
         }
 
-        private static void TryExtendLinkStyle(IHateoasConfiguration configuration, IDictionary<string, object> varsDictionary)
+        private static void TryExtendLinkStyle(Interfaces.IHateoasConfiguration configuration, IDictionary<string, object> varsDictionary)
         {
             object linkStyle;
             if (!varsDictionary.TryGetValue("LinkStyle", out linkStyle))
@@ -60,7 +60,7 @@ namespace FluentHateoas.Registration
             }
         }
 
-        private static void TryExtendTemplateStyle(IHateoasConfiguration configuration, IDictionary<string, object> varsDictionary)
+        private static void TryExtendTemplateStyle(Interfaces.IHateoasConfiguration configuration, IDictionary<string, object> varsDictionary)
         {
             object templateStyle;
             if (!varsDictionary.TryGetValue("TemplateStyle", out templateStyle))

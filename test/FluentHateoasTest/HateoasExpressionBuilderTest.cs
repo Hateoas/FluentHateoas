@@ -50,7 +50,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
-            containerMock.Setup(c => c.Update());
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
             var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
             var builder = new ExpressionBuilder<TestModel>(registration);
 
@@ -64,7 +64,7 @@ namespace FluentHateoasTest
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Get, expression.HttpMethod);
             Assert.IsNull(expression.TargetAction);
-            containerMock.Verify(c => c.Update(), Times.Once);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
-            containerMock.Setup(c => c.Update());
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
             var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
             var builder = new ExpressionBuilder<TestModel>(registration);
 
@@ -87,7 +87,7 @@ namespace FluentHateoasTest
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Get, expression.HttpMethod);
             Assert.AreEqual(getAllExpression, expression.TargetAction);
-            containerMock.Verify(c => c.Update(), Times.Once);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
         [TestMethod]
@@ -95,7 +95,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
-            containerMock.Setup(c => c.Update());
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
             var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
             var builder = new ExpressionBuilder<TestModel>(registration);
 
@@ -110,7 +110,7 @@ namespace FluentHateoasTest
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Get, expression.HttpMethod);
             Assert.AreEqual(getAllExpression, expression.TargetAction);
-            containerMock.Verify(c => c.Update(), Times.Once);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
         [TestMethod]
@@ -118,7 +118,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
-            containerMock.Setup(c => c.Update());
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
             var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
             var builder = new ExpressionBuilder<TestModel>(registration);
 
@@ -133,7 +133,7 @@ namespace FluentHateoasTest
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Get, expression.HttpMethod);
             Assert.AreEqual(getSingleExpression, expression.TargetAction);
-            containerMock.Verify(c => c.Update(), Times.Once);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
         [TestMethod]
@@ -141,7 +141,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
-            containerMock.Setup(c => c.Update());
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
             var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
             var builder = new ExpressionBuilder<TestModel>(registration);
 
@@ -155,7 +155,7 @@ namespace FluentHateoasTest
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Post, expression.HttpMethod);
             Assert.IsNull(expression.TargetAction);
-            containerMock.Verify(c => c.Update(), Times.Once);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
         [TestMethod]
@@ -163,7 +163,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
-            containerMock.Setup(c => c.Update());
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
             var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
             var builder = new ExpressionBuilder<TestModel>(registration);
 
@@ -177,7 +177,7 @@ namespace FluentHateoasTest
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Put, expression.HttpMethod);
             Assert.IsNull(expression.TargetAction);
-            containerMock.Verify(c => c.Update(), Times.Once);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
         [TestMethod]
@@ -185,7 +185,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
-            containerMock.Setup(c => c.Update());
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
             var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
             var builder = new ExpressionBuilder<TestModel>(registration);
 
@@ -199,7 +199,7 @@ namespace FluentHateoasTest
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Delete, expression.HttpMethod);
             Assert.IsNull(expression.TargetAction);
-            containerMock.Verify(c => c.Update(), Times.Once);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
         [TestMethod]
@@ -207,7 +207,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
-            containerMock.Setup(c => c.Update());
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
             var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
             var builder = new ExpressionBuilder<TestModel>(registration);
 
@@ -221,7 +221,7 @@ namespace FluentHateoasTest
             // assert
             Assert.IsNotNull(expression);
             Assert.IsTrue(expression.Collection);
-            containerMock.Verify(c => c.Update(), Times.Once);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
         [TestMethod]
@@ -229,7 +229,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
-            containerMock.Setup(c => c.Update());
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
             var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
             var builder = new ExpressionBuilder<TestModel>(registration);
 
@@ -244,7 +244,7 @@ namespace FluentHateoasTest
             Assert.IsNotNull(expression);
             Assert.IsTrue(expression.Template);
             Assert.IsNull(expression.TemplateParameters);
-            containerMock.Verify(c => c.Update(), Times.Once);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
         [TestMethod]
@@ -252,7 +252,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
-            containerMock.Setup(c => c.Update());
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
             var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
             var builder = new ExpressionBuilder<TestModel>(registration);
 
@@ -272,7 +272,7 @@ namespace FluentHateoasTest
             Assert.AreEqual(2, parameters.Count);
             Assert.AreEqual(idExpression, parameters[0]);
             Assert.AreEqual(nameExpression, parameters[1]);
-            containerMock.Verify(c => c.Update(), Times.Once);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
         [TestMethod]
@@ -280,7 +280,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
-            containerMock.Setup(c => c.Update());
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
             var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
             var builder = new ExpressionBuilder<TestModel>(registration);
 
@@ -295,7 +295,7 @@ namespace FluentHateoasTest
             // assert
             Assert.IsNotNull(expression);
             Assert.AreEqual(hasNextExpression, expression.WhenExpression);
-            containerMock.Verify(c => c.Update(), Times.Once);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
         [TestMethod]
@@ -303,7 +303,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
-            containerMock.Setup(c => c.Update());
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
             var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
             var builder = new ExpressionBuilder<TestModel>(registration);
 
@@ -320,7 +320,7 @@ namespace FluentHateoasTest
             // assert
             Assert.IsNotNull(expression);
             Assert.AreEqual(getNextExpression, expression.WithExpression);
-            containerMock.Verify(c => c.Update(), Times.Once);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
         [TestMethod]
@@ -328,7 +328,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
-            containerMock.Setup(c => c.Update());
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
             var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
 
             var fluentResult = 
@@ -345,7 +345,7 @@ namespace FluentHateoasTest
 
             Assert.AreEqual(typeof(PostCommand), expression.Command);
             Assert.IsNull(expression.CommandFactory);
-            containerMock.Verify(c => c.Update(), Times.Once);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
         [TestMethod]
@@ -353,7 +353,7 @@ namespace FluentHateoasTest
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
-            containerMock.Setup(c => c.Update());
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
             var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
 
             var fluentResult =
@@ -372,7 +372,7 @@ namespace FluentHateoasTest
             Assert.IsNull(expression.Command);
             Assert.IsNotNull(expression.CommandFactory);
             Assert.AreEqual(commandFactory, expression.CommandFactory);
-            containerMock.Verify(c => c.Update(), Times.Once);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
         #region Internal test objects
