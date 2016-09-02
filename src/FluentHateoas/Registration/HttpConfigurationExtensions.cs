@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using FluentHateoas.Contracts;
+
 using FluentHateoas.Interfaces;
 
 namespace FluentHateoas.Registration

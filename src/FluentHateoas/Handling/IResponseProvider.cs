@@ -1,7 +1,9 @@
+using System.Net.Http;
+
 namespace FluentHateoas.Handling
 {
     public interface IResponseProvider
     {
-        System.Net.Http.HttpResponseMessage Create(System.Net.Http.HttpResponseMessage response);
+        HttpResponseMessage Create(HttpRequestMessage request, HttpResponseMessage response);
     }
 }

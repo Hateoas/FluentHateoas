@@ -1,21 +1,28 @@
-﻿using System.Net.Http;
+﻿using System.Linq;
+using System.Net.Http;
 
 namespace FluentHateoas.Handling
 {
     public class ResponseProvider : IResponseProvider
     {
-        public ResponseProvider()
-        { }
+        private readonly IConfigurationProvider _configurationProvider;
 
-        public HttpResponseMessage Create(HttpResponseMessage response)
+        public ResponseProvider(IConfigurationProvider configurationProvider)
+        {
+            _configurationProvider = configurationProvider;
+        }
+
+        public HttpResponseMessage Create(HttpRequestMessage request, HttpResponseMessage response)
         {
             ObjectContent content;
-            if (!response.StatusCode.IsSuccess() && !response.TryGetContent(out content))
+            if (!response.TryGetContent(out content) || content == null)
+            {
                 return response;
+            }
 
-            // todo: Create ResponseMessage
-
-            return response;
+            var links = _configurationProvider.GetLinksFor(content.ObjectType, content.Value);
+            var commands = new System.Collections.Generic.List<IHateoasCommand>(); // TODO
+            return ResponseHelper.Ok(request, ((ObjectContent)(response.Content)).Value, links, commands);
         }
     }
 }

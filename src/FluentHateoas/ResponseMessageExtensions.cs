@@ -6,6 +6,12 @@ namespace FluentHateoas
     {
         public static bool TryGetContent(this HttpResponseMessage response, out ObjectContent content)
         {
+            if (!response.StatusCode.IsSuccess())
+            {
+                content = null;
+                return false;
+            }
+
             content = response.GetContent();
             return content == null;
         }

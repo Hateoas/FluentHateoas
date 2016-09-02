@@ -13,7 +13,7 @@
         {
             var response = await base.SendAsync(request, cancellationToken);
 
-            var result = _responseProvider.Create(response);
+            var result = _responseProvider.Create(request, response); // TODO Async?!
 
             return result;
         }

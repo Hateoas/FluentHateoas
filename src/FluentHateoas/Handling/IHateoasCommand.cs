@@ -1,6 +1,6 @@
 namespace FluentHateoas.Handling
 {
-    public interface IHateoasLink
+    public interface IHateoasCommand
     {
 
     }
