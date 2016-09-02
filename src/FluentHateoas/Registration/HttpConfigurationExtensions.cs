@@ -78,6 +78,17 @@ namespace FluentHateoas.Registration
         /// <param name="configuration">HTTP configuration</param>
         /// <param name="model">The model to get HATEOAS registrations for</param>
         /// <returns>HATEOAS registrations for the model specified</returns>
+        public static List<IHateoasRegistration> GetRegistrationsFor<TModel>(this HttpConfiguration configuration)
+        {
+            return configuration.GetRegistrationsFor(typeof(TModel));
+        }
+
+        /// <summary>
+        /// Returns the HATEOAS registrations for a specific model. Returns a (registered) empty list when the model could not be found.
+        /// </summary>
+        /// <param name="configuration">HTTP configuration</param>
+        /// <param name="model">The model to get HATEOAS registrations for</param>
+        /// <returns>HATEOAS registrations for the model specified</returns>
         public static List<IHateoasRegistration> GetRegistrationsFor(this HttpConfiguration configuration, Type model)
         {
             var linkedResourceDefinitions = configuration.GetRegistrations();

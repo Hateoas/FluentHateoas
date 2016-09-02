@@ -82,6 +82,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="HateoasContainerTest.cs" />
     <Compile Include="Helpers\DynamicObjectHelperTest.cs" />
     <Compile Include="HateoasContainerExtensionsTest.cs" />
     <Compile Include="HateoasExpressionBuilderTest.cs" />

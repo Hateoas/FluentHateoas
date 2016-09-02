@@ -55,7 +55,17 @@
     <Compile Include="Builder\ResponseBuilder.cs" />
     <Compile Include="Contracts\IHateoasContainer.cs" />
     <Compile Include="Contracts\IHateoasRegistrationProfile.cs" />
-    <Compile Include="HateoasHttpHandler.cs" />
+    <Compile Include="Handling\ConfigurationProvider.cs" />
+    <Compile Include="Handling\IConfigurationProvider.cs" />
+    <Compile Include="Handling\IHateoasLink.cs" />
+    <Compile Include="Handling\ILinkFactory.cs" />
+    <Compile Include="Handling\IRegistrationLinkHandler.cs" />
+    <Compile Include="Handling\IResponseProvider.cs" />
+    <Compile Include="Handling\LinkBuilder.cs" />
+    <Compile Include="Handling\LinkBuilderExtensions.cs" />
+    <Compile Include="Handling\LinkFactory.cs" />
+    <Compile Include="Handling\RegistrationLinkHandlerExtensions.cs" />
+    <Compile Include="Handling\Handlers\HateoasHttpHandler.cs" />
     <Compile Include="Interfaces\ITemplateExpressionBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\DynamicObjectHelper.cs" />
@@ -83,12 +93,11 @@
     <Compile Include="Registration\LinkStyle.cs" />
     <Compile Include="Registration\TemplateStyle.cs" />
     <Compile Include="ResponseMessageExtensions.cs" />
-    <Compile Include="ResponseProvider.cs" />
+    <Compile Include="Handling\ResponseProvider.cs" />
     <Compile Include="StatusCodeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
-    <Folder Include="Handling\Handlers\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
