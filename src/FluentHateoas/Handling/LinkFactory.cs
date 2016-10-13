@@ -1,3 +1,5 @@
+using System.Linq;
+using FluentHateoas.Handling.Handlers;
 using Enumerable = System.Linq.Enumerable;
 
 namespace FluentHateoas.Handling
@@ -15,19 +17,21 @@ namespace FluentHateoas.Handling
         {
             get
             {
-                //yield return new InitHandler();
+                yield return new RelationNameHandler();
                 //yield return new UseHandler();
                 //yield return new WhenNotNullHandler();
                 //yield return new FixedRouteHandler();
                 //yield return new WithHandler();
                 //yield return new TemplateHandler();
-                return null;
             }
         }
 
         public System.Collections.Generic.IEnumerable<IHateoasLink> CreateLinks(System.Collections.Generic.List<Interfaces.IHateoasRegistration> registrations, object data)
         {
-            return Enumerable.Select(Enumerable.Where(Enumerable.Select(registrations, definition => _handlerChain.Process(definition, new LinkBuilder(), data)), linkBuilder => linkBuilder.Success), linkBuilder => LinkBuilderExtensions.Build(linkBuilder));
+            return registrations.Select(definition => _handlerChain
+                    .Process(definition, new LinkBuilder(), data))
+                    .Where(linkBuilder => linkBuilder.Success)
+                    .Select(linkBuilder => linkBuilder.Build());
         }
     }
 }

@@ -56,6 +56,8 @@
     <Compile Include="Contracts\IHateoasContainer.cs" />
     <Compile Include="Contracts\IHateoasRegistrationProfile.cs" />
     <Compile Include="Handling\ConfigurationProvider.cs" />
+    <Compile Include="Handling\Handlers\RegistrationLinkHandlerBase.cs" />
+    <Compile Include="Handling\Handlers\RelationNameHandler.cs" />
     <Compile Include="Handling\HateOasResponse.cs" />
     <Compile Include="Handling\IConfigurationProvider.cs" />
     <Compile Include="Handling\IHateoasCommand.cs" />
