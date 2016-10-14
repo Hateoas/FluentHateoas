@@ -10,6 +10,6 @@ namespace FluentHateoas.Handling
         public bool IsTemplate { get; set; }
         public bool IsFixed { get; set; }
         public string FixedRoute { get; set; }
-        public string Command { get; set; }
+        public IHateoasCommand Command { get; set; }
     }
 }

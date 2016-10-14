@@ -30,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -52,12 +53,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builder\Factories\CommandFactory.cs" />
+    <Compile Include="Builder\Handlers\CommandHandler.cs" />
+    <Compile Include="Builder\Handlers\RegistrationLinkHandlerBase.cs" />
+    <Compile Include="Builder\Handlers\RelationHandler.cs" />
+    <Compile Include="Builder\Model\Command.cs" />
     <Compile Include="Builder\ResponseBuilder.cs" />
     <Compile Include="Contracts\IHateoasContainer.cs" />
     <Compile Include="Contracts\IHateoasRegistrationProfile.cs" />
     <Compile Include="Handling\ConfigurationProvider.cs" />
-    <Compile Include="Handling\Handlers\RegistrationLinkHandlerBase.cs" />
-    <Compile Include="Handling\Handlers\RelationNameHandler.cs" />
     <Compile Include="Handling\HateOasResponse.cs" />
     <Compile Include="Handling\IConfigurationProvider.cs" />
     <Compile Include="Handling\IHateoasCommand.cs" />
@@ -71,6 +75,8 @@
     <Compile Include="Handling\RegistrationLinkHandlerExtensions.cs" />
     <Compile Include="Handling\Handlers\HateoasHttpHandler.cs" />
     <Compile Include="Handling\ResponseHelper.cs" />
+    <Compile Include="Helpers\ExpressionHelper.cs" />
+    <Compile Include="Helpers\HttpControllerHelper.cs" />
     <Compile Include="Interfaces\ITemplateExpressionBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\DynamicObjectHelper.cs" />

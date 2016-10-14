@@ -1,8 +1,9 @@
-﻿using FluentHateoas.Interfaces;
+﻿using FluentHateoas.Handling;
+using FluentHateoas.Interfaces;
 
-namespace FluentHateoas.Handling.Handlers
+namespace FluentHateoas.Builder.Handlers
 {
-    public class RelationNameHandler : RegistrationLinkHandlerBase
+    public class RelationHandler : RegistrationLinkHandlerBase
     {
         public override LinkBuilder Process(IHateoasRegistration registration, LinkBuilder linkBuilder, object data)
         {
@@ -12,7 +13,7 @@ namespace FluentHateoas.Handling.Handlers
 
         public override bool CanProcess(IHateoasRegistration registration, LinkBuilder linkBuilder)
         {
-            return registration.Relation != null;
+            return !string.IsNullOrWhiteSpace(registration.Relation);
         }
     }
 }

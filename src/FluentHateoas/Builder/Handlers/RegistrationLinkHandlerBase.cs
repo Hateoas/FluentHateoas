@@ -1,7 +1,8 @@
 ﻿using System;
+using FluentHateoas.Handling;
 using FluentHateoas.Interfaces;
 
-namespace FluentHateoas.Handling.Handlers
+namespace FluentHateoas.Builder.Handlers
 {
     public abstract class RegistrationLinkHandlerBase : IRegistrationLinkHandler
     {

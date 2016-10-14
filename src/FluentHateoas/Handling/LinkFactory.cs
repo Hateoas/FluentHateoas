@@ -1,4 +1,5 @@
 using System.Linq;
+using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Handling.Handlers;
 using Enumerable = System.Linq.Enumerable;
 
@@ -17,7 +18,8 @@ namespace FluentHateoas.Handling
         {
             get
             {
-                yield return new RelationNameHandler();
+                yield return new RelationHandler();
+                yield return new CommandHandler();
                 //yield return new UseHandler();
                 //yield return new WhenNotNullHandler();
                 //yield return new FixedRouteHandler();
