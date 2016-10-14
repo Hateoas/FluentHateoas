@@ -28,7 +28,7 @@ namespace FluentHateoas.Handling
             }
         }
 
-        public System.Collections.Generic.IEnumerable<IHateoasLink> CreateLinks(System.Collections.Generic.List<Interfaces.IHateoasRegistration> registrations, object data)
+        public System.Collections.Generic.IEnumerable<IHateoasLink> CreateLinks<TModel>(System.Collections.Generic.List<Interfaces.IHateoasRegistration<TModel>> registrations, TModel data)
         {
             return registrations.Select(definition => _handlerChain
                     .Process(definition, new LinkBuilder(), data))

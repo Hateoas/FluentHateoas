@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Linq.Expressions;
 using FluentHateoas.Interfaces;
 
 namespace FluentHateoasTest.Assets.Model
 {
-    public class TestRegistration : IHateoasRegistration
+    public class TestRegistration<TModel> : IHateoasRegistration<TModel>
     {
-        public TestRegistration(Type model, string relation, bool isCollection)
+        public TestRegistration(string relation, bool isCollection)
         {
-            Model = model;
+            Model = typeof(TModel);
             Relation = relation;
             IsCollection = isCollection;
         }
@@ -15,6 +16,9 @@ namespace FluentHateoasTest.Assets.Model
         public Type Model { get; }
         public string Relation { get; }
         public bool IsCollection { get; }
+
+        IHateoasExpression<TModel> IHateoasRegistration<TModel>.Expression { get; set; }
+        public Expression<Func<TModel, object>> IdentityDefinition { get; }
         public IHateoasExpression Expression { get; set; }
     }
 }

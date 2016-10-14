@@ -8,7 +8,7 @@ namespace FluentHateoas.Builder.Handlers
     {
         private IRegistrationLinkHandler _successor;
 
-        public virtual LinkBuilder Process(IHateoasRegistration definition, LinkBuilder resourceBuilder, object data)
+        public virtual LinkBuilder Process<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder, TModel data)
         {
             return _successor != null && _successor.CanProcess(definition, resourceBuilder)
                 ? _successor.Process(definition, resourceBuilder, data)
@@ -22,6 +22,6 @@ namespace FluentHateoas.Builder.Handlers
             _successor = handler;
         }
 
-        public abstract bool CanProcess(IHateoasRegistration definition, LinkBuilder resourceBuilder);
+        public abstract bool CanProcess<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder);
     }
 }

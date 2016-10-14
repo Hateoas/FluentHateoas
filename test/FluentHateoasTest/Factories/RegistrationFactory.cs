@@ -5,9 +5,9 @@ namespace FluentHateoasTest.Factories
 {
     public static class RegistrationFactory
     {
-        public static TestRegistration Create(Type type, string relation, bool isCollection)
+        public static TestRegistration<TModel> Create<TModel>(string relation, bool isCollection)
         {
-            return new TestRegistration(type, relation, isCollection);
+            return new TestRegistration<TModel>(relation, isCollection);
         }
     }
 }

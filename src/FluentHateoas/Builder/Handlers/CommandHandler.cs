@@ -8,14 +8,14 @@ namespace FluentHateoas.Builder.Handlers
 {
     public class CommandHandler : RegistrationLinkHandlerBase
     {
-        public override LinkBuilder Process(IHateoasRegistration registration, LinkBuilder linkBuilder, object data)
+        public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder linkBuilder, TModel data)
         {
             linkBuilder.Command = registration.Expression.CreateCommand(registration.Relation + "-command");
 
             return base.Process(registration, linkBuilder, data);
         }
 
-        public override bool CanProcess(IHateoasRegistration registration, LinkBuilder linkBuilder)
+        public override bool CanProcess<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder linkBuilder)
         {
             return registration.Expression.Command != null;
         }

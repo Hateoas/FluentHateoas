@@ -40,10 +40,10 @@ namespace FluentHateoasTest.Assets
             _registrations.Add(registration);
         }
 
-        public IHateoasRegistration GetRegistration<TModel>(string relation)
+        public IHateoasRegistration<TModel> GetRegistration<TModel>(string relation)
         {
             var modelType = typeof (TModel);
-            return _registrations.SingleOrDefault(p => p.Model == modelType && p.Relation == relation);
+            return _registrations.SingleOrDefault(p => p.Model == modelType && p.Relation == relation) as IHateoasRegistration<TModel>;
         }
     }
 }

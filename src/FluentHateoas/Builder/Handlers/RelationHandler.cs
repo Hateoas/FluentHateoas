@@ -5,13 +5,13 @@ namespace FluentHateoas.Builder.Handlers
 {
     public class RelationHandler : RegistrationLinkHandlerBase
     {
-        public override LinkBuilder Process(IHateoasRegistration registration, LinkBuilder linkBuilder, object data)
+        public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder linkBuilder, TModel data)
         {
             linkBuilder.Relation = registration.Relation;
             return base.Process(registration, linkBuilder, data);
         }
 
-        public override bool CanProcess(IHateoasRegistration registration, LinkBuilder linkBuilder)
+        public override bool CanProcess<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder linkBuilder)
         {
             return !string.IsNullOrWhiteSpace(registration.Relation);
         }
