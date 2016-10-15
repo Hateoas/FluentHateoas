@@ -63,7 +63,7 @@ namespace FluentHateoasTest
 
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Get, expression.HttpMethod);
-            Assert.IsNull(expression.TargetAction);
+            Assert.IsNull(expression.Action);
             containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
@@ -86,7 +86,7 @@ namespace FluentHateoasTest
 
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Get, expression.HttpMethod);
-            Assert.AreEqual(getAllExpression, expression.TargetAction);
+            Assert.AreEqual(getAllExpression, expression.Action);
             containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
@@ -109,7 +109,7 @@ namespace FluentHateoasTest
 
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Get, expression.HttpMethod);
-            Assert.AreEqual(getAllExpression, expression.TargetAction);
+            Assert.AreEqual(getAllExpression, expression.Action);
             containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
@@ -132,7 +132,7 @@ namespace FluentHateoasTest
 
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Get, expression.HttpMethod);
-            Assert.AreEqual(getSingleExpression, expression.TargetAction);
+            Assert.AreEqual(getSingleExpression, expression.Action);
             containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
@@ -154,7 +154,7 @@ namespace FluentHateoasTest
 
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Post, expression.HttpMethod);
-            Assert.IsNull(expression.TargetAction);
+            Assert.IsNull(expression.Action);
             containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
@@ -176,7 +176,7 @@ namespace FluentHateoasTest
 
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Put, expression.HttpMethod);
-            Assert.IsNull(expression.TargetAction);
+            Assert.IsNull(expression.Action);
             containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
@@ -198,7 +198,7 @@ namespace FluentHateoasTest
 
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Delete, expression.HttpMethod);
-            Assert.IsNull(expression.TargetAction);
+            Assert.IsNull(expression.Action);
             containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 

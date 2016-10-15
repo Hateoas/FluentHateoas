@@ -10,7 +10,7 @@ namespace FluentHateoas.Registration
         {
             expression.Controller = typeof(TController);
             expression.HttpMethod = method;
-            expression.TargetAction = actionSelector;
+            expression.Action = actionSelector;
         }
     }
 }

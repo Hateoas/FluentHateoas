@@ -10,7 +10,7 @@ namespace FluentHateoas.Interfaces
         Type Controller { get; }
         string Relation { get; }
         bool IsCollection { get; }
-        LambdaExpression TargetAction { get; }
+        LambdaExpression Action { get; }
         HttpMethod HttpMethod { get; }
         bool Template { get; }
         bool Collection { get; }

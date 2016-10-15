@@ -14,7 +14,7 @@ namespace FluentHateoas.Registration
         public string Relation { get; internal set; }
         public bool IsCollection { get; internal set; }
 
-        public LambdaExpression TargetAction { get; internal set; }
+        public LambdaExpression Action { get; internal set; }
         public HttpMethod HttpMethod { get; internal set; }
         public bool Template { get; internal set; }
         public bool Collection { get; internal set; }

@@ -30,5 +30,23 @@ namespace FluentHateoasTest.Handling
             var registration = Container.GetRegistration<Person>("create");
             Handler.CanProcess(registration, LinkBuilder).Should().BeFalse();
         }
+
+        [TestMethod]
+        public void UseHandlerShouldRegisterActionWhenGiven()
+        {
+            Container
+                .Register<Person>("parents")
+                .Get<PersonController>(p => p.GetParents);
+
+            var registration = Container.GetRegistration<Person>("parents");
+
+            Handler.CanProcess(registration, LinkBuilder).Should().BeTrue();
+            Handler.Process(registration, LinkBuilder, Person);
+
+            LinkBuilder.Controller.Should().NotBeNull();
+            LinkBuilder.Controller.Should().Be(typeof(PersonController));
+            LinkBuilder.Action.Should().NotBeNull();
+            LinkBuilder.Action.Name.Should().Be("GetParents");
+        }
     }
 }

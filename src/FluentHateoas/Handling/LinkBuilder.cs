@@ -1,3 +1,6 @@
+using System.Linq.Expressions;
+using System.Reflection;
+
 namespace FluentHateoas.Handling
 {
     public class LinkBuilder
@@ -11,5 +14,6 @@ namespace FluentHateoas.Handling
         public bool IsFixed { get; set; }
         public string FixedRoute { get; set; }
         public IHateoasCommand Command { get; set; }
+        public MethodInfo Action { get; set; }
     }
 }
