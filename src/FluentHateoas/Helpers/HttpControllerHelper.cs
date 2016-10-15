@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
+using Microsoft.Build.Tasks.Deployment.Bootstrapper;
 
 namespace FluentHateoas.Helpers
 {
@@ -61,21 +62,35 @@ namespace FluentHateoas.Helpers
 
         }
 
-        public static MethodInfo GetAction(this Type source, HttpMethod method)
+        public static MethodInfo GetAction(this Type source, HttpMethod method, params object[] args)
         {
             var methods = source.GetMethods()
                 .Where(p => p.IsPublic && !p.IsStatic && !p.IsSpecialName && !p.IsVirtual && !p.IsGenericMethod && !p.IsSecuritySafeCritical)
-                .Select(methodInfo => new { methodInfo, httpMethod = methodInfo.GetHttpMethod() })
+                .Select(methodInfo => new
+                {
+                    methodInfo,
+                    httpMethod = methodInfo.GetHttpMethod(),
+                    parameters = methodInfo.GetParameters()
+                })
                 .Where(p => p.httpMethod == method)
                 .ToList();
 
             if (!methods.Any())
                 throw new Exception(string.Format("No suitable action found for {0}", method));
 
-            if (methods.Count() > 1)
+            if (methods.Count() == 1)
+                return methods.First().methodInfo;
+
+            var results = methods
+                .Where(m => string.Join(",", m.parameters.Select(p => p.ParameterType.FullName)) == string.Join(",", args.Select(a => (a ?? new object()).GetType().FullName))) // todo: new object => hack, should be clearer
+                .ToList();
+
+            if (results.Count() > 1)
                 throw new Exception(string.Format("There are multiple actions supporting {0}, try specifying explicit", method));
 
-            return methods.Single().methodInfo;
+            return results.Any() 
+                ? results.Single().methodInfo 
+                : methods.First().methodInfo;
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Net.Http;
 using System.Reflection;
 using FluentHateoas.Interfaces;
 
@@ -28,14 +29,6 @@ namespace FluentHateoas.Helpers
                 throw new Exception("Invalid ConstantExpression"); // todo: clearify this
 
             return (MethodInfo)constantExpression.Value;
-        }
-
-        public static MethodInfo GetTargetAction<TModel>(this IHateoasExpression<TModel> source)
-        {
-            if (source.Action != null)
-                return source.Action.GetTargetAction();
-
-            throw new NotImplementedException();
         }
     }
 }

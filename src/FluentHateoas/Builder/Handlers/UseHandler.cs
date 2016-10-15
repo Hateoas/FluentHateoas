@@ -1,4 +1,6 @@
-﻿using FluentHateoas.Handling;
+﻿using System;
+using System.Net.Http;
+using FluentHateoas.Handling;
 using FluentHateoas.Helpers;
 using FluentHateoas.Interfaces;
 
@@ -9,7 +11,16 @@ namespace FluentHateoas.Builder.Handlers
         public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder, TModel data)
         {
             resourceBuilder.Controller = registration.Expression.Controller;
-            resourceBuilder.Action = registration.Expression.GetTargetAction();
+
+            if (registration.Expression.Action != null)
+                resourceBuilder.Action = registration.Expression.Action.GetTargetAction();
+
+            else if (registration.Expression.Action == null && registration.Expression.IdentityDefinition == null)
+                resourceBuilder.Action = registration.Expression.Controller.GetAction(HttpMethod.Get, resourceBuilder.Argument);
+
+            else
+                throw new NotImplementedException();
+
 
             return base.Process(registration, resourceBuilder, data);
         }

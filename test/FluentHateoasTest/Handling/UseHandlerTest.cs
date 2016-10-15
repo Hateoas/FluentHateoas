@@ -48,5 +48,24 @@ namespace FluentHateoasTest.Handling
             LinkBuilder.Action.Should().NotBeNull();
             LinkBuilder.Action.Name.Should().Be("GetParents");
         }
+
+        [TestMethod]
+        public void UseHandlerShouldChooseMethodBasedOnAvailableArguments()
+        {
+            Container
+                .Register<Person>("list")
+                .Get<PersonController>();
+
+            var registration = Container.GetRegistration<Person>("list");
+
+            Handler.CanProcess(registration, LinkBuilder).Should().BeTrue();
+            Handler.Process(registration, LinkBuilder, Person);
+
+            LinkBuilder.Controller.Should().NotBeNull();
+            LinkBuilder.Controller.Should().Be(typeof(PersonController));
+            LinkBuilder.Action.Should().NotBeNull();
+            LinkBuilder.Action.Name.Should().Be("Get");
+            LinkBuilder.Argument.Should().BeNull();
+        }
     }
 }
