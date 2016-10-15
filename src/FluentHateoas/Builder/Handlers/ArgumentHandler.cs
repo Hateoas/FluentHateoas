@@ -8,12 +8,13 @@ namespace FluentHateoas.Builder.Handlers
     {
         public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder, TModel data)
         {
+            resourceBuilder.Argument = definition.ArgumentDefinition.Compile()(data); // todo: Compile during registration?
             return base.Process(definition, resourceBuilder, data);
         }
 
         public override bool CanProcess<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder)
         {
-            return definition.IdentityDefinition != null;
+            return definition.ArgumentDefinition != null;
         }
     }
 }

@@ -23,7 +23,7 @@ namespace FluentHateoasTest
 
             // assert
             Assert.AreEqual(Relation, registration.Relation);
-            Assert.IsNull(registration.IdentityDefinition);
+            Assert.IsNull(registration.ArgumentDefinition);
             Assert.IsFalse(registration.IsCollection);
         }
 
@@ -38,7 +38,7 @@ namespace FluentHateoasTest
 
             // assert
             Assert.AreEqual(Relation, registration.Relation);
-            Assert.IsNull(registration.IdentityDefinition);
+            Assert.IsNull(registration.ArgumentDefinition);
             Assert.IsFalse(registration.IsCollection);
         }
 
@@ -54,7 +54,7 @@ namespace FluentHateoasTest
 
             // assert
             Assert.AreEqual(Relation, registration.Relation);
-            Assert.AreEqual(identityDefinition, registration.IdentityDefinition);
+            Assert.AreEqual(identityDefinition, registration.ArgumentDefinition);
             Assert.IsFalse(registration.IsCollection);
         }
 
@@ -70,7 +70,7 @@ namespace FluentHateoasTest
 
             // assert
             Assert.AreEqual(Relation, registration.Relation);
-            Assert.AreEqual(identityDefinition, registration.IdentityDefinition);
+            Assert.AreEqual(identityDefinition, registration.ArgumentDefinition);
             Assert.IsTrue(registration.IsCollection);
         }
 

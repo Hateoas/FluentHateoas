@@ -18,7 +18,7 @@ namespace FluentHateoasTest.Assets.Model
         public bool IsCollection { get; }
 
         IHateoasExpression<TModel> IHateoasRegistration<TModel>.Expression { get; set; }
-        public Expression<Func<TModel, object>> IdentityDefinition { get; }
+        public Expression<Func<TModel, object>> ArgumentDefinition { get; }
         public IHateoasExpression Expression { get; set; }
     }
 }
