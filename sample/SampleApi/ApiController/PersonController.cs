@@ -12,7 +12,11 @@
     {
         public IEnumerable<Person> Get()
         {
-            return new List<Person>();
+            return new List<Person>
+            {
+                new Person {Id = Guid.Parse("0CFA46CC-116D-45F0-B57B-4C5586130072")},
+                new Person {Id = Guid.Parse("F6D0CF9E-5153-4218-8A22-8E71C5AC5A4A")}
+            };
         }
 
         [Route("all")]
@@ -27,16 +31,10 @@
             return new List<Person>();
         }
 
-        public Person Get(Guid id)
+        public Person GetById(Guid id)
         {
             return new Person { Id = id };
         }
-
-        public Person GetPerson(Guid id)
-        {
-            return null;
-        }
-
 
         [Route("{id}/father")]
         public Person GetFather(Guid id)

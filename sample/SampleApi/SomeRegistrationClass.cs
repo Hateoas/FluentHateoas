@@ -83,7 +83,7 @@
             // =======================================================================================================================
             container
                 .Register<Person>("self", p => p.Id)
-                .Get<PersonController>(p => p.GetPerson);
+                .Get<PersonController>(p => p.GetById);
 
             //  {
             //      "rel": "self"
