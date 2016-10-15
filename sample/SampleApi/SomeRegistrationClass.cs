@@ -155,7 +155,7 @@
             // =======================================================================================================================
             container
                 .Register<Person>("self", p => p.Id)
-                .Post<PersonController>(p => p.AddPerson);
+                .Delete<PersonController>(p => p.Delete);
 
             //  {
             //      "rel": "create"
