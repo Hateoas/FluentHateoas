@@ -22,7 +22,7 @@ namespace FluentHateoas.Handling
         public System.Collections.Generic.IEnumerable<IHateoasLink> GetLinksFor(System.Type modelType, object data)
         {
             var registrations = HttpConfigurationExtensions.GetRegistrationsFor(_httpConfiguration, modelType);
-            throw new System.NotImplementedException();
+            return _linkFactory.CreateLinks(registrations, data);
         }
     }
 }

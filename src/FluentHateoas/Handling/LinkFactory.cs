@@ -27,7 +27,10 @@ namespace FluentHateoas.Handling
 
         public System.Collections.Generic.IEnumerable<IHateoasLink> CreateLinks(System.Collections.Generic.List<Interfaces.IHateoasRegistration> registrations, object data)
         {
-            return Enumerable.Select(Enumerable.Where(Enumerable.Select(registrations, definition => _handlerChain.Process(definition, new LinkBuilder(), data)), linkBuilder => linkBuilder.Success), linkBuilder => LinkBuilderExtensions.Build(linkBuilder));
+            return Enumerable.Select(
+                Enumerable.Where(
+                    Enumerable.Select(registrations, definition => 
+                    _handlerChain.Process(definition, new LinkBuilder(), data)), linkBuilder => linkBuilder.Success), linkBuilder => LinkBuilderExtensions.Build(linkBuilder));
         }
     }
 }
