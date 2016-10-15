@@ -93,6 +93,7 @@
     <Compile Include="Handling\CommandHandlerTest.cs" />
     <Compile Include="Handling\RelationNameHandlerTest.cs" />
     <Compile Include="Assets\Model\TestRegistration.cs" />
+    <Compile Include="Handling\UseHandlerTest.cs" />
     <Compile Include="HateoasContainerTest.cs" />
     <Compile Include="Helpers\DynamicObjectHelperTest.cs" />
     <Compile Include="HateoasContainerExtensionsTest.cs" />
