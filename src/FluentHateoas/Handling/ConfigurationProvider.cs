@@ -16,12 +16,6 @@ namespace FluentHateoas.Handling
         public System.Collections.Generic.IEnumerable<IHateoasLink> GetLinksFor<TModel>(TModel data)
         {
             var registrations = HttpConfigurationExtensions.GetRegistrationsFor<TModel>(_httpConfiguration);
-            return _linkFactory.CreateLinks<TModel>(registrations, data);
-        }
-
-        public System.Collections.Generic.IEnumerable<IHateoasLink> GetLinksFor(System.Type modelType, object data)
-        {
-            var registrations = HttpConfigurationExtensions.GetRegistrationsFor(_httpConfiguration, modelType);
             return _linkFactory.CreateLinks(registrations, data);
         }
     }
