@@ -78,9 +78,9 @@ namespace FluentHateoas.Registration
         /// <param name="configuration">HTTP configuration</param>
         /// <param name="model">The model to get HATEOAS registrations for</param>
         /// <returns>HATEOAS registrations for the model specified</returns>
-        public static List<IHateoasRegistration> GetRegistrationsFor<TModel>(this HttpConfiguration configuration)
+        public static List<IHateoasRegistration<TModel>> GetRegistrationsFor<TModel>(this HttpConfiguration configuration)
         {
-            return configuration.GetRegistrationsFor(typeof(TModel));
+            return configuration.GetRegistrationsFor(typeof(TModel)).Cast<IHateoasRegistration<TModel>>().ToList();
         }
 
         /// <summary>

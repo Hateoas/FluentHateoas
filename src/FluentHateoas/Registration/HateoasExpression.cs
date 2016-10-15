@@ -36,7 +36,7 @@ namespace FluentHateoas.Registration
             var expression = new HateoasExpression<TModel>
             {
                 Relation = registration.Relation,
-                IdentityDefinition = registration.IdentityDefinition,
+                IdentityDefinition = registration.ArgumentDefinition,
                 IsCollection = registration.IsCollection
             };
 

@@ -77,11 +77,23 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Assets\Controllers\PersonController.cs" />
+    <Compile Include="Assets\Model\Person.cs" />
+    <Compile Include="Assets\TestContainer.cs" />
+    <Compile Include="Factories\RegistrationFactory.cs" />
+    <Compile Include="Handling\ArgumentHandlerTest.cs" />
+    <Compile Include="Handling\BaseHandlerTest.cs" />
+    <Compile Include="Handling\CommandHandlerTest.cs" />
+    <Compile Include="Handling\RelationNameHandlerTest.cs" />
+    <Compile Include="Assets\Model\TestRegistration.cs" />
+    <Compile Include="Handling\UseHandlerTest.cs" />
     <Compile Include="HateoasContainerTest.cs" />
     <Compile Include="Helpers\DynamicObjectHelperTest.cs" />
     <Compile Include="HateoasContainerExtensionsTest.cs" />
@@ -101,6 +113,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
