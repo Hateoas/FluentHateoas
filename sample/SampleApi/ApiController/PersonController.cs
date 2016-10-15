@@ -15,7 +15,7 @@
             
         }
 
-        public void AddPerson()
+        public void AddPerson(Person person)
         {
             
         }
