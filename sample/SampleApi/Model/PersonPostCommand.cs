@@ -11,5 +11,7 @@ namespace SampleApi.Model
 
         [MinValue(0), MaxValue(10)]
         public int Cars { get; set; }
+
+        public int NrOfHouses { get; set; }
     }
 }

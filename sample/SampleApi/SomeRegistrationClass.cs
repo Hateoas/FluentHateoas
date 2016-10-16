@@ -1,4 +1,6 @@
-﻿namespace SampleApi
+﻿using FluentHateoas;
+
+namespace SampleApi
 {
     using System.Diagnostics.CodeAnalysis;
 
@@ -19,7 +21,8 @@
                 {
                     HrefStyle = HrefStyle.Relative,
                     LinkStyle = LinkStyle.Array,
-                    TemplateStyle = TemplateStyle.Rendered
+                    TemplateStyle = TemplateStyle.Rendered,
+                    AuthorizationProvider = new WebApiAuthorizationProvider()
                 });
 
             ////
