@@ -8,11 +8,15 @@ namespace FluentHateoas
 {
     public static class Hateoas
     {
-        public static void Startup<TRegistrationClass>(HttpConfiguration config) 
+        public static void Startup<TRegistrationClass>(HttpConfiguration config, IAuthorizationProvider authorizationProvider = null)
             where TRegistrationClass : IHateoasRegistrationProfile, new()
         {
             // todo: this is not very clean; user dependencyresolver etc
-            var linkFactory = new LinkFactory();
+            if (authorizationProvider == null)
+            {
+                authorizationProvider = new WebApiAuthorizationProvider();
+            }
+            var linkFactory = new LinkFactory(authorizationProvider);
             var configurationProvider = new ConfigurationProvider(config, linkFactory);
             var responseProvider = new ResponseProvider(configurationProvider);
             var handler = new HateoasHttpHandler(responseProvider);

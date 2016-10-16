@@ -21,8 +21,7 @@ namespace SampleApi
                 {
                     HrefStyle = HrefStyle.Relative,
                     LinkStyle = LinkStyle.Array,
-                    TemplateStyle = TemplateStyle.Rendered,
-                    AuthorizationProvider = new WebApiAuthorizationProvider()
+                    TemplateStyle = TemplateStyle.Rendered
                 });
 
             ////

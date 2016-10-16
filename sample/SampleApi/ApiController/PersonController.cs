@@ -19,6 +19,7 @@
             };
         }
 
+        [Authorize]
         [Route("all")]
         public IEnumerable<Person> GetAll()
         {

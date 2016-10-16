@@ -1,16 +1,19 @@
 using System.Linq;
 using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Handling.Handlers;
+using FluentHateoas.Registration;
 using Enumerable = System.Linq.Enumerable;
 
 namespace FluentHateoas.Handling
 {
     public class LinkFactory : ILinkFactory
     {
+        private readonly IAuthorizationProvider _authorizationProvider;
         private readonly IRegistrationLinkHandler _handlerChain;
 
-        public LinkFactory(params IRegistrationLinkHandler[] handlers)
+        public LinkFactory(IAuthorizationProvider authorizationProvider, params IRegistrationLinkHandler[] handlers)
         {
+            _authorizationProvider = authorizationProvider;
             _handlerChain = (handlers.Length > 0 ? handlers : DefaultHandlers).CreateChain();
         }
 
@@ -24,6 +27,7 @@ namespace FluentHateoas.Handling
                 yield return new ArgumentHandler();
                 yield return new TemplateHandler();
                 yield return new UseHandler();
+                yield return new SuccessHandler(_authorizationProvider);
                 //yield return new WhenNotNullHandler();
                 //yield return new FixedRouteHandler();
                 //yield return new WithHandler();
@@ -41,8 +45,6 @@ namespace FluentHateoas.Handling
                     if (h.CanProcess(p, linkBuilder))
                         h.Process(p, linkBuilder, data);
                 });
-
-                linkBuilder.Success = linkBuilder.Controller != null && linkBuilder.Action != null;
 
                 return linkBuilder;
             })

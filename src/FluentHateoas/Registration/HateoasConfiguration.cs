@@ -5,6 +5,5 @@
         public HrefStyle HrefStyle { get; set; } = HrefStyle.Relative;
         public LinkStyle LinkStyle { get; set; } = LinkStyle.Array;
         public TemplateStyle TemplateStyle { get; set; } = TemplateStyle.Rendered;
-        public IAuthorizationProvider AuthorizationProvider { get; set; }
     }
 }
