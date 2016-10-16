@@ -6,10 +6,10 @@ namespace SampleApi.ApiController
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    [RoutePrefix("address")]
+    [System.Web.Http.RoutePrefix("address")]
     public class AddressController : System.Web.Http.ApiController
     {
-        [Route("{id}/{houseId}")]
+        [System.Web.Http.Route("{id}/{houseId}")]
         public object Get(Guid id, Guid houseId)
         {
             return new object();

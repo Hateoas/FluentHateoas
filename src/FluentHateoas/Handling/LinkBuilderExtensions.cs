@@ -55,8 +55,8 @@ namespace FluentHateoas.Handling
         {
             var apiPrefix = "/api/"; // todo: Should come from default of given route
 
-            var controllerAttribute = methodInfo.DeclaringType.GetCustomAttribute<RoutePrefixAttribute>();
-            var actionAttribute = methodInfo.GetCustomAttribute<RouteAttribute>();
+            var controllerAttribute = methodInfo.DeclaringType.GetCustomAttribute<System.Web.Http.RoutePrefixAttribute>();
+            var actionAttribute = methodInfo.GetCustomAttribute<System.Web.Http.RouteAttribute>();
 
             var hasPrefix = (controllerAttribute != null && !string.IsNullOrWhiteSpace(controllerAttribute.Prefix));
             var hasTemplate = (actionAttribute != null && !string.IsNullOrWhiteSpace(actionAttribute.Template));
