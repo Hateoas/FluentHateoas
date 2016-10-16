@@ -123,6 +123,7 @@
     <Folder Include="Data\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="FluentHateoas.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

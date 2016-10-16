@@ -1,0 +1,17 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>FluentHateoas</id>
+    <version>1.0.0</version>
+    <authors>Inkredible, Interest IT</authors>
+    <owners>Inkredible, Interest IT</owners>
+    <projectUrl>http://www.fluenthateoas.com</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Fluent library for registration and generation of HATEOAS-responses</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Interest IT, Inkredible 2016</copyright>
+    <tags>HATEOAS</tags>
+    <dependencies>
+    </dependencies>
+  </metadata>
+</package>
