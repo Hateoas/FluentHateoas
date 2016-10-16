@@ -11,10 +11,10 @@ namespace FluentHateoas.Helpers
             return source.Select(p => new
             {
                 Href = p.LinkPath,
-                p.Template,
+                Template = p.Template?.Replace("{", ":").Replace("}", ""),
                 Rel = p.Relation,
                 p.Method,
-                Command = p.Command == null ? null : p.Command.Name,
+                Command = p.Command?.Name,
             });
         }
     }
