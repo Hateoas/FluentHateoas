@@ -71,7 +71,7 @@ namespace FluentHateoasTest.Handling
             LinkBuilder.Controller.Should().Be(typeof(PersonController));
             LinkBuilder.Action.Should().NotBeNull();
             LinkBuilder.Action.Name.Should().Be("Get");
-            LinkBuilder.Arguments.Should().BeNull();
+            LinkBuilder.Arguments.Count.Should().Be(0);
         }
     }
 }
