@@ -30,7 +30,7 @@
             //  get all persons link
             // =====================================================================================================================
             container
-                .Register<Person>("self-1")
+                .Register<Person>("self-1", p => p.Id)
                 .Get<PersonController>();
 
             //  {

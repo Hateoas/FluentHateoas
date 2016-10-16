@@ -58,7 +58,7 @@ namespace FluentHateoas.Handling
                 return string.Format("{0}/{1}", prefix, actionAttribute.Template);
 
             var parameters = GetParameterString(methodInfo);
-            return string.Format("{0}{1}", prefix, string.IsNullOrWhiteSpace(parameters) ? string.Empty : "/" + parameters);
+            return string.Format("{0}{1}", prefix, string.IsNullOrWhiteSpace(parameters) ? string.Empty : parameters);
         }
 
         private static string GetParameterString(MethodInfo methodInfo)

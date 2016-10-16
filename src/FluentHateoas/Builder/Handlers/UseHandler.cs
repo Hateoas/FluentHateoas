@@ -15,7 +15,7 @@ namespace FluentHateoas.Builder.Handlers
             if (registration.Expression.Action != null)
                 resourceBuilder.Action = registration.Expression.Action.GetTargetAction();
 
-            else if (registration.Expression.Action == null && registration.Expression.IdentityDefinition == null)
+            else if (registration.Expression.Action == null)
                 resourceBuilder.Action = resourceBuilder.Argument == null 
                     ? registration.Expression.Controller.GetAction(HttpMethod.Get) 
                     : registration.Expression.Controller.GetAction(HttpMethod.Get, resourceBuilder.Argument);
