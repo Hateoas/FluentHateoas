@@ -14,6 +14,7 @@ namespace SampleApi
     {
         protected void Application_Start()
         {
+            // Set dependency resolver
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }

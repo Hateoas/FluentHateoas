@@ -123,11 +123,11 @@ namespace SampleApi
             // =======================================================================================================================
             //  Conditional dynamic parameter
             // =======================================================================================================================
-            //container
-            //    .Register<Person>("next")
-            //    .Get<PersonController>()
-            //    .When<IPersonProvider>((provider, person) => provider.HasNextId(person))
-            //    .With<IPersonProvider>((provider, person) => provider.GetNextId(person));
+            container
+                .Register<Person>("next")
+                .Get<PersonController>()
+                .When<IPersonProvider>((provider, person) => provider.HasNextId(person))
+                .With<IPersonProvider>((provider, person) => provider.GetNextId(person));
 
             //  {
             //      "rel": "next"
