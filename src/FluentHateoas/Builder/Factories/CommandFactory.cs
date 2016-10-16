@@ -14,7 +14,7 @@ namespace FluentHateoas.Builder.Factories
             return new Command
             {
                 Name = name,
-                Type = expression.Command,
+                Type = expression.Command.Name,
                 Properties = expression.Command.AsCommandProperties().ToList()
             };
         }

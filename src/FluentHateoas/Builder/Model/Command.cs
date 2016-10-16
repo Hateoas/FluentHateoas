@@ -8,7 +8,7 @@ namespace FluentHateoas.Builder.Model
     public class Command : IHateoasCommand
     {
         public string Name { get; set; }
-        public Type Type { get; set; }
+        public string Type { get; set; }
         public ICollection<Property> Properties { get; set; }
     }
 

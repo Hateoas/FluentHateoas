@@ -18,4 +18,16 @@ namespace FluentHateoas.Builder.Handlers
             return definition.ArgumentDefinition != null;
         }
     }
+    public class SuccessHandler : RegistrationLinkHandlerBase
+    {
+        public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder, TModel data)
+        {
+            return base.Process(definition, resourceBuilder, data);
+        }
+
+        public override bool CanProcess<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder)
+        {
+            return true;
+        }
+    }
 }

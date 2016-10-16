@@ -84,6 +84,7 @@
     <Compile Include="Helpers\ExpressionHelper.cs" />
     <Compile Include="Helpers\HaackFormater.cs" />
     <Compile Include="Helpers\HttpControllerHelper.cs" />
+    <Compile Include="Helpers\LinkHelper.cs" />
     <Compile Include="Interfaces\ITemplateExpressionBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\DynamicObjectHelper.cs" />

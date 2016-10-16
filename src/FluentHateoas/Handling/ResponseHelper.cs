@@ -1,4 +1,6 @@
+using System.Linq;
 using System.Net.Http;
+using FluentHateoas.Helpers;
 
 namespace FluentHateoas.Handling
 {
@@ -14,8 +16,8 @@ namespace FluentHateoas.Handling
             return new HateOasResponse
             {
                 Data = model,
-                Links = links,
-                Commands = commands
+                Links = links.ToLinkList(),
+                Commands = links.Where(p => p.Command != null).Select(p => p.Command)
             };
         }
 

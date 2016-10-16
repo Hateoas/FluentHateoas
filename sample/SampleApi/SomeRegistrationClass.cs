@@ -167,10 +167,10 @@
             // =======================================================================================================================
             //  Posting a command
             // =======================================================================================================================
-            //container
-            //    .Register<Person>("create-2")
-            //    .Post<PersonController>()
-            //    .WithCommand<PersonPostCommand>();
+            container
+                .Register<Person>("create-with-command")
+                .Post<PersonController>()
+                .WithCommand<PersonPostCommand>();
 
             //  {
             //      "rel": "create"

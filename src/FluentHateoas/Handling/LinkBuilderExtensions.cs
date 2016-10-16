@@ -13,16 +13,21 @@ namespace FluentHateoas.Handling
         {
             var result = new HateoasLink
             {
-                Rel = source.Relation
+                Relation = source.Relation
             };
 
             if (source.IsTemplate)
                 result.Template = source.GetPathAsTemplate();
             else
-                result.Href = source.GetPath();
+                result.LinkPath = source.GetPath();
 
             if (source.Method != HttpMethod.Get)
                 result.Method = source.Method.ToString();
+
+            if (source.Command != null)
+            {
+                result.Command = source.Command;
+            }
 
             return result;
         }
