@@ -30,7 +30,7 @@
             //  get all persons link
             // =====================================================================================================================
             container
-                .Register<Person>("self-1", p => p.Id)
+                .Register<Person>("default-list")
                 .Get<PersonController>();
 
             //  {
@@ -43,7 +43,7 @@
             //  get all persons link with custom function registration
             // =======================================================================================================================
             container
-                .Register<Person>("self-2")
+                .Register<Person>("get-all")
                 .Get<PersonController>(p => p.GetAll);
 
             //  {
@@ -68,9 +68,9 @@
             // =======================================================================================================================
             //  get single person link
             // =======================================================================================================================
-            //container
-            //    .Register<Person>("self-4", p => p.Id)
-            //    .Get<PersonController>();
+            container
+                .Register<Person>("get-by-id", p => p.Id)
+                .Get<PersonController>();
 
             //  {
             //      "rel": "self"
@@ -81,9 +81,9 @@
             // =======================================================================================================================
             //  get single person link with custom function registration
             // =======================================================================================================================
-            //container
-            //    .Register<Person>("self-5", p => p.Id)
-            //    .Get<PersonController>(p => p.GetById);
+            container
+                .Register<Person>("get-by-id-with-action", p => p.Id)
+                .Get<PersonController>(p => p.GetById);
 
             //  {
             //      "rel": "self"
@@ -92,10 +92,10 @@
 
 
             // get single person link as template (e.g. '/persons/:id')
-            //container
-            //    .Register<Person>("self-6", p => p.Id)
-            //    .Get<PersonController>()
-            //    .AsTemplate();
+            container
+                .Register<Person>("get-by-id-template", p => p.Id)
+                .Get<PersonController>()
+                .AsTemplate();
 
             //  {
             //      "rel": "self"
