@@ -13,7 +13,7 @@
 
     public interface IHateoasRegistration<TModel> : IHateoasRegistration
     {
-        Expression<Func<TModel, object>> ArgumentDefinition { get; }
+        Expression<Func<TModel, object>>[] ArgumentDefinitions { get; }
         new IHateoasExpression<TModel> Expression { get; set; }
     }
 }

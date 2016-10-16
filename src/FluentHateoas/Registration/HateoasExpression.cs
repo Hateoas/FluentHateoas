@@ -36,13 +36,13 @@ namespace FluentHateoas.Registration
             var expression = new HateoasExpression<TModel>
             {
                 Relation = registration.Relation,
-                IdentityDefinition = registration.ArgumentDefinition,
+                ArgumentDefinitions = registration.ArgumentDefinitions,
                 IsCollection = registration.IsCollection
             };
 
             return expression;
         }
 
-        public Expression<Func<TModel, object>> IdentityDefinition { get; private set; }
+        public Expression<Func<TModel, object>>[] ArgumentDefinitions { get; private set; }
     }
 }

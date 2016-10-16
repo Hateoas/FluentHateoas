@@ -23,6 +23,6 @@ namespace FluentHateoas.Interfaces
 
     public interface IHateoasExpression<TModel> : IHateoasExpression
     {
-        Expression<Func<TModel, object>> IdentityDefinition { get; }
+        Expression<Func<TModel, object>>[] ArgumentDefinitions { get; }
     }
 }

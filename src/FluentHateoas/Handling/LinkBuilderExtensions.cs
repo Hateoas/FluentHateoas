@@ -42,7 +42,7 @@ namespace FluentHateoas.Handling
             return RouteFromMethod(source.Action)
                 .HaackFormat(new //todo: make this a dynamic or something
                 {
-                    Id = source.Argument
+                    Id = source.Arguments
                 })
                 .HaackFormat(source.Data);
         }

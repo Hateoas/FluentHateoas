@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Dependencies;
 using FluentHateoas.Handling;
@@ -22,11 +23,11 @@ namespace FluentHateoas.Builder.Handlers
 
                 var providerType = registration.Expression.WithExpression.Parameters[0].Type;
                 var provider = _dependencyResolver.GetService(providerType);
-                resourceBuilder.Argument = compiledExpression.DynamicInvoke(provider, data);
+                resourceBuilder.Arguments = new [] { compiledExpression.DynamicInvoke(provider, data) };
             }
             else
             {
-                resourceBuilder.Argument = registration.ArgumentDefinition.Compile().DynamicInvoke(data);
+                resourceBuilder.Arguments = registration.ArgumentDefinitions.Select(p => p.Compile().DynamicInvoke(data)).ToArray();
             }
 
             return base.Process(registration, resourceBuilder, data);
@@ -34,7 +35,7 @@ namespace FluentHateoas.Builder.Handlers
 
         public override bool CanProcess<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder)
         {
-            return registration.ArgumentDefinition != null || registration.Expression.WithExpression != null;
+            return registration.ArgumentDefinitions.Any() || registration.Expression.WithExpression != null;
         }
     }
 }

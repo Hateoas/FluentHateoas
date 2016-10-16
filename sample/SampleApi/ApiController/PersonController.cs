@@ -1,4 +1,6 @@
-﻿namespace SampleApi.ApiController
+﻿using System.Web.Mvc;
+
+namespace SampleApi.ApiController
 {
     using System;
     using System.Collections.Generic;

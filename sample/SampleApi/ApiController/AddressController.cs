@@ -5,6 +5,5 @@
     [ExcludeFromCodeCoverage]
     public class AddressController : System.Web.Http.ApiController
     {
-         
     }
 }

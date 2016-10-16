@@ -23,7 +23,7 @@ namespace FluentHateoasTest
 
             // assert
             Assert.AreEqual(Relation, registration.Relation);
-            Assert.IsNull(registration.ArgumentDefinition);
+            Assert.IsNull(registration.ArgumentDefinitions);
             Assert.IsFalse(registration.IsCollection);
         }
 
@@ -38,7 +38,7 @@ namespace FluentHateoasTest
 
             // assert
             Assert.AreEqual(Relation, registration.Relation);
-            Assert.IsNull(registration.ArgumentDefinition);
+            Assert.IsNull(registration.ArgumentDefinitions);
             Assert.IsFalse(registration.IsCollection);
         }
 
@@ -50,11 +50,11 @@ namespace FluentHateoasTest
             Expression<Func<TestModel, object>> identityDefinition = m => m.Id;
 
             // act
-            var registration = new HateoasRegistration<TestModel>(Relation, identityDefinition, null);
+            var registration = new HateoasRegistration<TestModel>(Relation, new [] { identityDefinition }, null);
 
             // assert
             Assert.AreEqual(Relation, registration.Relation);
-            Assert.AreEqual(identityDefinition, registration.ArgumentDefinition);
+            Assert.AreEqual(identityDefinition, registration.ArgumentDefinitions[0]);
             Assert.IsFalse(registration.IsCollection);
         }
 
@@ -66,11 +66,11 @@ namespace FluentHateoasTest
             Expression<Func<TestModel, object>> identityDefinition = m => m.Id;
 
             // act
-            var registration = new HateoasRegistration<TestModel>(Relation, identityDefinition, null, true);
+            var registration = new HateoasRegistration<TestModel>(Relation, new [] { identityDefinition }, null, true);
 
             // assert
             Assert.AreEqual(Relation, registration.Relation);
-            Assert.AreEqual(identityDefinition, registration.ArgumentDefinition);
+            Assert.AreEqual(identityDefinition, registration.ArgumentDefinitions[0]);
             Assert.IsTrue(registration.IsCollection);
         }
 
