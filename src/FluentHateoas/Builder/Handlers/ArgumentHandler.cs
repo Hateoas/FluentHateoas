@@ -26,8 +26,7 @@ namespace FluentHateoas.Builder.Handlers
             }
             else
             {
-                var compiledExpression = registration.ArgumentDefinition.Compile();
-                resourceBuilder.Argument = compiledExpression.DynamicInvoke(data);
+                resourceBuilder.Argument = registration.ArgumentDefinition.Compile().DynamicInvoke(data);
             }
 
             return base.Process(registration, resourceBuilder, data);
@@ -35,7 +34,7 @@ namespace FluentHateoas.Builder.Handlers
 
         public override bool CanProcess<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder)
         {
-            return true;
+            return registration.ArgumentDefinition != null || registration.Expression.WithExpression != null;
         }
     }
 }

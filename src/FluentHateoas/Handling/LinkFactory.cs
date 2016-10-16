@@ -26,8 +26,8 @@ namespace FluentHateoas.Handling
             {
                 yield return new RelationHandler();
                 yield return new MethodHandler();
-                yield return new ArgumentHandler(_dependencyResolver);
                 yield return new CommandHandler();
+                yield return new ArgumentHandler(_dependencyResolver);
                 yield return new TemplateHandler();
                 yield return new UseHandler();
                 yield return new SuccessHandler(_authorizationProvider);
