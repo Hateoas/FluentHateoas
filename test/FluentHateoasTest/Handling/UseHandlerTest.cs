@@ -10,6 +10,12 @@ namespace FluentHateoasTest.Handling
     [TestClass]
     public class UseHandlerTest : BaseHandlerTest<UseHandler>
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Handler = new UseHandler();
+        }
+
         [TestMethod]
         public void UseHandlerShouldProcessWhenValid()
         {

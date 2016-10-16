@@ -14,6 +14,12 @@ namespace FluentHateoasTest.Handling
     [TestClass]
     public class CommandHandlerTest : BaseHandlerTest<CommandHandler>
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Handler = new CommandHandler();
+        }
+
         [TestMethod]
         public void HandlerShouldProcessWithCommand()
         {

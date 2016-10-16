@@ -10,6 +10,12 @@ namespace FluentHateoasTest.Handling
     [TestClass]
     public class TemplateHandlerTest : BaseHandlerTest<TemplateHandler>
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Handler = new TemplateHandler();
+        }
+
         [TestMethod]
         public void TemplateHandlerShouldAlwaysProcess()
         {
