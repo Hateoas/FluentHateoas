@@ -1,4 +1,8 @@
+using System;
+using System.Linq;
 using System.Net.Http;
+using System.Reflection;
+using System.Web.Http;
 
 namespace FluentHateoas.Handling
 {
@@ -12,14 +16,58 @@ namespace FluentHateoas.Handling
             };
 
             if (source.IsTemplate)
-                result.Template = "generated template!";
+                result.Template = source.GetPathAsTemplate();
             else
-                result.Href = "generated href!";
+                result.Href = source.GetPath();
 
             if (source.Method != HttpMethod.Get)
                 result.Method = source.Method.ToString();
 
             return result;
+        }
+
+        public static string GetPathAsTemplate(this LinkBuilder source)
+        {
+            return RouteFromMethod(source.Action);
+        }
+
+        public static string GetPath(this LinkBuilder source)
+        {
+            var route = RouteFromMethod(source.Action);
+            return route;
+        }
+
+        private static string RouteFromMethod(MethodInfo methodInfo)
+        {
+            var apiPrefix = "/api/"; // todo: Should come from default of given route
+
+            var controllerAttribute = methodInfo.DeclaringType.GetCustomAttribute<RoutePrefixAttribute>();
+            var actionAttribute = methodInfo.GetCustomAttribute<RouteAttribute>();
+
+            var hasPrefix = (controllerAttribute != null && !string.IsNullOrWhiteSpace(controllerAttribute.Prefix));
+            var hasTemplate = (actionAttribute != null && string.IsNullOrWhiteSpace(actionAttribute.Template));
+
+            var controllerType = methodInfo.DeclaringType;
+            var controllerTypeName = controllerType == null ? string.Empty : controllerType.Name;
+
+            var prefix = !hasPrefix
+                ? apiPrefix + controllerTypeName.Substring(0, controllerTypeName.IndexOf("Controller", StringComparison.Ordinal)).ToLower()
+                : apiPrefix + controllerAttribute.Prefix;
+
+            if (hasTemplate)
+                return string.Format("{0}/{1}", prefix, actionAttribute.Template);
+
+            var parameters = GetParameterString(methodInfo);
+            return string.Format("{0}{1}", prefix, string.IsNullOrWhiteSpace(parameters) ? string.Empty : "/" + parameters);
+        }
+
+        private static string GetParameterString(MethodInfo methodInfo)
+        {
+            var parameters = methodInfo.GetParameters();
+            var parameterString = parameters.Any(p => p.Name == "id")
+                ? "/{id}"
+                : "";
+            return parameterString;
         }
     }
 }
