@@ -1,4 +1,5 @@
-﻿using System.Web.Http.Dependencies;
+﻿using System.Collections.Generic;
+using System.Web.Http.Dependencies;
 using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Registration;
@@ -40,7 +41,7 @@ namespace FluentHateoasTest.Handling
             var registration = Container.GetRegistration<Person>("create");
 
             Handler.Process(registration, LinkBuilder, Person);
-            LinkBuilder.Arguments[0].Should().Be(Person.Id);
+            ((IDictionary<string, object>)LinkBuilder.Arguments)["id"].Should().Be(Person.Id);
         }
 
         [TestMethod]

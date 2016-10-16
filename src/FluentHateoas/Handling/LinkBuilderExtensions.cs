@@ -40,10 +40,7 @@ namespace FluentHateoas.Handling
         public static string GetPath(this LinkBuilder source)
         {
             return RouteFromMethod(source.Action)
-                .HaackFormat(new //todo: make this a dynamic or something
-                {
-                    Id = source.Arguments
-                })
+                .HaackFormat((object)source.Arguments)
                 .HaackFormat(source.Data);
         }
 

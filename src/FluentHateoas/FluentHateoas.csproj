@@ -83,6 +83,7 @@
     <Compile Include="Handling\Handlers\HateoasHttpHandler.cs" />
     <Compile Include="Handling\ResponseHelper.cs" />
     <Compile Include="Hateoas.cs" />
+    <Compile Include="Helpers\ExpandoHelper.cs" />
     <Compile Include="Helpers\ExpressionHelper.cs" />
     <Compile Include="Helpers\HaackFormater.cs" />
     <Compile Include="Helpers\HttpControllerHelper.cs" />

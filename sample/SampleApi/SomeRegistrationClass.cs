@@ -53,6 +53,18 @@ namespace SampleApi
             //      "href": "/api/person/"
             //  }
 
+            // =======================================================================================================================
+            //  get all persons link with custom function registration
+            // =======================================================================================================================
+            container
+                .Register<Person>("multiple-id", p => p.Id, p => p.HouseId)
+                .Get<AddressController>();
+
+            //  {
+            //      "rel": "self"
+            //      "href": "/api/address/92B27E6E-0F34-4732-B50C-A33114EF9053/E1F831BB-7677-4817-AB1F-F400D2CB9F99"
+            //  }
+
 
             // =======================================================================================================================
             //  get all persons link with custom function implementation registration (TODO: invent provider to make this one useful)

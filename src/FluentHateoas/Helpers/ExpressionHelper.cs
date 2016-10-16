@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq.Expressions;
 using System.Net.Http;
 using System.Reflection;
@@ -9,6 +10,19 @@ namespace FluentHateoas.Helpers
 {
     public static class ExpressionHelper
     {
+        public static ExpandoObject ToExpando<TModel>(this Expression<Func<TModel, object>>[] source, TModel data)
+        {
+            var expando = new ExpandoObject();
+            var expandoDic = (IDictionary<string, object>)expando;
+
+            foreach (var expression in source)
+            {
+                expandoDic.Add(((MemberExpression)((UnaryExpression)expression.Body).Operand).Member.Name, expression.Compile().DynamicInvoke(data));
+            }
+
+            return expando;
+        }
+
         public static MemberInfo GetMemberInfo<TModel>(this Expression<TModel> expression)
         {
             var expressionBody = expression.Body as MemberExpression;

@@ -1,7 +1,10 @@
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Dependencies;
 using FluentHateoas.Handling;
+using FluentHateoas.Helpers;
 using FluentHateoas.Interfaces;
 
 namespace FluentHateoas.Builder.Handlers
@@ -23,11 +26,15 @@ namespace FluentHateoas.Builder.Handlers
 
                 var providerType = registration.Expression.WithExpression.Parameters[0].Type;
                 var provider = _dependencyResolver.GetService(providerType);
-                resourceBuilder.Arguments = new [] { compiledExpression.DynamicInvoke(provider, data) };
+                var expando = new ExpandoObject();
+                var expandoDict = (IDictionary<string, object>) expando;
+                var result = compiledExpression.DynamicInvoke(provider, data);
+                expandoDict.Add("id", result);
+                resourceBuilder.Arguments = expando;
             }
             else
             {
-                resourceBuilder.Arguments = registration.ArgumentDefinitions.Select(p => p.Compile().DynamicInvoke(data)).ToArray();
+                resourceBuilder.Arguments = registration.ArgumentDefinitions.ToExpando(data);
             }
 
             return base.Process(registration, resourceBuilder, data);
