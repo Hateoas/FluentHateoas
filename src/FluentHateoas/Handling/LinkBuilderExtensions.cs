@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
+using System.Web.Mvc;
 using FluentHateoas.Helpers;
 
 namespace FluentHateoas.Handling

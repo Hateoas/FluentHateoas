@@ -34,7 +34,12 @@ namespace FluentHateoas.Builder.Handlers
                 foreach (var expression in registration.ArgumentDefinitions)
                 {
                     var id = ((MemberExpression)((UnaryExpression)expression.Body).Operand).Member.Name;
-                    resourceBuilder.Arguments.Add(id.Substring(0, 1).ToLowerInvariant() + id.Substring(1), expression.Compile().DynamicInvoke(data));
+                    var result = expression.Compile().DynamicInvoke(data);
+
+                    if (id != "Id" && !resourceBuilder.Arguments.ContainsKey("id"))
+                        resourceBuilder.Arguments.Add("id", result); // always add id at first
+
+                    resourceBuilder.Arguments.Add(id.Substring(0, 1).ToLowerInvariant() + id.Substring(1), result);
                 }
             }
 
