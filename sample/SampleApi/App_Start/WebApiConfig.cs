@@ -12,6 +12,7 @@ using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using SampleApi.App_Start;
 using SampleApi.Providers;
 
 namespace SampleApi
@@ -23,7 +24,7 @@ namespace SampleApi
     {
         public static void Register(HttpConfiguration config)
         {
-            var container = new UnityContainer();
+            var container = UnityConfig.GetConfiguredContainer();
 
             FilterProviders.Providers.Remove(FilterProviders.Providers.OfType<FilterAttributeFilterProvider>().First());
             FilterProviders.Providers.Add(new Microsoft.Practices.Unity.Mvc.UnityFilterAttributeFilterProvider(container));
@@ -32,7 +33,7 @@ namespace SampleApi
             GlobalConfiguration.Configuration.DependencyResolver = new Microsoft.Practices.Unity.WebApi.UnityDependencyResolver(container);
 
             // Web API configuration and services
-            Hateoas.Startup<SomeRegistrationClass>(config);
+            Hateoas.Startup<SomeRegistrationClass>(config, dependencyResolver: GlobalConfiguration.Configuration.DependencyResolver);
 
             // Web API routes
             config.MapHttpAttributeRoutes();

@@ -20,9 +20,9 @@ namespace FluentHateoas.Builder.Handlers
             {
                 var compiledExpression = registration.Expression.WithExpression.Compile();
 
-                var providerType = registration.Expression.WithExpression.Parameters[1].Type;
+                var providerType = registration.Expression.WithExpression.Parameters[0].Type;
                 var provider = _dependencyResolver.GetService(providerType);
-                resourceBuilder.Argument = compiledExpression.DynamicInvoke(data, provider);
+                resourceBuilder.Argument = compiledExpression.DynamicInvoke(provider, data);
             }
             else
             {
