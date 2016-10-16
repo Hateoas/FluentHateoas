@@ -57,8 +57,12 @@ namespace FluentHateoas.Helpers
             if (classAttribute != null && methodAttribute == null)
                 return string.Format("{0}{1}", classAttribute.Prefix, parameterString);
 
+            if (method.DeclaringType == null)
+                throw new NullReferenceException("DeclaringType can't be null");
+
             var typeName = method.DeclaringType.Name;
-            return string.Format("{0}", typeName.Substring(0, typeName.IndexOf("Controller")).ToLower());
+
+            return string.Format("{0}", typeName.Substring(0, typeName.IndexOf("Controller", StringComparison.Ordinal)).ToLower());
 
         }
 
@@ -86,7 +90,18 @@ namespace FluentHateoas.Helpers
                 .ToList();
 
             if (results.Count() > 1)
-                throw new Exception(string.Format("There are multiple actions supporting {0}, try specifying explicit", method));
+            {
+                // multiple actions supporting this method try finding one without route template (=default action)
+                var withoutRoute = results
+                    .Where(p => p.methodInfo.GetCustomAttribute<RouteAttribute>() == null)
+                    .ToList();
+
+                if (withoutRoute.Count() > 1)
+                    throw new Exception(string.Format("There are multiple actions supporting {0}, try specifying explicit", method));
+
+                if (withoutRoute.Count() == 1)
+                    return withoutRoute.Single().methodInfo;
+            }
 
             return results.Any() 
                 ? results.Single().methodInfo 

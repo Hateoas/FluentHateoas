@@ -45,7 +45,7 @@ namespace FluentHateoas.Handling
             var actionAttribute = methodInfo.GetCustomAttribute<RouteAttribute>();
 
             var hasPrefix = (controllerAttribute != null && !string.IsNullOrWhiteSpace(controllerAttribute.Prefix));
-            var hasTemplate = (actionAttribute != null && string.IsNullOrWhiteSpace(actionAttribute.Template));
+            var hasTemplate = (actionAttribute != null && !string.IsNullOrWhiteSpace(actionAttribute.Template));
 
             var controllerType = methodInfo.DeclaringType;
             var controllerTypeName = controllerType == null ? string.Empty : controllerType.Name;
