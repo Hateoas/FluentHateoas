@@ -1,15 +1,24 @@
-﻿using FluentAssertions;
+﻿using System.Web.Http.Dependencies;
+using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Registration;
 using FluentHateoasTest.Assets.Controllers;
 using FluentHateoasTest.Assets.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace FluentHateoasTest.Handling
 {
     [TestClass]
     public class ArgumentHandlerTest : BaseHandlerTest<ArgumentHandler>
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            var dependencyResolverMock = new Mock<IDependencyResolver>();
+            Handler = new ArgumentHandler(dependencyResolverMock.Object);
+        }
+
         [TestMethod]
         public void HandlerShouldProcessWhenValid()
         {

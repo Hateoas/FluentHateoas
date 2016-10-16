@@ -57,7 +57,6 @@
     <Compile Include="Attributes\MaxValueAttribute.cs" />
     <Compile Include="Attributes\MinValueAttribute.cs" />
     <Compile Include="Builder\Factories\CommandFactory.cs" />
-    <Compile Include="Builder\Handlers\ArgumentHandler.cs" />
     <Compile Include="Builder\Handlers\CommandHandler.cs" />
     <Compile Include="Builder\Handlers\MethodHandler.cs" />
     <Compile Include="Builder\Handlers\RegistrationLinkHandlerBase.cs" />
@@ -65,6 +64,7 @@
     <Compile Include="Builder\Handlers\SuccessHandler.cs" />
     <Compile Include="Builder\Handlers\TemplateHandler.cs" />
     <Compile Include="Builder\Handlers\UseHandler.cs" />
+    <Compile Include="Builder\Handlers\ArgumentHandler.cs" />
     <Compile Include="Builder\Model\Command.cs" />
     <Compile Include="Contracts\IHateoasContainer.cs" />
     <Compile Include="Contracts\IHateoasRegistrationProfile.cs" />

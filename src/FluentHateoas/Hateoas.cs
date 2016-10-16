@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using System.Web.Http.Dependencies;
 using FluentHateoas.Contracts;
 using FluentHateoas.Handling;
 using FluentHateoas.Handling.Handlers;
@@ -8,7 +9,7 @@ namespace FluentHateoas
 {
     public static class Hateoas
     {
-        public static void Startup<TRegistrationClass>(HttpConfiguration config, IAuthorizationProvider authorizationProvider = null)
+        public static void Startup<TRegistrationClass>(HttpConfiguration config, IAuthorizationProvider authorizationProvider = null, IDependencyResolver dependencyResolver = null)
             where TRegistrationClass : IHateoasRegistrationProfile, new()
         {
             // todo: this is not very clean; user dependencyresolver etc
@@ -16,7 +17,7 @@ namespace FluentHateoas
             {
                 authorizationProvider = new WebApiAuthorizationProvider();
             }
-            var linkFactory = new LinkFactory(authorizationProvider);
+            var linkFactory = new LinkFactory(authorizationProvider: authorizationProvider, dependencyResolver:dependencyResolver);
             var configurationProvider = new ConfigurationProvider(config, linkFactory);
             var responseProvider = new ResponseProvider(configurationProvider);
             var handler = new HateoasHttpHandler(responseProvider);

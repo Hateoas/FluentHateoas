@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FluentHateoasTest.Handling
 {
-    public abstract class BaseHandlerTest<THandler> where THandler: new()
+    public abstract class BaseHandlerTest<THandler>
     {
         private HateoasConfiguration _configuration;
 
@@ -18,7 +18,7 @@ namespace FluentHateoasTest.Handling
         protected Person Person;
 
         [TestInitialize]
-        public void Initialize()
+        public void BaseInitialize()
         {
             Person = new Person
             {
@@ -30,8 +30,6 @@ namespace FluentHateoasTest.Handling
 
             _configuration = new HateoasConfiguration();
             Container = new TestContainer(_configuration);
-
-            Handler = new THandler();
             LinkBuilder = new LinkBuilder(Person);
         }
 

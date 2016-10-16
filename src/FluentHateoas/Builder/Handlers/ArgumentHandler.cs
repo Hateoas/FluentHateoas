@@ -1,4 +1,5 @@
-﻿using FluentHateoas.Builder.Factories;
+using System.Web.Http;
+using System.Web.Http.Dependencies;
 using FluentHateoas.Handling;
 using FluentHateoas.Interfaces;
 
@@ -6,16 +7,35 @@ namespace FluentHateoas.Builder.Handlers
 {
     public class ArgumentHandler : RegistrationLinkHandlerBase
     {
-        public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder, TModel data)
+        private readonly IDependencyResolver _dependencyResolver;
+
+        public ArgumentHandler(IDependencyResolver dependencyResolver)
         {
-            // todo: data is in linkBuilder?
-            resourceBuilder.Argument = definition.ArgumentDefinition.Compile()(data); // todo: Compile during registration?
-            return base.Process(definition, resourceBuilder, data);
+            _dependencyResolver = dependencyResolver;
         }
 
-        public override bool CanProcess<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder)
+        public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder, TModel data)
         {
-            return definition.ArgumentDefinition != null;
+            if (registration.Expression.WithExpression != null)
+            {
+                var compiledExpression = registration.Expression.WithExpression.Compile();
+
+                var providerType = registration.Expression.WithExpression.Parameters[1].Type;
+                var provider = _dependencyResolver.GetService(providerType);
+                resourceBuilder.Argument = compiledExpression.DynamicInvoke(data, provider);
+            }
+            else
+            {
+                var compiledExpression = registration.ArgumentDefinition.Compile();
+                resourceBuilder.Argument = compiledExpression.DynamicInvoke(data);
+            }
+
+            return base.Process(registration, resourceBuilder, data);
+        }
+
+        public override bool CanProcess<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder)
+        {
+            return true;
         }
     }
 }

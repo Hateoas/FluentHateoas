@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Web.Http.Dependencies;
 using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Handling.Handlers;
 using FluentHateoas.Registration;
@@ -9,11 +10,13 @@ namespace FluentHateoas.Handling
     public class LinkFactory : ILinkFactory
     {
         private readonly IAuthorizationProvider _authorizationProvider;
+        private readonly IDependencyResolver _dependencyResolver;
         private readonly IRegistrationLinkHandler _handlerChain;
 
-        public LinkFactory(IAuthorizationProvider authorizationProvider, params IRegistrationLinkHandler[] handlers)
+        public LinkFactory(IAuthorizationProvider authorizationProvider, IDependencyResolver dependencyResolver, params IRegistrationLinkHandler[] handlers)
         {
             _authorizationProvider = authorizationProvider;
+            _dependencyResolver = dependencyResolver;
             _handlerChain = (handlers.Length > 0 ? handlers : DefaultHandlers).CreateChain();
         }
 
@@ -23,8 +26,8 @@ namespace FluentHateoas.Handling
             {
                 yield return new RelationHandler();
                 yield return new MethodHandler();
+                yield return new ArgumentHandler(_dependencyResolver);
                 yield return new CommandHandler();
-                yield return new ArgumentHandler();
                 yield return new TemplateHandler();
                 yield return new UseHandler();
                 yield return new SuccessHandler(_authorizationProvider);
