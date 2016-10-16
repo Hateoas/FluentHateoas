@@ -30,7 +30,7 @@
             //  get all persons link
             // =====================================================================================================================
             container
-                .Register<Person>("self")
+                .Register<Person>("self-1")
                 .Get<PersonController>();
 
             //  {
@@ -43,7 +43,7 @@
             //  get all persons link with custom function registration
             // =======================================================================================================================
             container
-                .Register<Person>("self")
+                .Register<Person>("self-2")
                 .Get<PersonController>(p => p.GetAll);
 
             //  {
@@ -55,9 +55,9 @@
             // =======================================================================================================================
             //  get all persons link with custom function implementation registration (TODO: invent provider to make this one useful)
             // =======================================================================================================================
-            container
-                .Register<Person>("self")
-                .Get<PersonController>(p => p.GetAllWithParams(string.Empty));
+            //container
+            //    .Register<Person>("self-3")
+            //    .Get<PersonController>(p => p.GetAllWithParams(string.Empty));
 
             //  {
             //      "rel": "self"
@@ -68,9 +68,9 @@
             // =======================================================================================================================
             //  get single person link
             // =======================================================================================================================
-            container
-                .Register<Person>("self", p => p.Id)
-                .Get<PersonController>();
+            //container
+            //    .Register<Person>("self-4", p => p.Id)
+            //    .Get<PersonController>();
 
             //  {
             //      "rel": "self"
@@ -81,9 +81,9 @@
             // =======================================================================================================================
             //  get single person link with custom function registration
             // =======================================================================================================================
-            container
-                .Register<Person>("self", p => p.Id)
-                .Get<PersonController>(p => p.GetById);
+            //container
+            //    .Register<Person>("self-5", p => p.Id)
+            //    .Get<PersonController>(p => p.GetById);
 
             //  {
             //      "rel": "self"
@@ -92,10 +92,10 @@
 
 
             // get single person link as template (e.g. '/persons/:id')
-            container
-                .Register<Person>("self", p => p.Id)
-                .Get<PersonController>()
-                .AsTemplate();
+            //container
+            //    .Register<Person>("self-6", p => p.Id)
+            //    .Get<PersonController>()
+            //    .AsTemplate();
 
             //  {
             //      "rel": "self"
@@ -106,11 +106,11 @@
             // =======================================================================================================================
             //  Specify the GET-message expects a collection
             // =======================================================================================================================
-            container
-                .Register<Person>("item")
-                .Get<PersonController>()
-                .AsCollection()
-                .AsTemplate(p => p.Id, p => p.Slug);
+            //container
+            //    .Register<Person>("item")
+            //    .Get<PersonController>()
+            //    .AsCollection()
+            //    .AsTemplate(p => p.Id, p => p.Slug);
 
             //  {
             //      "rel": "item"
@@ -121,11 +121,11 @@
             // =======================================================================================================================
             //  Conditional dynamic parameter
             // =======================================================================================================================
-            container
-                .Register<Person>("next")
-                .Get<PersonController>()
-                .When<IPersonProvider>((provider, person) => provider.HasNextId(person))
-                .With<IPersonProvider>((provider, person) => provider.GetNextId(person));
+            //container
+            //    .Register<Person>("next")
+            //    .Get<PersonController>()
+            //    .When<IPersonProvider>((provider, person) => provider.HasNextId(person))
+            //    .With<IPersonProvider>((provider, person) => provider.GetNextId(person));
 
             //  {
             //      "rel": "next"
@@ -153,9 +153,9 @@
             // =======================================================================================================================
             //  Example posted void
             // =======================================================================================================================
-            container
-                .Register<Person>("self", p => p.Id)
-                .Delete<PersonController>(p => p.Delete);
+            //container
+            //    .Register<Person>("self-7", p => p.Id)
+            //    .Delete<PersonController>(p => p.Delete);
 
             //  {
             //      "rel": "create"
@@ -167,10 +167,10 @@
             // =======================================================================================================================
             //  Posting a command
             // =======================================================================================================================
-            container
-                .Register<Person>("create")
-                .Post<PersonController>()
-                .WithCommand<PersonPostCommand>();
+            //container
+            //    .Register<Person>("create-2")
+            //    .Post<PersonController>()
+            //    .WithCommand<PersonPostCommand>();
 
             //  {
             //      "rel": "create"
@@ -229,10 +229,10 @@
             // =======================================================================================================================
             //  Post a dynamic template
             // =======================================================================================================================
-            container
-                .Register<Person>("add-address", p => p.Id)
-                .Post<AddressController>()
-                .WithCommand<ITemplateFactory>(p => p.Create());
+            //container
+            //    .Register<Person>("add-address", p => p.Id)
+            //    .Post<AddressController>()
+            //    .WithCommand<ITemplateFactory>(p => p.Create());
 
             ////
             //// PUT REGISTRATIONS
@@ -241,28 +241,28 @@
 
             // =======================================================================================================================
             // =======================================================================================================================
-            container
-                .Register<Person>("self", p => p.Id)
-                .Put<PersonController>();
+            //container
+            //    .Register<Person>("self-9", p => p.Id)
+            //    .Put<PersonController>();
 
 
             // =======================================================================================================================
             // =======================================================================================================================
-            container
-                .Register<Person>("self", p => p.Id)
-                .Put<PersonController>()
-                .WithCommand<PersonPostCommand>();
+            //container
+            //    .Register<Person>("self-10", p => p.Id)
+            //    .Put<PersonController>()
+            //    .WithCommand<PersonPostCommand>();
 
             ////
             //// DELETE REGISTRATIONS
             ////
 
-            
+
             // =======================================================================================================================
             // =======================================================================================================================
-            container
-                .Register<Person>("self", p => p.Id)
-                .Delete<PersonController>();
+            //container
+            //    .Register<Person>("self-11", p => p.Id)
+            //    .Delete<PersonController>();
 
             // store container
 

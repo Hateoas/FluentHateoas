@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using FluentHateoas;
 using FluentHateoas.Handling;
 using FluentHateoas.Handling.Handlers;
+using FluentHateoas.Registration;
 
 namespace SampleApi
 {
@@ -15,11 +17,7 @@ namespace SampleApi
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-            var linkFactory = new LinkFactory();
-            var configurationProvider = new ConfigurationProvider(config, linkFactory);
-            var responseProvider = new ResponseProvider(configurationProvider);
-            var handler = new HateoasHttpHandler(responseProvider);
-            config.MessageHandlers.Add(handler); // todo: dependency resolver
+            Hateoas.Startup<SomeRegistrationClass>(config);
 
             // Web API routes
             config.MapHttpAttributeRoutes();

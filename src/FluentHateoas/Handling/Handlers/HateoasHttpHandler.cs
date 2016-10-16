@@ -12,7 +12,6 @@
         protected override async System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> SendAsync(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
         {
             var response = await base.SendAsync(request, cancellationToken);
-
             var result = _responseProvider.Create(request, response); // TODO Async?!
 
             return result;

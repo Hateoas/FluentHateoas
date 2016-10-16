@@ -13,7 +13,7 @@ namespace FluentHateoas
             }
 
             content = response.GetContent();
-            return content == null;
+            return content != null;
         }
 
         public static ObjectContent GetContent(this HttpResponseMessage response)

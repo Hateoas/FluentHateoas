@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 
 namespace FluentHateoas.Handling
@@ -20,8 +21,14 @@ namespace FluentHateoas.Handling
                 return response;
             }
 
-            var links = _configurationProvider.GetLinksFor(content.Value);//content.ObjectType, 
-            var commands = new System.Collections.Generic.List<IHateoasCommand>(); // TODO
+            // Yes walk on, nothing to see here
+            var links = _configurationProvider
+                .GetType()
+                .GetMethod(nameof(_configurationProvider.GetLinksFor))
+                .MakeGenericMethod(content.Value.GetType())
+                .Invoke(_configurationProvider, new [] { content.Value }) as IEnumerable<IHateoasLink>;
+
+            var commands = new System.Collections.Generic.List<IHateoasCommand>();
             return ResponseHelper.Ok(request, ((ObjectContent)(response.Content)).Value, links, commands);
         }
     }

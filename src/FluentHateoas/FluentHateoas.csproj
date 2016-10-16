@@ -65,10 +65,10 @@
     <Compile Include="Contracts\IHateoasContainer.cs" />
     <Compile Include="Contracts\IHateoasRegistrationProfile.cs" />
     <Compile Include="Handling\ConfigurationProvider.cs" />
+    <Compile Include="Handling\HateoasLink.cs" />
     <Compile Include="Handling\HateOasResponse.cs" />
     <Compile Include="Handling\IConfigurationProvider.cs" />
     <Compile Include="Handling\IHateoasCommand.cs" />
-    <Compile Include="Handling\IHateoasLink.cs" />
     <Compile Include="Handling\ILinkFactory.cs" />
     <Compile Include="Handling\IRegistrationLinkHandler.cs" />
     <Compile Include="Handling\IResponseProvider.cs" />
@@ -78,6 +78,7 @@
     <Compile Include="Handling\RegistrationLinkHandlerExtensions.cs" />
     <Compile Include="Handling\Handlers\HateoasHttpHandler.cs" />
     <Compile Include="Handling\ResponseHelper.cs" />
+    <Compile Include="Hateoas.cs" />
     <Compile Include="Helpers\ExpressionHelper.cs" />
     <Compile Include="Helpers\HttpControllerHelper.cs" />
     <Compile Include="Interfaces\ITemplateExpressionBuilder.cs" />

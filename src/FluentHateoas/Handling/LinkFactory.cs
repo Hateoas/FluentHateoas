@@ -19,21 +19,39 @@ namespace FluentHateoas.Handling
             get
             {
                 yield return new RelationHandler();
+                yield return new MethodHandler();
                 yield return new CommandHandler();
-                //yield return new UseHandler();
+                yield return new ArgumentHandler();
+                yield return new TemplateHandler();
+                yield return new UseHandler();
                 //yield return new WhenNotNullHandler();
                 //yield return new FixedRouteHandler();
                 //yield return new WithHandler();
-                //yield return new TemplateHandler();
             }
         }
 
         public System.Collections.Generic.IEnumerable<IHateoasLink> CreateLinks<TModel>(System.Collections.Generic.List<Interfaces.IHateoasRegistration<TModel>> registrations, TModel data)
         {
-            return registrations.Select(definition => _handlerChain
-                    .Process(definition, new LinkBuilder(), data))
-                    .Where(linkBuilder => linkBuilder.Success)
-                    .Select(linkBuilder => linkBuilder.Build());
+            var handlers = DefaultHandlers.ToList();
+            return registrations.Select(p =>
+            {
+                var linkBuilder = new LinkBuilder();
+                handlers.ForEach(h =>
+                {
+                    if (h.CanProcess(p, linkBuilder))
+                        h.Process(p, linkBuilder, data);
+                });
+
+                linkBuilder.Success = linkBuilder.Controller != null && linkBuilder.Action != null;
+
+                return linkBuilder;
+            })
+            .Where(linkBuilder => linkBuilder.Success)
+            .Select(linkBuilder => linkBuilder.Build());
+            //return registrations.Select(definition => _handlerChain
+            //        .Process(definition, new LinkBuilder(), data))
+            //        .Where(linkBuilder => linkBuilder.Success)
+            //        .Select(linkBuilder => linkBuilder.Build());
         }
     }
 }

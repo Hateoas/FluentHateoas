@@ -21,14 +21,28 @@ namespace FluentHateoas.Helpers
 
         public static MethodInfo GetTargetAction(this LambdaExpression expression)
         {
-            var unaryExpression = (UnaryExpression)expression.Body;
-            var methodCallExpression = (MethodCallExpression)unaryExpression.Operand;
-            var constantExpression = (ConstantExpression)methodCallExpression.Object;
+            var unaryExpression = expression.Body as UnaryExpression;
+            if (unaryExpression != null)
+            {
+                var methodCallExpression = (MethodCallExpression) unaryExpression.Operand;
+                var constantExpression = (ConstantExpression) methodCallExpression.Object;
 
-            if (constantExpression == null)
-                throw new Exception("Invalid ConstantExpression"); // todo: clearify this
+                if (constantExpression == null)
+                    throw new Exception("Invalid ConstantExpression"); // todo: clearify this
 
-            return (MethodInfo)constantExpression.Value;
+                return (MethodInfo) constantExpression.Value;
+            }
+            else
+            {
+                //var methodCallExpression = (MethodCallExpression)expression.Body;
+                //var constantExpression = (ConstantExpression)methodCallExpression.Object;
+
+                //if (constantExpression == null)
+                //    throw new Exception("Invalid ConstantExpression"); // todo: clearify this
+
+                //return (MethodInfo)constantExpression.Value;
+                throw new NotImplementedException();
+            }
         }
     }
 }
