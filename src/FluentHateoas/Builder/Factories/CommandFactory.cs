@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using FluentHateoas.Attributes;
 using FluentHateoas.Builder.Model;
 using FluentHateoas.Interfaces;
 
@@ -29,7 +30,39 @@ namespace FluentHateoas.Builder.Factories
 
         private static Property CreateProperty(PropertyInfo propertyInfo, int index)
         {
-            return new Property
+            switch (propertyInfo.PropertyType.Name)
+            {
+                case "Int32":
+                case "Int64":
+                    return CreateIntProperty(propertyInfo, index);
+
+                default:
+                    return CreateProperty<Property>(propertyInfo, index);
+            }
+        }
+
+        private static Property CreateIntProperty(PropertyInfo propertyInfo, int index)
+        {
+            var result = CreateProperty<IntegerProperty>(propertyInfo, index);
+
+            var minValue = propertyInfo.GetCustomAttribute<MinValueAttribute>();
+            var maxValue = propertyInfo.GetCustomAttribute<MaxValueAttribute>();
+
+            if (minValue != null)
+            {
+                result.Min = minValue.MinimumValue;
+            }
+
+            if (maxValue != null)
+            {
+                result.Max = maxValue.MaximumValue;
+            }
+            return result;
+        }
+
+        private static TProperty CreateProperty<TProperty>(PropertyInfo propertyInfo, int index) where TProperty : Property, new()
+        {
+            return new TProperty
             {
                 Type = propertyInfo.PropertyType.Name,
                 Name = propertyInfo.Name,

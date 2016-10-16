@@ -19,4 +19,11 @@ namespace FluentHateoas.Builder.Model
         public bool? Required { get; set; }
         public int? Order { get; set; }
     }
+
+    public class IntegerProperty : Property
+    {
+        public int Min { get; set; }
+        public int Max { get; set; }
+        public int? Default { get; set; }
+    }
 }

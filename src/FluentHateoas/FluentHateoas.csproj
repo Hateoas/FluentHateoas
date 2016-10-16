@@ -54,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\MaxValueAttribute.cs" />
+    <Compile Include="Attributes\MinValueAttribute.cs" />
     <Compile Include="Builder\Factories\CommandFactory.cs" />
     <Compile Include="Builder\Handlers\ArgumentHandler.cs" />
     <Compile Include="Builder\Handlers\CommandHandler.cs" />
