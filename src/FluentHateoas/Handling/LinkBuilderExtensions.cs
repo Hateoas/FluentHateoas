@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -40,8 +41,13 @@ namespace FluentHateoas.Handling
         public static string GetPath(this LinkBuilder source)
         {
             return RouteFromMethod(source.Action)
-                .HaackFormat((object)source.Arguments)
+                .FormatArguments(source.Arguments)
                 .HaackFormat(source.Data);
+        }
+
+        public static string FormatArguments(this string source, IDictionary<string, object> dict)
+        {
+            return dict.Keys.Aggregate(source, (current, key) => current.Replace($"{{{key}}}", dict[key].ToString()));
         }
 
         private static string RouteFromMethod(MethodInfo methodInfo)

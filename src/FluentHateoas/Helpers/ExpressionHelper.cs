@@ -17,7 +17,9 @@ namespace FluentHateoas.Helpers
 
             foreach (var expression in source)
             {
-                expandoDic.Add(((MemberExpression)((UnaryExpression)expression.Body).Operand).Member.Name, expression.Compile().DynamicInvoke(data));
+                var id = ((MemberExpression) ((UnaryExpression) expression.Body).Operand).Member.Name;
+
+                expandoDic.Add(id.Substring(0, 1).ToLowerInvariant() + id.Substring(1), expression.Compile().DynamicInvoke(data));
             }
 
             return expando;
