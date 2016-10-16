@@ -27,7 +27,7 @@ namespace FluentHateoasTest.Handling
             _handler = new RelationHandler();
 
             _object = new Person { };
-            _linkBuilder = new LinkBuilder();
+            _linkBuilder = new LinkBuilder(_object);
         }
 
         [TestMethod]

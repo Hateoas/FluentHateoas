@@ -5,6 +5,12 @@ namespace FluentHateoas.Handling
 {
     public class LinkBuilder
     {
+        public LinkBuilder(object data)
+        {
+            Data = data;
+        }
+
+        public object Data { get; private set; }
         public string Relation { get; set; }
         public object Argument { get; set; }
         public System.Type Controller { get; set; }

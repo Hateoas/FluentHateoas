@@ -32,7 +32,7 @@ namespace FluentHateoasTest.Handling
             Container = new TestContainer(_configuration);
 
             Handler = new THandler();
-            LinkBuilder = new LinkBuilder();
+            LinkBuilder = new LinkBuilder(Person);
         }
 
     }

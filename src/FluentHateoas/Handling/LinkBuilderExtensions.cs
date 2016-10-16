@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
+using FluentHateoas.Helpers;
 
 namespace FluentHateoas.Handling
 {
@@ -33,8 +34,7 @@ namespace FluentHateoas.Handling
 
         public static string GetPath(this LinkBuilder source)
         {
-            var route = RouteFromMethod(source.Action);
-            return route;
+            return RouteFromMethod(source.Action).HaackFormat(source.Data);
         }
 
         private static string RouteFromMethod(MethodInfo methodInfo)

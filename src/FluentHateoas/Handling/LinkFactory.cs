@@ -35,7 +35,7 @@ namespace FluentHateoas.Handling
             var handlers = DefaultHandlers.ToList();
             return registrations.Select(p =>
             {
-                var linkBuilder = new LinkBuilder();
+                var linkBuilder = new LinkBuilder(data);
                 handlers.ForEach(h =>
                 {
                     if (h.CanProcess(p, linkBuilder))
