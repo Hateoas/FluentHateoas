@@ -3,7 +3,7 @@ using FluentHateoas.Interfaces;
 
 namespace FluentHateoas.Builder.Handlers
 {
-    public class MethodHandler : RegistrationLinkHandlerBase
+    public class HttpMethodHandler : RegistrationLinkHandlerBase
     {
         public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder, TModel data)
         {

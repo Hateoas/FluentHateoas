@@ -11,6 +11,6 @@
         // TODO Do not return HateoasExpressionBuilder<TModel>
         IWhenExpressionBuilder<TModel> When<TProvider>(Expression<Func<TProvider, TModel, bool>> when);
         ITemplateExpressionBuilder<TModel> AsCollection();
-        IWithExpressionBuilder<TModel> With<TProvider>(Expression<Func<TProvider, TModel, object>> with);
+        IIdFromExpressionBuilder<TModel> IdFrom<TProvider>(Expression<Func<TProvider, TModel, object>> with);
     }
 }

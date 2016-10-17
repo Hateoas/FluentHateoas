@@ -7,9 +7,10 @@
 
     public interface IExpressionBuilder<TModel> : IExpressionBuilderBase<TModel>
     {
-        IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Func<IEnumerable<TModel>>>> methodSelector) where TController : IHttpController;
-        IGetExpressionBuilder<TModel> Get<TController, T1>(Expression<Func<TController, Func<T1, object>>> methodSelector) where TController : IHttpController;
-        IGetExpressionBuilder<TModel> Get<TController, T1, T2>(Expression<Func<TController, Func<T1, T2, object>>> methodSelector) where TController : IHttpController;
+        //IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Func<IEnumerable<TModel>>>> methodSelector) where TController : IHttpController;
+        IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Func<object>>> methodSelector) where TController : IHttpController;
+        IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Expression>> methodSelector) where TController : IHttpController;
+        //IGetExpressionBuilder<TModel> Get<TController, T1, T2>(Expression<Func<TController, Func<T1, T2, object>>> methodSelector) where TController : IHttpController;
         IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, IEnumerable<TModel>>> methodSelector) where TController : IHttpController;
         IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Func<Guid, TModel>>> methodSelector) where TController : IHttpController;
         IGetExpressionBuilder<TModel> Get<TController>(LambdaExpression methodSelector = null) where TController : IHttpController;

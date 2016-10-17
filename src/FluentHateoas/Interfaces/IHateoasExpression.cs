@@ -16,7 +16,7 @@ namespace FluentHateoas.Interfaces
         bool Collection { get; }
         IEnumerable<LambdaExpression> TemplateParameters { get; }
         LambdaExpression WhenExpression { get; }
-        LambdaExpression WithExpression { get; }
+        LambdaExpression IdFromExpression { get; }
         Type Command { get; }
         LambdaExpression CommandFactory { get; }
     }

@@ -20,7 +20,7 @@ namespace FluentHateoas.Registration
         public bool Collection { get; internal set; }
         public IEnumerable<LambdaExpression> TemplateParameters { get; internal set; }
         public LambdaExpression WhenExpression { get; internal set; }
-        public LambdaExpression WithExpression { get; internal set; }
+        public LambdaExpression IdFromExpression { get; internal set; }
         public Type Command { get; internal set; }
         public LambdaExpression CommandFactory { get; internal set; }
     }

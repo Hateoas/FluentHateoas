@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -66,10 +67,34 @@ namespace FluentHateoas.Helpers
 
         }
 
-        public static MethodInfo GetAction(this Type source, HttpMethod method, params object[] args)
+        /// <summary>
+        /// Gets the desired method from the ApiController based on HttpMethod and arguments
+        /// 
+        /// 1 - Check if there are methods:
+        ///     a) case  0 methods : exception
+        ///     b) case  1 method  : return this; todo: validate arguments
+        ///     c) case >1 methods : step 2
+        /// 
+        /// 2 - Check if there are arguments and if these match on name (including templates)
+        ///     a) case no arguments: this should be case 1b and not happening
+        ///     b) case 1 match: return this
+        ///     c) case >1 match: ask for explicit definition
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="method"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public static MethodInfo GetAction(this Type source, HttpMethod method, IDictionary<string, object> arguments)
         {
+            // Get the available actions from the controller type
+            // todo: Validate the given type is indeed a controller
             var methods = source.GetMethods()
-                .Where(p => p.IsPublic && !p.IsStatic && !p.IsSpecialName && !p.IsVirtual && !p.IsGenericMethod && !p.IsSecuritySafeCritical)
+                .Where(p => p.IsPublic 
+                    && !p.IsStatic 
+                    && !p.IsSpecialName 
+                    && !p.IsVirtual 
+                    && !p.IsGenericMethod 
+                    && !p.IsSecuritySafeCritical)
                 .Select(methodInfo => new
                 {
                     methodInfo,
@@ -82,17 +107,22 @@ namespace FluentHateoas.Helpers
             if (!methods.Any())
                 throw new Exception(string.Format("No suitable action found for {0}", method));
 
+            // If there's only one method on the controller, pass this one
             if (methods.Count() == 1)
                 return methods.First().methodInfo;
 
-            var results = methods
-                .Where(m => string.Join(",", m.parameters.Select(p => p.ParameterType.FullName)) == string.Join(",", args.Select(a => (a ?? new object()).GetType().FullName))) // todo: new object => hack, should be clearer
+            // Check if there are actions available with minimal or matching count of arguments with matching type
+            // todo: Should be: Check if there are actions available with matching arguments NAMES
+
+            var actionsWithEqualArguments = methods
+                .Where(p => arguments.Count == p.parameters.Count()
+                         && arguments.All(a => p.parameters.Any(r => r.Name == a.Key && r.ParameterType == a.Value.GetType())))
                 .ToList();
 
-            if (results.Count() > 1)
+            if (actionsWithEqualArguments.Count() > 1)
             {
                 // multiple actions supporting this method try finding one without route template (=default action)
-                var withoutRoute = results
+                var withoutRoute = actionsWithEqualArguments
                     .Where(p => p.methodInfo.GetCustomAttribute<RouteAttribute>() == null)
                     .ToList();
 
@@ -103,8 +133,8 @@ namespace FluentHateoas.Helpers
                     return withoutRoute.Single().methodInfo;
             }
 
-            return results.Any() 
-                ? results.Single().methodInfo 
+            return actionsWithEqualArguments.Any() 
+                ? actionsWithEqualArguments.Single().methodInfo 
                 : methods.First().methodInfo;
         }
     }

@@ -314,12 +314,12 @@ namespace FluentHateoasTest
 
             // act
             Expression<Func<ITestModelProvider, TestModel, object>> getNextExpression = (provider, testModel) => provider.GetNextId(testModel);
-            fluentResult.With<ITestModelProvider>(getNextExpression);
+            fluentResult.IdFrom<ITestModelProvider>(getNextExpression);
             var expression = builder.GetExpression();
 
             // assert
             Assert.IsNotNull(expression);
-            Assert.AreEqual(getNextExpression, expression.WithExpression);
+            Assert.AreEqual(getNextExpression, expression.IdFromExpression);
             containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 

@@ -36,7 +36,7 @@ namespace SampleApi.ApiController
 
         public Person GetById(Guid id)
         {
-            return new Person { Id = id };
+            return new Person { Id = id, HouseId = Guid.Parse("46B18438-A460-4C65-BFC7-8538E7F93568")};
         }
 
         [Route("{id}/father")]

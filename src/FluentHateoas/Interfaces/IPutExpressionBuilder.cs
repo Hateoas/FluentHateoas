@@ -10,6 +10,6 @@
         // TODO Do not return HateoasExpressionBuilder<TModel>
         IWithCommandExpressionBuilder<TModel> WithCommand<TCommandFactory>();
         IWithCommandExpressionBuilder<TModel> WithCommand<TCommandFactory>(Expression<Func<TCommandFactory, object>> commandFactory);
-        IWithExpressionBuilder<TModel> With<TProvider>(Expression<Func<TProvider, TModel, object>> with);
+        IIdFromExpressionBuilder<TModel> IdFrom<TProvider>(Expression<Func<TProvider, TModel, object>> with);
     }
 }

@@ -25,7 +25,7 @@ namespace FluentHateoas.Handling
             get
             {
                 yield return new RelationHandler();
-                yield return new MethodHandler();
+                yield return new HttpMethodHandler();
                 yield return new CommandHandler();
                 yield return new ArgumentHandler(_dependencyResolver);
                 yield return new TemplateHandler();

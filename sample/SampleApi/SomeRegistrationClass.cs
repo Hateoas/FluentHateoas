@@ -59,7 +59,7 @@ namespace SampleApi
             // =======================================================================================================================
             container
                 .Register<Person>("multiple-id", p => p.Id, p => p.HouseId)
-                .Get<AddressController, Guid, Guid>(p => p.Get);
+                .Get<AddressController>(p => p.Get);
 
             // Should ideally be:
             //container
@@ -126,11 +126,11 @@ namespace SampleApi
             // =======================================================================================================================
             //  Specify the GET-message expects a collection
             // =======================================================================================================================
-            //container
-            //    .Register<Person>("item")
-            //    .Get<PersonController>()
-            //    .AsCollection()
-            //    .AsTemplate(p => p.Id, p => p.Slug);
+            container
+                .Register<Person>("item")
+                .Get<PersonController>()
+                .AsCollection()
+                .AsTemplate(p => p.Id, p => p.Slug);
 
             //  {
             //      "rel": "item"
@@ -145,17 +145,39 @@ namespace SampleApi
                 .Register<Person>("next-5B8DC86A-72A2-40E8-BDA7-EF35FBD26399")
                 .Get<PersonController>(p => p.GetById)
                 .When<IPersonProvider>((provider, person) => provider.HasNextId(person))
-                .With<IPersonProvider>((provider, person) => provider.GetNextId(person));
+                .IdFrom<IPersonProvider>((provider, person) => provider.GetNextId(person));
 
             container
                 .Register<Person>("previous-A1557C62-2BA5-402D-A879-EB17E811EDD0")
                 .Get<PersonController>(p => p.GetById)
-                .With<IPersonProvider>((provider, person) => provider.GetPreviousId(person));
+                .IdFrom<IPersonProvider>((provider, person) => provider.GetPreviousId(person));
 
             //  {
             //      "rel": "next"
             //      "href": "/api/person/C1B837B0-5FDC-495F-9847-3ABF68E0B96E"
             //  }
+
+            // =======================================================================================================================
+            //  Get where Controller action "Get" share list and get-by-id
+            // =======================================================================================================================
+            container
+                .Register<Person>("share-get")
+                .Get<AddressController>(p => p.Get);
+
+            //  {
+            //      "rel": "share-get"
+            //      "href": "/api/person"
+            //  }
+
+            container
+                .Register<Person>("share-get-with-id", p => p.Id)
+                .Get<AddressController>(p => p.Get);
+
+            //  {
+            //      "rel": "share-get-with-id"
+            //      "href": "/api/person/C1B837B0-5FDC-495F-9847-3ABF68E0B96E"
+            //  }
+
 
 
             ////

@@ -18,7 +18,7 @@ namespace FluentHateoas.Registration
         IPutExpressionBuilder<TModel>,
         IDeleteExpressionBuilder<TModel>,
         IWhenExpressionBuilder<TModel>,
-        IWithExpressionBuilder<TModel>,
+        IIdFromExpressionBuilder<TModel>,
         IWithCommandExpressionBuilder<TModel>
     {
         private readonly HateoasExpression<TModel> _expression;
@@ -31,6 +31,20 @@ namespace FluentHateoas.Registration
         }
 
         public IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Func<IEnumerable<TModel>>>> methodSelector) where TController : IHttpController
+        {
+            _expression.SetMethod<TController>(HttpMethod.Get, methodSelector);
+            _registration.Update();
+            return this;
+        }
+
+        public IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Func<object>>> methodSelector) where TController : IHttpController
+        {
+            _expression.SetMethod<TController>(HttpMethod.Get, methodSelector);
+            _registration.Update();
+            return this;
+        }
+
+        public IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Expression>> methodSelector) where TController : IHttpController
         {
             _expression.SetMethod<TController>(HttpMethod.Get, methodSelector);
             _registration.Update();
@@ -145,9 +159,9 @@ namespace FluentHateoas.Registration
         }
 
         // TODO BL Add TProvider constraint(s)
-        public IWithExpressionBuilder<TModel> With<TProvider>(Expression<Func<TProvider, TModel, object>> with)
+        public IIdFromExpressionBuilder<TModel> IdFrom<TProvider>(Expression<Func<TProvider, TModel, object>> with)
         {
-            _expression.WithExpression = with;
+            _expression.IdFromExpression = with;
             _registration.Update();
             return this;
         }
