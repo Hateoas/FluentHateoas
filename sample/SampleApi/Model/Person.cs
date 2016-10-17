@@ -24,6 +24,10 @@ namespace SampleApi.Model
     public class CreateChildRequest : CreatePersonRequest
     {
         public Guid Id { get; set; }
+        public Guid Mom { get; set; }
+        public Guid Dad { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 
     public class UpdatePersonRequest

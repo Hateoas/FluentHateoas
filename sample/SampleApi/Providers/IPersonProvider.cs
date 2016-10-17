@@ -6,6 +6,7 @@ namespace SampleApi.Providers
     {
         bool HasNextId(object obj);
         Guid GetNextId(object obj);
+        Guid GetPreviousId(object obj);
     }
 
     public class PersonProvider : IPersonProvider
@@ -18,6 +19,11 @@ namespace SampleApi.Providers
         public Guid GetNextId(object obj)
         {
             return Guid.Parse("5B8DC86A-72A2-40E8-BDA7-EF35FBD26399");
+        }
+
+        public Guid GetPreviousId(object obj)
+        {
+            return Guid.Parse("A1557C62-2BA5-402D-A879-EB17E811EDD0");
         }
     }
 }

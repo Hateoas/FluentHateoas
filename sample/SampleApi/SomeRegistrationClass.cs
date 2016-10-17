@@ -61,6 +61,11 @@ namespace SampleApi
                 .Register<Person>("multiple-id", p => p.Id, p => p.HouseId)
                 .Get<AddressController, Guid, Guid>(p => p.Get);
 
+            // Should ideally be:
+            //container
+            //    .Register<Person>("multiple-id", p => p.Id, p => p.HouseId)
+            //    .Get<AddressController>(p => p.Get);
+
             //  {
             //      "rel": "self"
             //      "href": "/api/address/92B27E6E-0F34-4732-B50C-A33114EF9053/E1F831BB-7677-4817-AB1F-F400D2CB9F99"
@@ -142,6 +147,11 @@ namespace SampleApi
                 .When<IPersonProvider>((provider, person) => provider.HasNextId(person))
                 .With<IPersonProvider>((provider, person) => provider.GetNextId(person));
 
+            container
+                .Register<Person>("previous-A1557C62-2BA5-402D-A879-EB17E811EDD0")
+                .Get<PersonController>(p => p.GetById)
+                .With<IPersonProvider>((provider, person) => provider.GetPreviousId(person));
+
             //  {
             //      "rel": "next"
             //      "href": "/api/person/C1B837B0-5FDC-495F-9847-3ABF68E0B96E"
@@ -168,9 +178,9 @@ namespace SampleApi
             // =======================================================================================================================
             //  Example posted void
             // =======================================================================================================================
-            //container
-            //    .Register<Person>("self-7", p => p.Id)
-            //    .Delete<PersonController>(p => p.Delete);
+            container
+                .Register<Person>("delete-with-void", p => p.Id)
+                .Delete<PersonController>(p => p.Delete);
 
             //  {
             //      "rel": "create"
@@ -242,12 +252,12 @@ namespace SampleApi
 
 
             // =======================================================================================================================
-            //  Post a dynamic template
+            //  Post a dynamic template todo: not working
             // =======================================================================================================================
-            //container
-            //    .Register<Person>("add-address", p => p.Id)
-            //    .Post<AddressController>()
-            //    .WithCommand<ITemplateFactory>(p => p.Create());
+            container
+                .Register<Person>("add-address-with-dynamic-command", p => p.Id)
+                .Post<AddressController>()
+                .WithCommand<ITemplateFactory>(p => p.Create());
 
             ////
             //// PUT REGISTRATIONS
@@ -255,10 +265,11 @@ namespace SampleApi
 
 
             // =======================================================================================================================
+            //  Default PUT-action
             // =======================================================================================================================
-            //container
-            //    .Register<Person>("self-9", p => p.Id)
-            //    .Put<PersonController>();
+            container
+                .Register<Person>("put-action", p => p.Id)
+                .Put<PersonController>();
 
 
             // =======================================================================================================================

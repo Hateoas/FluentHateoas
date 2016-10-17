@@ -37,7 +37,8 @@ namespace SampleApi.App_Start
             // container.LoadConfiguration();
 
             // TODO: Register your types here
-             container.RegisterType<IPersonProvider, PersonProvider>();
+            container.RegisterType<IPersonProvider, PersonProvider>();
+            container.RegisterType<ITemplateFactory, TemplateFactory>();
         }
     }
 }
