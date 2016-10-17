@@ -1,4 +1,5 @@
-﻿using FluentHateoas;
+﻿using System;
+using FluentHateoas;
 
 namespace SampleApi
 {
@@ -58,7 +59,7 @@ namespace SampleApi
             // =======================================================================================================================
             container
                 .Register<Person>("multiple-id", p => p.Id, p => p.HouseId)
-                .Get<AddressController>();
+                .Get<AddressController, Guid, Guid>(p => p.Get);
 
             //  {
             //      "rel": "self"
