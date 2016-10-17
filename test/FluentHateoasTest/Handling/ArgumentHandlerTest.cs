@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Net.Http;
 using System.Web.Http.Dependencies;
 using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
-using FluentHateoas.Registration;
+using FluentHateoas.Interfaces;
 using FluentHateoasTest.Assets.Controllers;
 using FluentHateoasTest.Assets.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,35 +23,38 @@ namespace FluentHateoasTest.Handling
         [TestMethod]
         public void HandlerShouldProcessWhenValid()
         {
-            Container
-                .Register<Person>("create", p => p.Id)
-                .Post<PersonController>();
+            // arrange
+            var registration = GetRegistration<Person, PersonController>(p => p.Id);
 
-            var registration = Container.GetRegistration<Person>("create");
+            // act & assert
             Handler.CanProcess(registration, LinkBuilder).Should().BeTrue();
         }
 
         [TestMethod]
         public void HandlerShouldSetId()
         {
-            Container
-                .Register<Person>("create", p => p.Id)
-                .Post<PersonController>();
+            // arrange
+            var registration = GetRegistration<Person, PersonController>(p => p.Id);
 
-            var registration = Container.GetRegistration<Person>("create");
-
+            // act
             Handler.Process(registration, LinkBuilder, Person);
-            ((IDictionary<string, object>)LinkBuilder.Arguments)["id"].Should().Be(Person.Id);
+
+            // assert
+            LinkBuilder.Arguments["id"].Should().Be(Person.Id);
         }
 
         [TestMethod]
         public void HandlerShouldNotProcessWhenInvalid()
         {
-            Container
-                .Register<Person>("create")
-                .Post<PersonController>();
+            // arrange
+            var registrationMock = new Mock<IHateoasRegistration<Person>>();
+            var expression = new Mock<IHateoasExpression<Person>>();
+            expression.SetupGet(e => e.Controller).Returns(typeof(PersonController));
+            expression.SetupGet(e => e.HttpMethod).Returns(HttpMethod.Post);
+            registrationMock.SetupGet(r => r.Expression).Returns(expression.Object);
+            var registration = registrationMock.Object;
 
-            var registration = Container.GetRegistration<Person>("create");
+            // act & assert
             Handler.CanProcess(registration, LinkBuilder).Should().BeFalse();
         }
     }

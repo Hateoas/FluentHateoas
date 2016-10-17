@@ -1,13 +1,12 @@
-﻿using System;
+﻿using System.Net.Http;
 using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
-using FluentHateoas.Handling;
-using FluentHateoas.Registration;
-using FluentHateoasTest.Assets;
+using FluentHateoas.Interfaces;
 using FluentHateoasTest.Assets.Controllers;
-using FluentHateoasTest.Assets.Model;
-using FluentHateoasTest.Factories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using SampleApi.Model;
+using Person = FluentHateoasTest.Assets.Model.Person;
 
 namespace FluentHateoasTest.Handling
 {
@@ -23,26 +22,37 @@ namespace FluentHateoasTest.Handling
         [TestMethod]
         public void HandlerShouldProcessWithCommand()
         {
-            Container
-                .Register<Person>("create")
-                .Post<PersonController>()
-                .WithCommand<CreatePersonRequest>();
+            // arrange
+            var registrationMock = new Mock<IHateoasRegistration<Person>>();
 
-            var registration = Container.GetRegistration<Person>("create");
+            var expression = new Mock<IHateoasExpression<Person>>();
+            expression.SetupGet(e => e.Controller).Returns(typeof(PersonController));
+            expression.SetupGet(e => e.Command).Returns(typeof(PersonPostCommand));
+            expression.SetupGet(e => e.HttpMethod).Returns(HttpMethod.Post);
+
+            registrationMock.SetupGet(r => r.Expression).Returns(expression.Object);
+            var registration = registrationMock.Object;
+
+            // act
             Handler.CanProcess(registration, LinkBuilder).Should().BeTrue();
             Handler.Process(registration, LinkBuilder, Person);
 
+            // assert
             LinkBuilder.Command.Should().NotBeNull();
         }
 
         [TestMethod]
         public void HandlerShouldNotProcessWithoutCommand()
         {
-            Container
-                .Register<Person>("create")
-                .Post<PersonController>();
+            // arrange
+            var registrationMock = new Mock<IHateoasRegistration<Person>>();
+            var expression = new Mock<IHateoasExpression<Person>>();
+            expression.SetupGet(e => e.Controller).Returns(typeof(PersonController));
+            expression.SetupGet(e => e.HttpMethod).Returns(HttpMethod.Post);
+            registrationMock.SetupGet(r => r.Expression).Returns(expression.Object);
+            var registration = registrationMock.Object;
 
-            var registration = Container.GetRegistration<Person>("create");
+            // act & assert
             Handler.CanProcess(registration, LinkBuilder).Should().BeFalse();
         }
     }

@@ -1,9 +1,11 @@
-﻿using FluentAssertions;
+﻿using System.Net.Http;
+using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
-using FluentHateoas.Registration;
+using FluentHateoas.Interfaces;
 using FluentHateoasTest.Assets.Controllers;
 using FluentHateoasTest.Assets.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace FluentHateoasTest.Handling
 {
@@ -19,36 +21,38 @@ namespace FluentHateoasTest.Handling
         [TestMethod]
         public void UseHandlerShouldProcessWhenValid()
         {
-            Container
-                .Register<Person>("create", p => p.Id)
-                .Get<PersonController>();
+            // arrange
+            var registration = GetRegistration<Person, PersonController>(p => p.Id);
 
-            var registration = Container.GetRegistration<Person>("create");
+            // act & assert
             Handler.CanProcess(registration, LinkBuilder).Should().BeTrue();
         }
 
         [TestMethod]
         public void UseHandlerShouldNotProcessWhenInvalid()
         {
-            Container
-                .Register<Person>("create");
+            // arrange
+            var registrationMock = new Mock<IHateoasRegistration<Person>>();
+            var expression = new Mock<IHateoasExpression<Person>>();
+            expression.SetupGet(e => e.Controller).Returns(typeof(PersonController));
+            registrationMock.SetupGet(r => r.Expression).Returns(expression.Object);
+            var registration = registrationMock.Object;
 
-            var registration = Container.GetRegistration<Person>("create");
+            // act & assert
             Handler.CanProcess(registration, LinkBuilder).Should().BeFalse();
         }
 
         [TestMethod]
         public void UseHandlerShouldRegisterActionWhenGiven()
         {
-            Container
-                .Register<Person>("parents")
-                .Get<PersonController>(p => p.GetParents);
+            // arrange
+            var registration = GetRegistration<Person, PersonController>(p => p.GetParents);
 
-            var registration = Container.GetRegistration<Person>("parents");
-
+            // act
             Handler.CanProcess(registration, LinkBuilder).Should().BeTrue();
             Handler.Process(registration, LinkBuilder, Person);
 
+            // assert
             LinkBuilder.Controller.Should().NotBeNull();
             LinkBuilder.Controller.Should().Be(typeof(PersonController));
             LinkBuilder.Action.Should().NotBeNull();
@@ -58,15 +62,14 @@ namespace FluentHateoasTest.Handling
         [TestMethod]
         public void UseHandlerShouldChooseMethodBasedOnAvailableArguments()
         {
-            Container
-                .Register<Person>("list")
-                .Get<PersonController>();
+            // arrange
+            var registration = GetRegistration<Person, PersonController>();
 
-            var registration = Container.GetRegistration<Person>("list");
-
+            // act
             Handler.CanProcess(registration, LinkBuilder).Should().BeTrue();
             Handler.Process(registration, LinkBuilder, Person);
 
+            // assert
             LinkBuilder.Controller.Should().NotBeNull();
             LinkBuilder.Controller.Should().Be(typeof(PersonController));
             LinkBuilder.Action.Should().NotBeNull();

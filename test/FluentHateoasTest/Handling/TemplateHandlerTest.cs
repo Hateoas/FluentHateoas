@@ -19,25 +19,23 @@ namespace FluentHateoasTest.Handling
         [TestMethod]
         public void TemplateHandlerShouldAlwaysProcess()
         {
-            Container
-                .Register<Person>("create", p => p.Id)
-                .Get<PersonController>();
+            // arrange
+            var registration = GetRegistration<Person, PersonController>(p => p.Id);
 
-            var registration = Container.GetRegistration<Person>("create");
+            // act & assert
             Handler.CanProcess(registration, LinkBuilder).Should().BeTrue();
         }
 
         [TestMethod]
         public void HandlerShouldSetTemplateFlag()
         {
-            Container
-                .Register<Person>("create", p => p.Id)
-                .Get<PersonController>()
-                .AsTemplate();
+            // arrange
+            var registration = GetRegistration<Person, PersonController>(p => p.Id, template: true);
 
-            var registration = Container.GetRegistration<Person>("create");
-
+            // act
             Handler.Process(registration, LinkBuilder, Person);
+
+            // assert
             LinkBuilder.IsTemplate.Should().BeTrue();
         }
     }
