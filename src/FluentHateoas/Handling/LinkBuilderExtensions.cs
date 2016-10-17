@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Web.Configuration;
 using System.Web.Http;
 using System.Web.Mvc;
 using FluentHateoas.Helpers;
@@ -53,7 +55,7 @@ namespace FluentHateoas.Handling
 
         private static string RouteFromMethod(MethodInfo methodInfo)
         {
-            var apiPrefix = "/api/"; // todo: Should come from default of given route
+            var apiPrefix = ConfigurationKeys.ApiPrefix;
 
             var controllerAttribute = methodInfo.DeclaringType.GetCustomAttribute<System.Web.Http.RoutePrefixAttribute>();
             var actionAttribute = methodInfo.GetCustomAttribute<System.Web.Http.RouteAttribute>();
