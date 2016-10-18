@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Web.Configuration;
 using System.Web.Http;
 using System.Web.Mvc;
+using FluentHateoas.Builder.Model;
 using FluentHateoas.Helpers;
 
 namespace FluentHateoas.Handling
@@ -48,9 +49,9 @@ namespace FluentHateoas.Handling
                 .HaackFormat(source.Data);
         }
 
-        public static string FormatArguments(this string source, IDictionary<string, object> dict)
+        public static string FormatArguments(this string source, IDictionary<string, Argument> dict)
         {
-            return dict.Keys.Aggregate(source, (current, key) => current.Replace($"{{{key}}}", dict[key].ToString()));
+            return dict.Keys.Aggregate(source, (current, key) => current.Replace($"{{{key}}}", dict[key].Value.ToString()));
         }
 
         private static string RouteFromMethod(MethodInfo methodInfo)

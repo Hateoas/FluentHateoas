@@ -94,6 +94,7 @@
     <Compile Include="Builder\Handlers\TemplateHandler.cs" />
     <Compile Include="Builder\Handlers\UseHandler.cs" />
     <Compile Include="Builder\Handlers\ArgumentHandler.cs" />
+    <Compile Include="Builder\Model\Argument.cs" />
     <Compile Include="Builder\Model\Command.cs" />
     <Compile Include="Contracts\IHateoasContainer.cs" />
     <Compile Include="Contracts\IHateoasRegistrationProfile.cs" />

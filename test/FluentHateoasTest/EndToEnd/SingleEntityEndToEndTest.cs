@@ -125,7 +125,7 @@ namespace FluentHateoasTest.EndToEnd
 
             link.Relation.Should().Be("get-by-id-template");
             link.LinkPath.Should().BeNull();
-            link.Template.Should().Be("/api/person/:id");
+            link.Template.Should().Be("/api/person/{id}");
             link.Command.Should().BeNull();
         }
 

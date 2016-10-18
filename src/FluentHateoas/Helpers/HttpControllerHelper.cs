@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
+using FluentHateoas.Builder.Model;
 using Microsoft.Build.Tasks.Deployment.Bootstrapper;
 
 namespace FluentHateoas.Helpers
@@ -85,7 +86,7 @@ namespace FluentHateoas.Helpers
         /// <param name="method"></param>
         /// <param name="arguments"></param>
         /// <returns></returns>
-        public static MethodInfo GetAction(this Type source, string relation, HttpMethod method, IDictionary<string, object> arguments)
+        public static MethodInfo GetAction(this Type source, string relation, HttpMethod method, IDictionary<string, Argument> arguments)
         {
             // Get the available actions from the controller type
             // todo: Validate the given type is indeed a controller
@@ -117,7 +118,7 @@ namespace FluentHateoas.Helpers
 
             var actionsWithEqualArguments = methods
                 .Where(p => arguments.Count == p.parameters.Count()
-                         && arguments.All(a => p.parameters.Any(r => r.Name == a.Key && r.ParameterType == a.Value.GetType())))
+                         && arguments.All(a => p.parameters.Any(r => r.Name == a.Key && r.ParameterType == a.Value.Type)))
                 .ToList();
 
             if (actionsWithEqualArguments.Count() > 1)
