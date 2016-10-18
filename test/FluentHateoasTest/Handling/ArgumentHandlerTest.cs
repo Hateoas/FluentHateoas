@@ -40,7 +40,7 @@ namespace FluentHateoasTest.Handling
             Handler.Process(registration, LinkBuilder, Person);
 
             // assert
-            LinkBuilder.Arguments["id"].Should().Be(Person.Id);
+            LinkBuilder.Arguments["id"].Value.Should().Be(Person.Id);
         }
 
         [TestMethod]

@@ -80,7 +80,7 @@ namespace FluentHateoas.Builder.Handlers
             {
                 var member = ((MemberExpression)((UnaryExpression)expression.Body).Operand).Member;
                 var key = GetKey(data, member);
-                resourceBuilder.Arguments.Add(key, CreateArgument(key, ((PropertyInfo)member).PropertyType, $"{{{key}}}"));
+                resourceBuilder.Arguments.Add(key, CreateTemplateArgument(key, ((PropertyInfo)member).PropertyType));
             }
 
             return base.Process(registration, resourceBuilder, data);
@@ -93,6 +93,17 @@ namespace FluentHateoas.Builder.Handlers
                 Name = name,
                 Type = type,
                 Value = value
+            };
+        }
+
+        private static Argument CreateTemplateArgument(string name, Type type)
+        {
+            return new Argument
+            {
+                Name = name,
+                Type = type,
+                Value = $"{{{name}}}",
+                IsTemplateArgument = true
             };
         }
 

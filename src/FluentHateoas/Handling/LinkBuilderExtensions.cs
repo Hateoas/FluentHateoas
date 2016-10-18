@@ -22,7 +22,9 @@ namespace FluentHateoas.Handling
             };
 
             if (source.IsTemplate)
-                result.Template = source.GetPathAsTemplate();
+                result.Template = source.Arguments.Any(p => p.Value.IsTemplateArgument)
+                    ? source.GetPath()
+                    : source.GetPathAsTemplate();
             else
                 result.LinkPath = source.GetPath();
 
@@ -45,8 +47,8 @@ namespace FluentHateoas.Handling
         public static string GetPath(this LinkBuilder source)
         {
             return RouteFromMethod(source.Action)
-                .FormatArguments(source.Arguments)
-                .HaackFormat(source.Data);
+                .FormatArguments(source.Arguments);
+            //.HaackFormat(source.Data);
         }
 
         public static string FormatArguments(this string source, IDictionary<string, Argument> dict)
