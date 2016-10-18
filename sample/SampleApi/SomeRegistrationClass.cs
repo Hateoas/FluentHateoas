@@ -38,12 +38,12 @@ namespace SampleApi
 
             //  {
             //      "rel": "self"
-            //      "href": "/api/person/A2209F1A-4607-4B40-AC59-EC7DAFC6D1DF"
+            //      "href": "/api/person/
             //  }
 
 
             // =======================================================================================================================
-            //  get all persons link with custom function registration
+            //  get all persons link with custom function registration => IS HIDDEN WHEN TESTING UNAUTHORIZED
             // =======================================================================================================================
             container
                 .Register<Person>("get-all")
@@ -55,7 +55,7 @@ namespace SampleApi
             //  }
 
             // =======================================================================================================================
-            //  get all persons link with custom function registration
+            //  get all persons link with custom function registration => todo: id's failing
             // =======================================================================================================================
             container
                 .Register<Person>("multiple-id", p => p.Id, p => p.HouseId)
@@ -94,7 +94,7 @@ namespace SampleApi
 
             //  {
             //      "rel": "self"
-            //      "href": "/api/person/42DB0C7B-1F89-41E5-B485-880176EDBE83"
+            //      "href": "/api/person/96d74b0d-4456-4643-a5fd-d0a31af0c284",
             //  }
 
 
@@ -107,7 +107,7 @@ namespace SampleApi
 
             //  {
             //      "rel": "self"
-            //      "href": "/api/person/42DB0C7B-1F89-41E5-B485-880176EDBE83"
+            //      "href": "/api/person/96d74b0d-4456-4643-a5fd-d0a31af0c284",
             //  }
 
 
@@ -124,7 +124,7 @@ namespace SampleApi
 
 
             // =======================================================================================================================
-            //  Specify the GET-message expects a collection
+            //  Specify the GET-message expects a collection ==> todo: template is failing
             // =======================================================================================================================
             container
                 .Register<Person>("item")
@@ -169,8 +169,10 @@ namespace SampleApi
             //      "href": "/api/person"
             //  }
 
+            // todo: template is failing
+
             container
-                .Register<Person>("share-get-with-id", p => p.Id)
+                .Register<Person>("share-get-with-id", p => p.Id, p => p.HouseId)
                 .Get<AddressController>(p => p.Get);
 
             //  {
@@ -207,7 +209,7 @@ namespace SampleApi
             //  {
             //      "rel": "create"
             //      "method": "POST"
-            //      "href": "/api/person/EADCB057-A41D-448B-B10D-94F99162AD4E"
+            //      "href": "/api/person/96d74b0d-4456-4643-a5fd-d0a31af0c284"
             //  }
 
 
@@ -276,10 +278,10 @@ namespace SampleApi
             // =======================================================================================================================
             //  Post a dynamic template todo: not working
             // =======================================================================================================================
-            container
-                .Register<Person>("add-address-with-dynamic-command", p => p.Id)
-                .Post<AddressController>()
-                .WithCommand<ITemplateFactory>(p => p.Create());
+            //container
+            //    .Register<Person>("add-address-with-dynamic-command", p => p.Id)
+            //    .Post<AddressController>()
+            //    .WithCommand<ITemplateFactory>(p => p.Create());
 
             ////
             //// PUT REGISTRATIONS
@@ -287,10 +289,10 @@ namespace SampleApi
 
 
             // =======================================================================================================================
-            //  Default PUT-action
+            //  Default PUT-action todo: get the getbyid action
             // =======================================================================================================================
             container
-                .Register<Person>("put-action", p => p.Id)
+                .Register<Person>("put-action")
                 .Put<PersonController>();
 
 

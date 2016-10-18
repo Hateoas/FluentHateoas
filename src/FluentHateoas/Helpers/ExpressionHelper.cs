@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Dynamic;
 using System.Linq.Expressions;
 using System.Net.Http;
@@ -35,7 +36,7 @@ namespace FluentHateoas.Helpers
             return expressionBody.Member;
         }
 
-        public static MethodInfo GetTargetAction(this LambdaExpression expression)
+        public static MethodInfo GetTargetAction(this LambdaExpression expression, string relation, HttpMethod httpMethod, IDictionary<string, object> arguments)
         {
             var unaryExpression = expression.Body as UnaryExpression;
             if (unaryExpression != null)

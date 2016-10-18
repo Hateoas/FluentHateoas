@@ -81,10 +81,11 @@ namespace FluentHateoas.Helpers
         ///     c) case >1 match: ask for explicit definition
         /// </summary>
         /// <param name="source"></param>
+        /// <param name="relation"></param>
         /// <param name="method"></param>
         /// <param name="arguments"></param>
         /// <returns></returns>
-        public static MethodInfo GetAction(this Type source, HttpMethod method, IDictionary<string, object> arguments)
+        public static MethodInfo GetAction(this Type source, string relation, HttpMethod method, IDictionary<string, object> arguments)
         {
             // Get the available actions from the controller type
             // todo: Validate the given type is indeed a controller
@@ -105,7 +106,7 @@ namespace FluentHateoas.Helpers
                 .ToList();
 
             if (!methods.Any())
-                throw new Exception(string.Format("No suitable action found for {0}", method));
+                throw new Exception(string.Format("No suitable action found for {0} on {1} (relation: {2})", method, source.Name, relation));
 
             // If there's only one method on the controller, pass this one
             if (methods.Count() == 1)

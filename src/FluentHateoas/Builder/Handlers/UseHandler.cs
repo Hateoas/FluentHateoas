@@ -13,10 +13,10 @@ namespace FluentHateoas.Builder.Handlers
             resourceBuilder.Controller = registration.Expression.Controller;
 
             if (registration.Expression.Action != null)
-                resourceBuilder.Action = registration.Expression.Action.GetTargetAction();
+                resourceBuilder.Action = registration.Expression.Action.GetTargetAction(resourceBuilder.Relation, resourceBuilder.Method, resourceBuilder.Arguments);
 
             else if (registration.Expression.Action == null)
-                resourceBuilder.Action = registration.Expression.Controller.GetAction(HttpMethod.Get, resourceBuilder.Arguments);
+                resourceBuilder.Action = registration.Expression.Controller.GetAction(resourceBuilder.Relation, resourceBuilder.Method, resourceBuilder.Arguments);
 
             else
                 throw new NotImplementedException();
