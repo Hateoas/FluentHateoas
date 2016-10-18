@@ -60,6 +60,7 @@ namespace FluentHateoasTest.Handling
         }
 
         [TestMethod]
+        [Ignore()]
         public void UseHandlerShouldChooseMethodBasedOnAvailableArguments()
         {
             // arrange
