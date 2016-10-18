@@ -10,9 +10,8 @@
         //IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Func<IEnumerable<TModel>>>> methodSelector) where TController : IHttpController;
         IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Func<object>>> methodSelector) where TController : IHttpController;
         IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Expression>> methodSelector) where TController : IHttpController;
-        //IGetExpressionBuilder<TModel> Get<TController, T1, T2>(Expression<Func<TController, Func<T1, T2, object>>> methodSelector) where TController : IHttpController;
         IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, IEnumerable<TModel>>> methodSelector) where TController : IHttpController;
-        IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Func<Guid, TModel>>> methodSelector) where TController : IHttpController;
+        IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Func<Guid, object>>> methodSelector) where TController : IHttpController;
         IGetExpressionBuilder<TModel> Get<TController>(LambdaExpression methodSelector = null) where TController : IHttpController;
         IPostExpressionBuilder<TModel> Post<TController>(LambdaExpression methodSelector = null) where TController : IHttpController;
         IPostExpressionBuilder<TModel> Post<TController>(Expression<Func<TController, Action<TModel>>> methodSelector) where TController : IHttpController;

@@ -79,6 +79,13 @@ namespace FluentHateoas.Registration
             return this;
         }
 
+        public IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Func<Guid, object>>> methodSelector) where TController : IHttpController
+        {
+            _expression.SetMethod<TController>(HttpMethod.Get, methodSelector);
+            _registration.Update();
+            return this;
+        }
+
         public IGetExpressionBuilder<TModel> Get<TController>(LambdaExpression methodSelector = null) where TController : IHttpController
         {
             _expression.SetMethod<TController>(HttpMethod.Get, methodSelector);

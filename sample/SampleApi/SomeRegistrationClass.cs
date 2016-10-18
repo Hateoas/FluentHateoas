@@ -55,7 +55,7 @@ namespace SampleApi
             //  }
 
             // =======================================================================================================================
-            //  get all persons link with custom function registration => todo: id's failing
+            //  get all persons link with custom function registration
             // =======================================================================================================================
             container
                 .Register<Person>("multiple-id", p => p.Id, p => p.HouseId)

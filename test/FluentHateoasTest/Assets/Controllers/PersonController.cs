@@ -26,13 +26,19 @@ namespace FluentHateoasTest.Assets.Controllers
         }
 
         [Route("{id}/parents")]
-        public IEnumerable<Person> GetParents()
+        public IEnumerable<Person> GetParents(Guid id)
         {
             return new[]
             {
                 new Person {Id = Guid.Parse("0CFA46CC-116D-45F0-B57B-4C5586130072")},
                 new Person {Id = Guid.Parse("F6D0CF9E-5153-4218-8A22-8E71C5AC5A4A")}
             };
+        }
+
+        [Route("{id}/house/{houseId}")]
+        public object Get(Guid id, Guid houseId)
+        {
+            return new object();
         }
 
         public Person Post(CreatePersonRequest request)
