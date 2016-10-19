@@ -82,6 +82,38 @@ namespace FluentHateoasTest.EndToEnd
         }
 
         [TestMethod]
+        public void GetDefaultWithIdAsTemplate()
+        {
+            Container
+                .RegisterCollection<Person>("item")
+                .Get<CarController>()
+                .AsTemplate(p => p.Id);
+
+            var link = GetLink();
+
+            link.Relation.Should().Be("item");
+            link.LinkPath.Should().BeNull();
+            link.Template.Should().Be("/api/car/{id}");
+            link.Command.Should().BeNull();
+        }
+
+        [TestMethod]
+        public void GetDefaultWithIdAsArgumentAndTemplate()
+        {
+            Container
+                .RegisterCollection<Person>("item", p => p.Id)
+                .Get<PersonController>()
+                .AsTemplate(p => p.Id);
+
+            var link = GetLink();
+
+            link.Relation.Should().Be("item");
+            link.LinkPath.Should().BeNull();
+            link.Template.Should().Be("/api/person/{id}");
+            link.Command.Should().BeNull();
+        }
+
+        [TestMethod]
         public void GetWithMethod()
         {
             Container
