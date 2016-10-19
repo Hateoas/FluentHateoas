@@ -64,6 +64,7 @@ namespace FluentHateoasTest.EndToEnd
 
             // this link is added to check if it is ignored
             Container.Register<Person>("some-extra-link").Get<PersonController>();
+            Container.Register<Car>("some-extra-link").Get<CarController>();
         }
 
         [TestMethod]
@@ -199,8 +200,12 @@ namespace FluentHateoasTest.EndToEnd
 
         public IHateoasLink GetLink()
         {
+            var carLink = ConfigurationProvider.GetLinksFor(new Car());
+            var personLink = ConfigurationProvider.GetLinksFor(new Person());
             var links = ConfigurationProvider.GetLinksFor(Enumerable).ToList();
 
+            carLink.Count().Should().Be(1);
+            personLink.Count().Should().Be(1);
             links.Count().Should().Be(1);
 
             return links.Single();
