@@ -61,6 +61,9 @@ namespace FluentHateoasTest.EndToEnd
                     HouseId = Guid.Parse("9042e54f-dee6-45c9-8d9e-048026f5d5fa"),
                 },
             };
+
+            // this link is added to check if it is ignored
+            Container.Register<Person>("some-extra-link").Get<PersonController>();
         }
 
         [TestMethod]

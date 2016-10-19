@@ -78,10 +78,11 @@ namespace FluentHateoas.Registration
         /// </summary>
         /// <param name="configuration">HTTP configuration</param>
         /// <param name="model">The model to get HATEOAS registrations for</param>
+        /// <param name="isCollection"></param>
         /// <returns>HATEOAS registrations for the model specified</returns>
-        public static List<IHateoasRegistration> GetRegistrationsFor<TModel>(this HttpConfiguration configuration)
+        public static List<IHateoasRegistration> GetRegistrationsFor<TModel>(this HttpConfiguration configuration, bool isCollection = false)
         {
-            return configuration.GetRegistrationsFor(typeof(TModel)).ToList();//.Cast<IHateoasRegistration<TModel>>().ToList();
+            return configuration.GetRegistrationsFor(typeof(TModel), isCollection).ToList();//.Cast<IHateoasRegistration<TModel>>().ToList();
         }
 
         /// <summary>
@@ -89,19 +90,20 @@ namespace FluentHateoas.Registration
         /// </summary>
         /// <param name="configuration">HTTP configuration</param>
         /// <param name="model">The model to get HATEOAS registrations for</param>
+        /// <param name="isCollection"></param>
         /// <returns>HATEOAS registrations for the model specified</returns>
-        public static List<IHateoasRegistration> GetRegistrationsFor(this HttpConfiguration configuration, Type model)
+        public static List<IHateoasRegistration> GetRegistrationsFor(this HttpConfiguration configuration, Type model, bool isCollection = false)
         {
             var linkedResourceDefinitions = configuration.GetRegistrations();
             List<IHateoasRegistration> definitions;
 
             if (linkedResourceDefinitions.TryGetValue(model, out definitions))
-                return definitions;
+                return definitions;//.Where(p => p.IsCollection == isCollection).ToList();
 
             definitions = new List<IHateoasRegistration>();
             linkedResourceDefinitions.Add(model, definitions);
 
-            return definitions;
+            return definitions;//.Where(p => p.IsCollection == isCollection).ToList();
         }
 
         /// <summary>

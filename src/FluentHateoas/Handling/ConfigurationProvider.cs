@@ -24,7 +24,7 @@ namespace FluentHateoas.Handling
 
             if (!isCollection)
             {
-                var registrations = _httpConfiguration.GetRegistrationsFor<TModel>().Where(p => !p.IsCollection).Cast<IHateoasRegistration<TModel>>().ToList();
+                var registrations = _httpConfiguration.GetRegistrationsFor<TModel>().Cast<IHateoasRegistration<TModel>>().ToList();
                 return _linkFactory.CreateLinks(registrations, data);
             }
             else
