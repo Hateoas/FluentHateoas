@@ -58,7 +58,10 @@ namespace FluentHateoas.Handling
 
         private static string RouteFromMethod(MethodInfo methodInfo)
         {
-            var apiPrefix = ConfigurationKeys.ApiPrefix;
+            var apiPrefixSetting = ConfigurationKeys.ApiPrefix;
+            var apiPrefix = string.IsNullOrWhiteSpace(apiPrefixSetting)
+                ? "/"
+                : $"/{apiPrefixSetting}/";
 
             var controllerAttribute = methodInfo.DeclaringType.GetCustomAttribute<System.Web.Http.RoutePrefixAttribute>();
             var actionAttribute = methodInfo.GetCustomAttribute<System.Web.Http.RouteAttribute>();

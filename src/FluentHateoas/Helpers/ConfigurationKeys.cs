@@ -4,7 +4,7 @@ namespace FluentHateoas.Helpers
 {
     internal static class ConfigurationKeys
     {
-        public static string ApiPrefix => $"/{(GetSetting("api-prefix") ?? "api")}/";
+        public static string ApiPrefix => GetSetting("api-prefix") ?? "api";
 
         private static string GetSetting(string key)
         {
