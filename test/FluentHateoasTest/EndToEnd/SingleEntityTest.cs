@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Web.Http;
 using System.Web.Http.Dependencies;
 using FluentAssertions;
 using FluentHateoas.Handling;
 using FluentHateoas.Interfaces;
 using FluentHateoas.Registration;
 using FluentHateoasTest.Assets.Controllers;
+using FluentHateoasTest.Assets.Model;
 using FluentHateoasTest.Assets.Providers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using SampleApi.Model;
 
 namespace FluentHateoasTest.EndToEnd
 {
     [TestClass]
-    public class SingleEntityEndToEndTest
+    public class SingleEntityTest
     {
         private IHateoasConfiguration _configuration;
 
@@ -24,7 +25,7 @@ namespace FluentHateoasTest.EndToEnd
         private Mock<IPersonProvider> _personProvider;
 
         protected IConfigurationProvider ConfigurationProvider;
-        protected TestContainer Container;
+        protected HateoasContainer Container;
         protected ILinkFactory LinkFactory;
 
         protected Person Entity;
@@ -41,8 +42,10 @@ namespace FluentHateoasTest.EndToEnd
             _authorizationProvider.Setup(p => p.IsAuthorized(It.IsAny<MethodInfo>())).Returns(true);
             _dependencyResolver.Setup(p => p.GetService(It.IsAny<Type>())).Returns(_personProvider.Object);
 
-            Container = new TestContainer(_configuration);
+            var configuration = new HttpConfiguration();
+            Container = HateoasContainerFactory.Create(configuration);
             LinkFactory = new LinkFactory(_authorizationProvider.Object, _dependencyResolver.Object);
+            ConfigurationProvider = new ConfigurationProvider(configuration, LinkFactory);
 
             Entity = new Person()
             {
@@ -187,8 +190,7 @@ namespace FluentHateoasTest.EndToEnd
 
         public IHateoasLink GetLink()
         {
-            var registrations = Container.GetRegistrationsFor<Person>();
-            var links = LinkFactory.CreateLinks(registrations, Entity).ToList();
+            var links = ConfigurationProvider.GetLinksFor(Entity).ToList();
 
             links.Count().Should().Be(1);
 

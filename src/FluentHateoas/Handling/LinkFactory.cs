@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http.Dependencies;
 using FluentHateoas.Builder.Handlers;
@@ -37,7 +38,7 @@ namespace FluentHateoas.Handling
             }
         }
 
-        public System.Collections.Generic.IEnumerable<IHateoasLink> CreateLinks<TModel>(System.Collections.Generic.List<Interfaces.IHateoasRegistration<TModel>> registrations, TModel data)
+        public IEnumerable<IHateoasLink> CreateLinks<TModel>(List<Interfaces.IHateoasRegistration<TModel>> registrations, object data)
         {
             var handlers = DefaultHandlers.ToList();
             return registrations.Select(p =>

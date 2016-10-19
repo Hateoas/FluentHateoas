@@ -8,7 +8,7 @@ namespace FluentHateoas.Builder.Handlers
 {
     public class CommandHandler : RegistrationLinkHandlerBase
     {
-        public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder linkBuilder, TModel data)
+        public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder linkBuilder, object data)
         {
             linkBuilder.Command = registration.Expression.CreateCommand(registration.Relation + "-command");
 

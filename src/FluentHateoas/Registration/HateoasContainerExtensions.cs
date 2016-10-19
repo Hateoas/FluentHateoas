@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -13,11 +14,20 @@ namespace FluentHateoas.Registration
     {
         public static IExpressionBuilder<TModel> Register<TModel>(this IHateoasContainer container, string relation = null, params Expression<Func<TModel, object>>[] identityDefinition)
         {
-            if (typeof(TModel).GetInterfaces().Contains(typeof(IEnumerable)))
-                throw new ArgumentException("Cannot register collections; use .AsCollection() instead");
+            // todo: Why can't we register collections?
+            //if (typeof(TModel).GetInterfaces().Contains(typeof(IEnumerable)))
+            //    throw new ArgumentException("Cannot register collections; use .AsCollection() instead");
 
             // TODO The relation between (container,) registration and expression builder feels weird 
             var registration = new HateoasRegistration<TModel>(relation, identityDefinition, container);
+            var builder = HateoasExpressionFactory.CreateBuilder(registration);
+            container.Add(registration);
+            return builder;
+        }
+
+        public static IExpressionBuilder<TModel> RegisterCollection<TModel>(this IHateoasContainer container, string relation = null, params Expression<Func<TModel, object>>[] identityDefinition)
+        {
+            var registration = new HateoasRegistration<TModel>(relation, null, container, true);
             var builder = HateoasExpressionFactory.CreateBuilder(registration);
             container.Add(registration);
             return builder;

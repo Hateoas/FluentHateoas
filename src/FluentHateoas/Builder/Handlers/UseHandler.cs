@@ -8,7 +8,7 @@ namespace FluentHateoas.Builder.Handlers
 {
     public class UseHandler : RegistrationLinkHandlerBase
     {
-        public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder, TModel data)
+        public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder, object data)
         {
             resourceBuilder.Controller = registration.Expression.Controller;
 

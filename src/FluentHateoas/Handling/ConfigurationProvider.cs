@@ -1,4 +1,9 @@
-using HttpConfigurationExtensions = FluentHateoas.Registration.HttpConfigurationExtensions;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using FluentHateoas.Interfaces;
+using FluentHateoas.Registration;
 
 namespace FluentHateoas.Handling
 {
@@ -13,10 +18,18 @@ namespace FluentHateoas.Handling
             _linkFactory = linkFactory;
         }
 
-        public System.Collections.Generic.IEnumerable<IHateoasLink> GetLinksFor<TModel>(TModel data)
+        public IEnumerable<IHateoasLink> GetLinksFor<TModel>(TModel data)
         {
-            var registrations = HttpConfigurationExtensions.GetRegistrationsFor<TModel>(_httpConfiguration);
-            return _linkFactory.CreateLinks(registrations, data);
+            var isCollection = typeof(TModel).GetInterfaces().Contains(typeof(IEnumerable));
+            var registrations = _httpConfiguration.GetRegistrationsFor<TModel>().Where(p => p.IsCollection == isCollection);
+
+            if (!isCollection)
+                return _linkFactory.CreateLinks(registrations.Cast<IHateoasRegistration<TModel>>().ToList(), data);
+
+            var yesThisIsVeryHacky = typeof(IHateoasRegistration<>).MakeGenericType(typeof(TModel).GenericTypeArguments[0]);
+            var soInCaseOfBetterIdeas = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(yesThisIsVeryHacky).Invoke(null, new object[] { registrations });
+            var pleaseRefactorThis = (typeof(Enumerable).GetMethod("ToList")).MakeGenericMethod(yesThisIsVeryHacky).Invoke(null, new[] { soInCaseOfBetterIdeas });
+            return (IEnumerable<IHateoasLink>) _linkFactory.GetType().GetMethod(nameof(_linkFactory.CreateLinks)).MakeGenericMethod(typeof(TModel).GenericTypeArguments[0]).Invoke(_linkFactory, new [] { pleaseRefactorThis, data });
         }
     }
 }

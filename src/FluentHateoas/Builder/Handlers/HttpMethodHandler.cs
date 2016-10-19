@@ -5,7 +5,7 @@ namespace FluentHateoas.Builder.Handlers
 {
     public class HttpMethodHandler : RegistrationLinkHandlerBase
     {
-        public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder, TModel data)
+        public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder, object data)
         {
             resourceBuilder.Method = definition.Expression.HttpMethod;
             return base.Process(definition, resourceBuilder, data);

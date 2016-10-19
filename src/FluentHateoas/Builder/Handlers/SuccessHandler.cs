@@ -13,7 +13,7 @@ namespace FluentHateoas.Builder.Handlers
             _authorizationProvider = authorizationProvider;
         }
 
-        public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder, TModel data)
+        public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder, object data)
         {
             resourceBuilder.Success = resourceBuilder.Action != null && _authorizationProvider.IsAuthorized(resourceBuilder.Action);
             return base.Process(definition, resourceBuilder, data);

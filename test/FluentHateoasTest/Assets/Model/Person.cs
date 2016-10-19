@@ -8,6 +8,7 @@ namespace FluentHateoasTest.Assets.Model
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public DateTimeOffset Birthday { get; set; }
+        public Guid HouseId { get; set; }
     }
 
     public class CreatePersonRequest

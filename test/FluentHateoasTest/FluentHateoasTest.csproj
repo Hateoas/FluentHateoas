@@ -89,7 +89,8 @@
     <Compile Include="Assets\Model\Address.cs" />
     <Compile Include="Assets\Model\Person.cs" />
     <Compile Include="Assets\Providers\IPersonProvider.cs" />
-    <Compile Include="EndToEnd\SingleEntityEndToEndTest.cs" />
+    <Compile Include="EndToEnd\EnumerableTest.cs" />
+    <Compile Include="EndToEnd\SingleEntityTest.cs" />
     <Compile Include="EndToEnd\TestContainer.cs" />
     <Compile Include="Factories\RegistrationFactory.cs" />
     <Compile Include="Handling\ArgumentHandlerTest.cs" />
