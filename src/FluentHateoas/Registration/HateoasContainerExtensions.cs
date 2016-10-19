@@ -14,9 +14,8 @@ namespace FluentHateoas.Registration
     {
         public static IExpressionBuilder<TModel> Register<TModel>(this IHateoasContainer container, string relation = null, params Expression<Func<TModel, object>>[] identityDefinition)
         {
-            // todo: Why can't we register collections?
-            //if (typeof(TModel).GetInterfaces().Contains(typeof(IEnumerable)))
-            //    throw new ArgumentException("Cannot register collections; use .AsCollection() instead");
+            if (typeof(TModel).GetInterfaces().Contains(typeof(IEnumerable)))
+                throw new ArgumentException("Cannot register collections; use .RegisterCollection<TModel>(\"name\") instead");
 
             // TODO The relation between (container,) registration and expression builder feels weird 
             var registration = new HateoasRegistration<TModel>(relation, identityDefinition, container);

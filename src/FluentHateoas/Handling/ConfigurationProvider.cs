@@ -21,15 +21,22 @@ namespace FluentHateoas.Handling
         public IEnumerable<IHateoasLink> GetLinksFor<TModel>(TModel data)
         {
             var isCollection = typeof(TModel).GetInterfaces().Contains(typeof(IEnumerable));
-            var registrations = _httpConfiguration.GetRegistrationsFor<TModel>().Where(p => p.IsCollection == isCollection);
 
             if (!isCollection)
-                return _linkFactory.CreateLinks(registrations.Cast<IHateoasRegistration<TModel>>().ToList(), data);
+            {
+                var registrations = _httpConfiguration.GetRegistrationsFor<TModel>().Where(p => !p.IsCollection).Cast<IHateoasRegistration<TModel>>().ToList();
+                return _linkFactory.CreateLinks(registrations, data);
+            }
+            else
+            {
+                var registrations = _httpConfiguration.GetRegistrationsFor(typeof(TModel).GenericTypeArguments[0]);
 
-            var yesThisIsVeryHacky = typeof(IHateoasRegistration<>).MakeGenericType(typeof(TModel).GenericTypeArguments[0]);
-            var soInCaseOfBetterIdeas = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(yesThisIsVeryHacky).Invoke(null, new object[] { registrations });
-            var pleaseRefactorThis = (typeof(Enumerable).GetMethod("ToList")).MakeGenericMethod(yesThisIsVeryHacky).Invoke(null, new[] { soInCaseOfBetterIdeas });
-            return (IEnumerable<IHateoasLink>) _linkFactory.GetType().GetMethod(nameof(_linkFactory.CreateLinks)).MakeGenericMethod(typeof(TModel).GenericTypeArguments[0]).Invoke(_linkFactory, new [] { pleaseRefactorThis, data });
+                var yesThisIsVeryHacky = typeof(IHateoasRegistration<>).MakeGenericType(typeof(TModel).GenericTypeArguments[0]);
+                var soInCaseOfBetterIdeas = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(yesThisIsVeryHacky).Invoke(null, new object[] { registrations });
+                var pleaseRefactorThis = (typeof(Enumerable).GetMethod("ToList")).MakeGenericMethod(yesThisIsVeryHacky).Invoke(null, new[] { soInCaseOfBetterIdeas });
+
+                return (IEnumerable<IHateoasLink>)_linkFactory.GetType().GetMethod(nameof(_linkFactory.CreateLinks)).MakeGenericMethod(typeof(TModel).GenericTypeArguments[0]).Invoke(_linkFactory, new[] { pleaseRefactorThis, data });
+            }
         }
     }
 }

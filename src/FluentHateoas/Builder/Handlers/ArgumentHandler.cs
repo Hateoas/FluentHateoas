@@ -44,7 +44,7 @@ namespace FluentHateoas.Builder.Handlers
         public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder, object data)
         {
             var arguments = registration.ArgumentDefinitions;
-            var templateArguments = registration.Expression.TemplateParameters;
+            var templateArguments = (registration.Expression.TemplateParameters ?? new List<LambdaExpression>()).ToArray();
 
             if (registration.Expression.IdFromExpression != null)
             {
@@ -55,31 +55,40 @@ namespace FluentHateoas.Builder.Handlers
                 var result = compiledExpression.DynamicInvoke(provider, data);
                 resourceBuilder.Arguments.Add("id", CreateArgument("id", result.GetType(), result));
             }
-            else if (arguments.Any())
+            else if (arguments != null && arguments.Any())
             {
                 // Add the first argument so it always can be used as named property 'id'
                 var result = arguments.First().Compile().DynamicInvoke(data);
                 resourceBuilder.Arguments.Add("id", CreateArgument("id", result.GetType(), result));
                 arguments = arguments.Skip(1).ToArray();
+
+                // Handle arguments
+                foreach (var expression in arguments)
+                {
+                    var key = GetKey(data, ((MemberExpression)((UnaryExpression)expression.Body).Operand).Member);
+                    var invokeResult = expression.Compile().DynamicInvoke(data);
+
+                    resourceBuilder.Arguments.Add(key, CreateArgument(key, invokeResult.GetType(), invokeResult));
+                }
             }
 
-            // Handle arguments
-            foreach (var expression in arguments)
-            {
-                var key = GetKey(data, ((MemberExpression)((UnaryExpression)expression.Body).Operand).Member);
-                var result = expression.Compile().DynamicInvoke(data);
-
-                resourceBuilder.Arguments.Add(key, CreateArgument(key, result.GetType(), result));
-            }
-
-            if (templateArguments == null)
+            if (!templateArguments.Any())
                 return base.Process(registration, resourceBuilder, data);
 
             // Handle templates
+            if (!resourceBuilder.Arguments.Any())
+            {
+                var first = templateArguments.First();
+                var member = ((MemberExpression)((UnaryExpression)first.Body).Operand).Member;
+                resourceBuilder.Arguments.Add("id", CreateTemplateArgument("id", ((PropertyInfo)member).PropertyType));
+
+                templateArguments = templateArguments.Skip(1).ToArray();
+            }
+
             foreach (var expression in templateArguments)
             {
                 var member = ((MemberExpression)((UnaryExpression)expression.Body).Operand).Member;
-                var key = GetKey(data, member);
+                var key = GetKey(data, member, registration.IsCollection);
                 resourceBuilder.Arguments.Add(key, CreateTemplateArgument(key, ((PropertyInfo)member).PropertyType));
             }
 
@@ -107,18 +116,21 @@ namespace FluentHateoas.Builder.Handlers
             };
         }
 
-        private static string GetKey<TModel>(TModel data, MemberInfo member)
+        private static string GetKey<TModel>(TModel data, MemberInfo member, bool isCollection = false)
         {
             var keyName = member.Name;
+            var valueType = isCollection ? data.GetType().GetGenericArguments()[0] : data.GetType();
             var key = keyName == "Id"
-                ? data.GetType().Name.Substring(0, 1).ToLowerInvariant() + data.GetType().Name.Substring(1) + keyName // PersonInfo.Id becomes personInfoId
+                ? valueType.Name.Substring(0, 1).ToLowerInvariant() + valueType.Name.Substring(1) + keyName // PersonInfo.Id becomes personInfoId
                 : keyName.Substring(0, 1).ToLowerInvariant() + keyName.Substring(1);
             return key;
         }
 
         public override bool CanProcess<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder)
         {
-            return registration.ArgumentDefinitions.Any() || registration.Expression.IdFromExpression != null;
+            return (registration.ArgumentDefinitions != null && registration.ArgumentDefinitions.Any()) 
+                || (registration.Expression.TemplateParameters != null && registration.Expression.TemplateParameters.Any())
+                || registration.Expression.IdFromExpression != null;
         }
     }
 }

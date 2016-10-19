@@ -46,7 +46,7 @@ namespace FluentHateoasTest
             catch (ArgumentException exc)
             {
                 // assert
-                Assert.AreEqual("Cannot register collections; use .AsCollection() instead", exc.Message);
+                Assert.AreEqual("Cannot register collections; use .RegisterCollection<TModel>(\"name\") instead", exc.Message);
             }
         }
 
