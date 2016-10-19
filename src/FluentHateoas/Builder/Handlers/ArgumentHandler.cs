@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -79,7 +80,10 @@ namespace FluentHateoas.Builder.Handlers
             if (!resourceBuilder.Arguments.Any())
             {
                 var first = templateArguments.First();
-                var member = ((MemberExpression)((UnaryExpression)first.Body).Operand).Member;
+                var member = first.Body is MemberExpression
+                    ? ((MemberExpression)first.Body).Member
+                    : ((MemberExpression)((UnaryExpression)first.Body).Operand).Member;
+
                 resourceBuilder.Arguments.Add("id", CreateTemplateArgument("id", ((PropertyInfo)member).PropertyType));
 
                 templateArguments = templateArguments.Skip(1).ToArray();
@@ -87,7 +91,10 @@ namespace FluentHateoas.Builder.Handlers
 
             foreach (var expression in templateArguments)
             {
-                var member = ((MemberExpression)((UnaryExpression)expression.Body).Operand).Member;
+                var member = expression.Body is MemberExpression
+                    ? ((MemberExpression) expression.Body).Member
+                    : ((MemberExpression)((UnaryExpression)expression.Body).Operand).Member;
+
                 var key = GetKey(data, member, registration.IsCollection);
                 resourceBuilder.Arguments.Add(key, CreateTemplateArgument(key, ((PropertyInfo)member).PropertyType));
             }
