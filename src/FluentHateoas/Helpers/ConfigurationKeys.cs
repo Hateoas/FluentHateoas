@@ -8,7 +8,7 @@ namespace FluentHateoas.Helpers
 
         private static string GetSetting(string key)
         {
-            var format = $"fluenthateoas:api-prefix:{key}";
+            var format = $"fluenthateoas:{key}";
             return ConfigurationManager.AppSettings[format];
         }
     }
