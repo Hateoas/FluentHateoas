@@ -80,9 +80,9 @@ namespace FluentHateoas.Registration
         /// <param name="model">The model to get HATEOAS registrations for</param>
         /// <param name="isCollection"></param>
         /// <returns>HATEOAS registrations for the model specified</returns>
-        public static List<IHateoasRegistration> GetRegistrationsFor<TModel>(this HttpConfiguration configuration, bool isCollection = false)
+        public static List<IHateoasRegistration> GetRegistrationsFor<TModel>(this HttpConfiguration configuration)
         {
-            return configuration.GetRegistrationsFor(typeof(TModel), isCollection).ToList();//.Cast<IHateoasRegistration<TModel>>().ToList();
+            return configuration.GetRegistrationsFor(typeof(TModel)).ToList();//.Cast<IHateoasRegistration<TModel>>().ToList();
         }
 
         /// <summary>
@@ -92,18 +92,18 @@ namespace FluentHateoas.Registration
         /// <param name="model">The model to get HATEOAS registrations for</param>
         /// <param name="isCollection"></param>
         /// <returns>HATEOAS registrations for the model specified</returns>
-        public static List<IHateoasRegistration> GetRegistrationsFor(this HttpConfiguration configuration, Type model, bool isCollection = false)
+        public static List<IHateoasRegistration> GetRegistrationsFor(this HttpConfiguration configuration, Type model)
         {
             var linkedResourceDefinitions = configuration.GetRegistrations();
             List<IHateoasRegistration> definitions;
 
             if (linkedResourceDefinitions.TryGetValue(model, out definitions))
-                return definitions;//.Where(p => p.IsCollection == isCollection).ToList();
+                return definitions;
 
             definitions = new List<IHateoasRegistration>();
             linkedResourceDefinitions.Add(model, definitions);
 
-            return definitions;//.Where(p => p.IsCollection == isCollection).ToList();
+            return definitions;
         }
 
         /// <summary>

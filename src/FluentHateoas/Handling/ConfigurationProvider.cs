@@ -24,12 +24,12 @@ namespace FluentHateoas.Handling
 
             if (!isCollection)
             {
-                var registrations = _httpConfiguration.GetRegistrationsFor<TModel>().Cast<IHateoasRegistration<TModel>>().ToList();
+                var registrations = _httpConfiguration.GetRegistrationsFor<TModel>().Where(p => !p.IsCollection).Cast<IHateoasRegistration<TModel>>().ToList();
                 return _linkFactory.CreateLinks(registrations, data);
             }
             else
             {
-                var registrations = _httpConfiguration.GetRegistrationsFor(typeof(TModel).GenericTypeArguments[0]);
+                var registrations = _httpConfiguration.GetRegistrationsFor(typeof(TModel).GenericTypeArguments[0]).Where(p => p.IsCollection);
 
                 var yesThisIsVeryHacky = typeof(IHateoasRegistration<>).MakeGenericType(typeof(TModel).GenericTypeArguments[0]);
                 var soInCaseOfBetterIdeas = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(yesThisIsVeryHacky).Invoke(null, new object[] { registrations });
