@@ -36,7 +36,7 @@ namespace FluentHateoas.Handling
                 return CreateLinksForFunc(method, contentType);
             }
 
-            return null;
+            throw new InvalidOperationException($"No HATEOAS configuration for type {contentType.Name}");
         }
 
         private static IEnumerable<MethodInfo> GetLinksForGenericMethods(IConfigurationProvider configurationProvider)

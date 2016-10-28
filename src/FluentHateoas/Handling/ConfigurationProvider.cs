@@ -45,9 +45,6 @@ namespace FluentHateoas.Handling
             if (!_getLinksForMethodCache.TryGetValue(contentType, out getLinksForFn))
                 getLinksForFn = this.GetLinksForFunc(contentType, content);
 
-            if (getLinksForFn == null)
-                throw new InvalidOperationException($"No HATEOAS configuration for type {contentType.Name}");
-
             return getLinksForFn(this, content);
         }
     }
