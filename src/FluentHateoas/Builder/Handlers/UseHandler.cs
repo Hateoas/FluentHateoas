@@ -8,7 +8,7 @@ namespace FluentHateoas.Builder.Handlers
 {
     public class UseHandler : RegistrationLinkHandlerBase
     {
-        public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder, object data)
+        protected override void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder, object data)
         {
             resourceBuilder.Controller = registration.Expression.Controller;
 
@@ -20,9 +20,6 @@ namespace FluentHateoas.Builder.Handlers
 
             else
                 throw new NotImplementedException();
-
-
-            return base.Process(registration, resourceBuilder, data);
         }
 
         public override bool CanProcess<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder)

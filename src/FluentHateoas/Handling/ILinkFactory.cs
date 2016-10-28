@@ -1,7 +1,9 @@
+using System.Collections.Generic;
+
 namespace FluentHateoas.Handling
 {
     public interface ILinkFactory
     {
-        System.Collections.Generic.IEnumerable<IHateoasLink> CreateLinks<TModel>(System.Collections.Generic.List<Interfaces.IHateoasRegistration<TModel>> registrations, object data);
+        IEnumerable<IHateoasLink> CreateLinks<TModel>(IEnumerable<Interfaces.IHateoasRegistration<TModel>> registrations, object data);
     }
 }

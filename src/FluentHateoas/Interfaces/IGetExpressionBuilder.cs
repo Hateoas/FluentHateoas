@@ -3,8 +3,6 @@
     using System;
     using System.Linq.Expressions;
 
-    using FluentHateoas.Registration;
-
     public interface IGetExpressionBuilder<TModel> : 
         ITemplateExpressionBuilder<TModel>
     {

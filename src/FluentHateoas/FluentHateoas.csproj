@@ -99,6 +99,7 @@
     <Compile Include="Contracts\IHateoasContainer.cs" />
     <Compile Include="Contracts\IHateoasRegistrationProfile.cs" />
     <Compile Include="Handling\ConfigurationProvider.cs" />
+    <Compile Include="Handling\ConfigurationProviderExtensions.cs" />
     <Compile Include="Handling\HateoasLink.cs" />
     <Compile Include="Handling\HateOasResponse.cs" />
     <Compile Include="Handling\IConfigurationProvider.cs" />

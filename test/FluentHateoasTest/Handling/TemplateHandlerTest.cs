@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Registration;
 using FluentHateoasTest.Assets.Controllers;
@@ -8,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace FluentHateoasTest.Handling
 {
     [TestClass]
+    [ExcludeFromCodeCoverage]
     public class TemplateHandlerTest : BaseHandlerTest<TemplateHandler>
     {
         [TestInitialize]

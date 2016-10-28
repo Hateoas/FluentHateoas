@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
 using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Interfaces;
@@ -11,6 +12,7 @@ using Person = FluentHateoasTest.Assets.Model.Person;
 namespace FluentHateoasTest.Handling
 {
     [TestClass]
+    [ExcludeFromCodeCoverage]
     public class CommandHandlerTest : BaseHandlerTest<CommandHandler>
     {
         [TestInitialize]

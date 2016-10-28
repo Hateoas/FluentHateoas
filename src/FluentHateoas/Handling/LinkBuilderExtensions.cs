@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Web.Configuration;
-using System.Web.Http;
-using System.Web.Mvc;
 using FluentHateoas.Builder.Model;
 using FluentHateoas.Helpers;
 

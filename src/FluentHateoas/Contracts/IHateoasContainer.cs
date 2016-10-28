@@ -1,11 +1,6 @@
-﻿using System;
-
-namespace FluentHateoas.Contracts
+﻿namespace FluentHateoas.Contracts
 {
-    using System.Collections.Generic;
-
     using FluentHateoas.Interfaces;
-    using FluentHateoas.Registration;
 
     public interface IHateoasContainer
     {

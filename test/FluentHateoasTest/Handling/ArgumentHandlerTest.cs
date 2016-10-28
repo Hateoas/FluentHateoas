@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
 using System.Web.Http.Dependencies;
 using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
@@ -11,6 +12,7 @@ using Moq;
 namespace FluentHateoasTest.Handling
 {
     [TestClass]
+    [ExcludeFromCodeCoverage]
     public class ArgumentHandlerTest : BaseHandlerTest<ArgumentHandler>
     {
         [TestInitialize]

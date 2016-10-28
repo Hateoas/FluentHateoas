@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
 using FluentHateoas.Builder.Model;
-using Microsoft.Build.Tasks.Deployment.Bootstrapper;
 
 namespace FluentHateoas.Helpers
 {

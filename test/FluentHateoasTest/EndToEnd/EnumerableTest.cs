@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Web.Http;
@@ -17,10 +18,9 @@ using Moq;
 namespace FluentHateoasTest.EndToEnd
 {
     [TestClass]
+    [ExcludeFromCodeCoverage]
     public class EnumerableTest
     {
-        private IHateoasConfiguration _configuration;
-
         private Mock<IAuthorizationProvider> _authorizationProvider;
         private Mock<IDependencyResolver> _dependencyResolver;
         private Mock<IPersonProvider> _personProvider;
@@ -34,8 +34,6 @@ namespace FluentHateoasTest.EndToEnd
         [TestInitialize]
         public void Initialize()
         {
-            _configuration = new HateoasConfiguration();
-
             _authorizationProvider = new Mock<IAuthorizationProvider>();
             _dependencyResolver = new Mock<IDependencyResolver>();
             _personProvider = new Mock<IPersonProvider>();

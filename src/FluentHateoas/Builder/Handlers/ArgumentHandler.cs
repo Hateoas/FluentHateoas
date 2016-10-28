@@ -1,15 +1,11 @@
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Web.Http;
 using System.Web.Http.Dependencies;
 using FluentHateoas.Builder.Model;
 using FluentHateoas.Handling;
-using FluentHateoas.Helpers;
 using FluentHateoas.Interfaces;
 
 namespace FluentHateoas.Builder.Handlers
@@ -42,7 +38,7 @@ namespace FluentHateoas.Builder.Handlers
         /// <param name="resourceBuilder"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override LinkBuilder Process<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder, object data)
+        protected override void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder, object data)
         {
             var arguments = registration.ArgumentDefinitions;
             var templateArguments = (registration.Expression.TemplateParameters ?? new List<LambdaExpression>()).ToArray();
@@ -73,8 +69,7 @@ namespace FluentHateoas.Builder.Handlers
                 }
             }
 
-            if (!templateArguments.Any())
-                return base.Process(registration, resourceBuilder, data);
+            if (!templateArguments.Any()) return;
 
             // Handle templates
             if (!resourceBuilder.Arguments.Any())
@@ -98,8 +93,6 @@ namespace FluentHateoas.Builder.Handlers
                 var key = GetKey(data, member, registration.IsCollection);
                 resourceBuilder.Arguments.Add(key, CreateTemplateArgument(key, ((PropertyInfo)member).PropertyType));
             }
-
-            return base.Process(registration, resourceBuilder, data);
         }
 
         private static Argument CreateArgument(string name, Type type, object value)

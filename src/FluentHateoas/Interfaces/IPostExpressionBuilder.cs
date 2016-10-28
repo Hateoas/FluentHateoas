@@ -3,8 +3,6 @@ namespace FluentHateoas.Interfaces
     using System;
     using System.Linq.Expressions;
 
-    using FluentHateoas.Registration;
-
     public interface IWithCommandExpressionBuilder<TModel> : IExpressionBuilderBase<TModel>
     {
     }

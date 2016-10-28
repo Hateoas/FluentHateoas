@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Web.Http;
 using FluentAssertions;
@@ -15,6 +16,7 @@ using Moq;
 namespace FluentHateoasTest.Handling
 {
     [TestClass]
+    [ExcludeFromCodeCoverage]
     public class RelationNameHandlerTest
     {
         private RelationHandler _handler;

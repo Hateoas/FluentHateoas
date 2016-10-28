@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -80,9 +79,9 @@ namespace FluentHateoas.Registration
         /// <param name="model">The model to get HATEOAS registrations for</param>
         /// <param name="isCollection"></param>
         /// <returns>HATEOAS registrations for the model specified</returns>
-        public static List<IHateoasRegistration> GetRegistrationsFor<TModel>(this HttpConfiguration configuration)
+        public static List<IHateoasRegistration<TModel>> GetRegistrationsFor<TModel>(this HttpConfiguration configuration)
         {
-            return configuration.GetRegistrationsFor(typeof(TModel)).ToList();//.Cast<IHateoasRegistration<TModel>>().ToList();
+            return configuration.GetRegistrationsFor(typeof(TModel)).Cast<IHateoasRegistration<TModel>>().ToList();
         }
 
         /// <summary>

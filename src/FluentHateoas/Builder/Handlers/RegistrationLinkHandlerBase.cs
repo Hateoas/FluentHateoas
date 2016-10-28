@@ -8,17 +8,23 @@ namespace FluentHateoas.Builder.Handlers
     {
         private IRegistrationLinkHandler _successor;
 
-        public virtual LinkBuilder Process<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder, object data)
+        public LinkBuilder Process<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder, object data)
         {
-            return _successor != null && _successor.CanProcess(registration, resourceBuilder)
+            if (CanProcess(registration, resourceBuilder))
+            {
+                ProcessInternal(registration, resourceBuilder, data);
+            }
+
+            return _successor != null
                 ? _successor.Process(registration, resourceBuilder, data)
                 : resourceBuilder;
         }
 
+        protected abstract void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder, object data);
+
         public void SetSuccessor(IRegistrationLinkHandler handler)
         {
-            if (handler == null) throw new ArgumentNullException("handler");
-
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
             _successor = handler;
         }
 

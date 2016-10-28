@@ -12,31 +12,43 @@ namespace FluentHateoas.Handling
         private readonly System.Web.Http.HttpConfiguration _httpConfiguration;
         private readonly ILinkFactory _linkFactory;
 
+        private readonly Dictionary<Type, Func<ConfigurationProvider, object, IEnumerable<IHateoasLink>>> _getLinksForMethodCache;
+
         public ConfigurationProvider(System.Web.Http.HttpConfiguration httpConfiguration, ILinkFactory linkFactory)
         {
             _httpConfiguration = httpConfiguration;
             _linkFactory = linkFactory;
+
+            _getLinksForMethodCache = new Dictionary<Type, Func<ConfigurationProvider, object, IEnumerable<IHateoasLink>>> ();
         }
 
         public IEnumerable<IHateoasLink> GetLinksFor<TModel>(TModel data)
         {
-            var isCollection = typeof(TModel).GetInterfaces().Contains(typeof(IEnumerable));
+            var registrations = _httpConfiguration
+                .GetRegistrationsFor<TModel>()
+                .Where(p => !p.IsCollection);
+            return _linkFactory.CreateLinks(registrations, data);
+        }
 
-            if (!isCollection)
-            {
-                var registrations = _httpConfiguration.GetRegistrationsFor<TModel>().Where(p => !p.IsCollection).Cast<IHateoasRegistration<TModel>>().ToList();
-                return _linkFactory.CreateLinks(registrations, data);
-            }
-            else
-            {
-                var registrations = _httpConfiguration.GetRegistrationsFor(typeof(TModel).GenericTypeArguments[0]).Where(p => p.IsCollection);
+        public IEnumerable<IHateoasLink> GetLinksFor<TModel>(IEnumerable<TModel> data)
+        {
+            var registrations = _httpConfiguration
+                .GetRegistrationsFor<TModel>()
+                .Where(p => p.IsCollection);
 
-                var yesThisIsVeryHacky = typeof(IHateoasRegistration<>).MakeGenericType(typeof(TModel).GenericTypeArguments[0]);
-                var soInCaseOfBetterIdeas = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(yesThisIsVeryHacky).Invoke(null, new object[] { registrations });
-                var pleaseRefactorThis = (typeof(Enumerable).GetMethod("ToList")).MakeGenericMethod(yesThisIsVeryHacky).Invoke(null, new[] { soInCaseOfBetterIdeas });
+            return _linkFactory.CreateLinks(registrations, data);
+        }
 
-                return (IEnumerable<IHateoasLink>)_linkFactory.GetType().GetMethod(nameof(_linkFactory.CreateLinks)).MakeGenericMethod(typeof(TModel).GenericTypeArguments[0]).Invoke(_linkFactory, new[] { pleaseRefactorThis, data });
-            }
+        public IEnumerable<IHateoasLink> GetLinksFor(Type contentType, object content)
+        {
+            Func<ConfigurationProvider, object, IEnumerable<IHateoasLink>> getLinksForFn;
+            if (!_getLinksForMethodCache.TryGetValue(contentType, out getLinksForFn))
+                getLinksForFn = this.GetLinksForFunc(contentType, content);
+
+            if (getLinksForFn == null)
+                throw new InvalidOperationException($"No HATEOAS configuration for type {contentType.Name}");
+
+            return getLinksForFn(this, content);
         }
     }
 }

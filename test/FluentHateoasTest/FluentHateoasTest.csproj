@@ -91,6 +91,7 @@
     <Compile Include="Assets\Model\Car.cs" />
     <Compile Include="Assets\Model\Person.cs" />
     <Compile Include="Assets\Providers\IPersonProvider.cs" />
+    <Compile Include="EndToEnd\ConfigurationProviderTest.cs" />
     <Compile Include="EndToEnd\EnumerableTest.cs" />
     <Compile Include="EndToEnd\SingleEntityTest.cs" />
     <Compile Include="EndToEnd\TestContainer.cs" />
@@ -98,8 +99,10 @@
     <Compile Include="Handling\ArgumentHandlerTest.cs" />
     <Compile Include="Handling\BaseHandlerTest.cs" />
     <Compile Include="Handling\CommandHandlerTest.cs" />
+    <Compile Include="Handling\RegistrationLinkHandlerExtensionsTest.cs" />
     <Compile Include="Handling\RelationNameHandlerTest.cs" />
     <Compile Include="Assets\Model\TestRegistration.cs" />
+    <Compile Include="Handling\ResponseProviderTest.cs" />
     <Compile Include="Handling\TemplateHandlerTest.cs" />
     <Compile Include="Handling\UseHandlerTest.cs" />
     <Compile Include="HateoasContainerTest.cs" />

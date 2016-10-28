@@ -1,21 +1,25 @@
-using Enumerable = System.Linq.Enumerable;
-
 namespace FluentHateoas.Handling
 {
     public static class RegistrationLinkHandlerExtensions
     {
         public static IRegistrationLinkHandler CreateChain(this System.Collections.Generic.IEnumerable<IRegistrationLinkHandler> source)
         {
-            var handlers = Enumerable.ToList(source);
+            IRegistrationLinkHandler root = null;
+            IRegistrationLinkHandler predecessor = null;
 
-            if (handlers.Count <= 1)
-                return Enumerable.First(handlers);
-
-            for (var i = 1; i < handlers.Count; i++)
+            foreach (var handler in source)
             {
-                handlers[i - 1].SetSuccessor(handlers[i]);
+                // set root
+                if (root == null) root = handler;
+
+                // set successor (if predecessor)
+                predecessor?.SetSuccessor(handler);
+
+                // set next predecessor
+                predecessor = handler;
             }
-            return Enumerable.First(handlers);
+
+            return root;
         }
     }
 }

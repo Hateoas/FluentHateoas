@@ -1,8 +1,5 @@
-﻿using System;
-
-namespace FluentHateoas.Registration
+﻿namespace FluentHateoas.Registration
 {
-    using System.Collections.Generic;
     using System.Web.Http;
 
     using FluentHateoas.Contracts;

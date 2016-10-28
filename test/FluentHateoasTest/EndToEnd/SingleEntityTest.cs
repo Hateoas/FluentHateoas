@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Web.Http;
@@ -16,6 +17,7 @@ using Moq;
 namespace FluentHateoasTest.EndToEnd
 {
     [TestClass]
+    [ExcludeFromCodeCoverage]
     public class SingleEntityTest
     {
         private IHateoasConfiguration _configuration;
