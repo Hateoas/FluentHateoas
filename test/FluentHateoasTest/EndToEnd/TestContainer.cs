@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentHateoas.Contracts;
 using FluentHateoas.Interfaces;
 
 namespace FluentHateoasTest.EndToEnd
 {
+    [ExcludeFromCodeCoverage]
     public class TestContainer : IHateoasContainer
     {
         private readonly List<IHateoasRegistration> _registrations;

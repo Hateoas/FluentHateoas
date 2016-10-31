@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FluentHateoasTest.Assets.Model
 {
+    [ExcludeFromCodeCoverage]
     public class Address
     {
         public Guid Id { get; set; }
@@ -11,6 +13,7 @@ namespace FluentHateoasTest.Assets.Model
         public string Country { get; set; }
     }
 
+    [ExcludeFromCodeCoverage]
     public class CreateAddressRequest
     {
         public string Street { get; set; }
@@ -20,6 +23,7 @@ namespace FluentHateoasTest.Assets.Model
 
     }
 
+    [ExcludeFromCodeCoverage]
     public class UpdateAddressRequest
     {
         public Guid Id { get; set; }

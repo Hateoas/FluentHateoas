@@ -5,7 +5,7 @@ namespace FluentHateoas.Builder.Handlers
 {
     public class TemplateHandler : RegistrationLinkHandlerBase
     {
-        protected override void ProcessInternal<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder, object data)
+        public override void ProcessInternal<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder, object data)
         {
             resourceBuilder.IsTemplate = definition.Expression.Template;
         }

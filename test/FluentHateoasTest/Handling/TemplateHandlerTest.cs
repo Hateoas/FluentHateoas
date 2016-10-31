@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
-using FluentHateoas.Registration;
 using FluentHateoasTest.Assets.Controllers;
 using FluentHateoasTest.Assets.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SampleApi.Providers
 {
@@ -9,6 +10,7 @@ namespace SampleApi.Providers
         Guid GetPreviousId(object obj);
     }
 
+    [ExcludeFromCodeCoverage]
     public class PersonProvider : IPersonProvider
     {
         public bool HasNextId(object obj)

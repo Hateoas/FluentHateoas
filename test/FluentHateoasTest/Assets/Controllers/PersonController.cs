@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Web.Http;
-using FluentAssertions;
 using FluentHateoasTest.Assets.Model;
 
 namespace FluentHateoasTest.Assets.Controllers
 {
+    [ExcludeFromCodeCoverage]
     public class PersonController : ApiController
     {
         public IEnumerable<Person> Get()

@@ -1,4 +1,5 @@
-﻿using SampleApi.Model;
+﻿using System.Diagnostics.CodeAnalysis;
+using SampleApi.Model;
 
 namespace SampleApi.Providers
 {
@@ -7,6 +8,7 @@ namespace SampleApi.Providers
         object Create();
     }
 
+    [ExcludeFromCodeCoverage]
     public class TemplateFactory : ITemplateFactory
     {
         public object Create()

@@ -5,7 +5,7 @@ namespace FluentHateoas.Builder.Handlers
 {
     public class RelationHandler : RegistrationLinkHandlerBase
     {
-        protected override void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder linkBuilder, object data)
+        public override void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder linkBuilder, object data)
         {
             linkBuilder.Relation = registration.Relation;
         }

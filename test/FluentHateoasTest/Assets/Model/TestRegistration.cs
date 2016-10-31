@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using FluentHateoas.Interfaces;
 
 namespace FluentHateoasTest.Assets.Model
 {
+    [ExcludeFromCodeCoverage]
     public class TestRegistration<TModel> : IHateoasRegistration<TModel>
     {
         public TestRegistration(string relation, bool isCollection)

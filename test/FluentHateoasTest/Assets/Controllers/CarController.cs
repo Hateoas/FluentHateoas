@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Web.Http;
 using FluentHateoasTest.Assets.Model;
 
 namespace FluentHateoasTest.Assets.Controllers
 {
+    [ExcludeFromCodeCoverage]
     public class CarController : ApiController
     {
         public IEnumerable<Car> Get()

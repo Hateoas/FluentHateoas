@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Configuration;
 using SampleApi.Providers;
@@ -8,6 +9,7 @@ namespace SampleApi.App_Start
     /// <summary>
     /// Specifies the Unity configuration for the main container.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class UnityConfig
     {
         #region Unity Container

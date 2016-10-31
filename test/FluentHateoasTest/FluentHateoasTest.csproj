@@ -92,13 +92,14 @@
     <Compile Include="Assets\Model\Person.cs" />
     <Compile Include="Assets\Providers\IPersonProvider.cs" />
     <Compile Include="EndToEnd\ConfigurationProviderExtensionsTest.cs" />
-    <Compile Include="EndToEnd\EnumerableTest.cs" />
-    <Compile Include="EndToEnd\SingleEntityTest.cs" />
+    <Compile Include="EndToEnd\ConfigurationProviderEnumerableTest.cs" />
+    <Compile Include="EndToEnd\ConfigurationProviderSingleEntityTest.cs" />
     <Compile Include="EndToEnd\TestContainer.cs" />
     <Compile Include="Factories\RegistrationFactory.cs" />
     <Compile Include="Handling\ArgumentHandlerTest.cs" />
     <Compile Include="Handling\BaseHandlerTest.cs" />
     <Compile Include="Handling\CommandHandlerTest.cs" />
+    <Compile Include="Handling\RegistrationLinkHandlerBaseTest.cs" />
     <Compile Include="Handling\RegistrationLinkHandlerExtensionsTest.cs" />
     <Compile Include="Handling\RelationNameHandlerTest.cs" />
     <Compile Include="Assets\Model\TestRegistration.cs" />

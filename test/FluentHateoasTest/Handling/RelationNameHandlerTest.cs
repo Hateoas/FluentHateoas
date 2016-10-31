@@ -1,17 +1,10 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
-using System.Web.Http;
+﻿using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Handling;
-using FluentHateoas.Handling.Handlers;
-using FluentHateoas.Registration;
-using FluentHateoasTest.Assets.Controllers;
 using FluentHateoasTest.Assets.Model;
 using FluentHateoasTest.Factories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace FluentHateoasTest.Handling
 {

@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Net.Http;
 using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Interfaces;

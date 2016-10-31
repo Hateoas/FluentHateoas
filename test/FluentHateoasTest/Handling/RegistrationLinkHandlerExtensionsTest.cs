@@ -2,13 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Web.Http;
-using System.Web.Http.Dependencies;
 using FluentHateoas.Handling;
-using FluentHateoas.Registration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

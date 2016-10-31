@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Net.Http;
 using FluentHateoas.Handling;
@@ -10,6 +11,7 @@ using Moq;
 
 namespace FluentHateoasTest.Handling
 {
+    [ExcludeFromCodeCoverage]
     public abstract class BaseHandlerTest<THandler>
     {
         protected THandler Handler;
