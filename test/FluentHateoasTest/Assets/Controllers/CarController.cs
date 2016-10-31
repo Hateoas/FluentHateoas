@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Web.Http;
 using FluentHateoasTest.Assets.Model;
 
@@ -11,7 +12,7 @@ namespace FluentHateoasTest.Assets.Controllers
     {
         public IEnumerable<Car> Get()
         {
-            return new List<Car>();
+            return new List<Car>().Select(p => new Car());
         }
 
         public Car Get(Guid id)

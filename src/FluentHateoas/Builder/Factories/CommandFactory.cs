@@ -30,20 +30,25 @@ namespace FluentHateoas.Builder.Factories
 
         private static Property CreateProperty(PropertyInfo propertyInfo, int index)
         {
-            switch (propertyInfo.PropertyType.Name)
+            var nullable = propertyInfo.PropertyType.IsGenericType && propertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
+            var type = nullable
+                ? Nullable.GetUnderlyingType(propertyInfo.PropertyType)
+                : propertyInfo.PropertyType;
+
+            switch (type.Name)
             {
                 case "Int32":
                 case "Int64":
-                    return CreateIntProperty(propertyInfo, index);
+                    return CreateIntProperty(propertyInfo, index, nullable);
 
                 default:
-                    return CreateProperty<Property>(propertyInfo, index);
+                    return CreateProperty<Property>(propertyInfo, index, nullable);
             }
         }
 
-        private static Property CreateIntProperty(PropertyInfo propertyInfo, int index)
+        private static Property CreateIntProperty(PropertyInfo propertyInfo, int index, bool nullable)
         {
-            var result = CreateProperty<IntegerProperty>(propertyInfo, index);
+            var result = CreateProperty<IntegerProperty>(propertyInfo, index, nullable);
 
             var minValue = propertyInfo.GetCustomAttribute<MinValueAttribute>();
             var maxValue = propertyInfo.GetCustomAttribute<MaxValueAttribute>();
@@ -60,14 +65,14 @@ namespace FluentHateoas.Builder.Factories
             return result;
         }
 
-        private static TProperty CreateProperty<TProperty>(PropertyInfo propertyInfo, int index) where TProperty : Property, new()
+        private static TProperty CreateProperty<TProperty>(PropertyInfo propertyInfo, int index, bool nullable) where TProperty : Property, new()
         {
             return new TProperty
             {
                 Type = propertyInfo.PropertyType.Name,
                 Name = propertyInfo.Name,
                 Order = index,
-                //Required = propertyInfo
+                Required = !nullable
             };
         }
     }
