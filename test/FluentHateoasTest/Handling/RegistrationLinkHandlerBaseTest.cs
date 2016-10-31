@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
+using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Handling;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,9 +22,10 @@ namespace FluentHateoasTest.Handling
             var successorMock = new Mock<IRegistrationLinkHandler>(MockBehavior.Strict);
 
             // act
-            handlerMock.Object.SetSuccessor(successorMock.Object);
+            Action action = () => handlerMock.Object.SetSuccessor(successorMock.Object);
 
             // assert (nothing to assert yet, simply should not fail)
+            action.ShouldNotThrow();
         }
 
         [TestMethod]
