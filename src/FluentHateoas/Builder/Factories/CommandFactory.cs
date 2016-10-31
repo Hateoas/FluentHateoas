@@ -39,16 +39,16 @@ namespace FluentHateoas.Builder.Factories
             {
                 case "Int32":
                 case "Int64":
-                    return CreateIntProperty(propertyInfo, index, nullable);
+                    return CreateIntProperty(propertyInfo, type, index, nullable);
 
                 default:
-                    return CreateProperty<Property>(propertyInfo, index, nullable);
+                    return CreateProperty<Property>(propertyInfo, type, index, nullable);
             }
         }
 
-        private static Property CreateIntProperty(PropertyInfo propertyInfo, int index, bool nullable)
+        private static Property CreateIntProperty(PropertyInfo propertyInfo, Type type, int index, bool nullable)
         {
-            var result = CreateProperty<IntegerProperty>(propertyInfo, index, nullable);
+            var result = CreateProperty<IntegerProperty>(propertyInfo, type, index, nullable);
 
             var minValue = propertyInfo.GetCustomAttribute<MinValueAttribute>();
             var maxValue = propertyInfo.GetCustomAttribute<MaxValueAttribute>();
@@ -65,11 +65,11 @@ namespace FluentHateoas.Builder.Factories
             return result;
         }
 
-        private static TProperty CreateProperty<TProperty>(PropertyInfo propertyInfo, int index, bool nullable) where TProperty : Property, new()
+        private static TProperty CreateProperty<TProperty>(PropertyInfo propertyInfo, Type type, int index, bool nullable) where TProperty : Property, new()
         {
             return new TProperty
             {
-                Type = propertyInfo.PropertyType.Name,
+                Type = type.Name,
                 Name = propertyInfo.Name,
                 Order = index,
                 Required = !nullable
