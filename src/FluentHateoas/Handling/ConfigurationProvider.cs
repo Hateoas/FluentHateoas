@@ -39,6 +39,7 @@ namespace FluentHateoas.Handling
 
         public IEnumerable<IHateoasLink> GetLinksFor(Type contentType, object content)
         {
+            // TODO Dynamically creating/caching those link functions is heavy and should move to the registration phase.
             Func<ConfigurationProvider, object, IEnumerable<IHateoasLink>> getLinksForFunction;
             if (!_cachedGetLinksForMethod.TryGetValue(contentType, out getLinksForFunction))
                 _cachedGetLinksForMethod[contentType] = getLinksForFunction = this.GetLinksForFunc(contentType, content);
