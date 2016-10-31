@@ -25,9 +25,7 @@ namespace FluentHateoas.Handling
         {
             Type singleContentType, contentTypeToUse;
 
-            if (contentType
-                .GetInterfaces()
-                .Any(ti => ti.IsGenericType && ti.GetGenericTypeDefinition() == typeof(IEnumerable<>)))
+            if(IsOrImplementsIEnumerable(contentType))
             {
                 singleContentType = contentType.GetGenericArguments()[0];
                 // The content type to use must be IEnumerable<TModel> in order to find the correct GetLinksFor method to use
@@ -42,6 +40,19 @@ namespace FluentHateoas.Handling
             }
 
             return new Tuple<Type, Type>(singleContentType, contentTypeToUse);
+        }
+
+        private static bool IsOrImplementsIEnumerable(Type contentType)
+        {
+            if (contentType.IsInterface && 
+                contentType.IsGenericType &&
+                contentType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                return true;
+
+            return
+                contentType
+                    .GetInterfaces()
+                    .Any(ti => ti.IsGenericType && ti.GetGenericTypeDefinition() == typeof(IEnumerable<>));
         }
 
         private static Func<IConfigurationProvider, object, IEnumerable<IHateoasLink>> GetLinksForFunc(IConfigurationProvider configurationProvider, Type singleContentType, Type contentTypeToUse)
