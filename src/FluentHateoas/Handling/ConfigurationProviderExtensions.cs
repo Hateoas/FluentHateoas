@@ -4,25 +4,48 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
+// ReSharper disable ArgumentsStyleNamedExpression
+
 namespace FluentHateoas.Handling
 {
     public static class ConfigurationProviderExtensions
     {
-        private static IList<MethodInfo> _genericLinksForMethods;
+        private static IEnumerable<MethodInfo> _genericLinksForMethods;
 
         public static Func<IConfigurationProvider, object, IEnumerable<IHateoasLink>> GetLinksForFunc(this IConfigurationProvider configurationProvider, Type contentType, object content)
         {
-            Type singleContentType;
-            if (contentType.GetInterfaces().Any(ti => ti.IsGenericType && ti.GetGenericTypeDefinition() == typeof(IEnumerable<>)))
+            var determinedContentTypes = DetermineContentTypes(contentType);
+            return GetLinksForFunc(
+                configurationProvider,
+                singleContentType: determinedContentTypes.Item1,
+                contentTypeToUse: determinedContentTypes.Item2);
+        }
+
+        private static Tuple<Type, Type> DetermineContentTypes(Type contentType)
+        {
+            Type singleContentType, contentTypeToUse;
+
+            if (contentType
+                .GetInterfaces()
+                .Any(ti => ti.IsGenericType && ti.GetGenericTypeDefinition() == typeof(IEnumerable<>)))
             {
                 singleContentType = contentType.GetGenericArguments()[0];
-                contentType = typeof(IEnumerable<>).MakeGenericType(singleContentType);
+                // The content type to use must be IEnumerable<TModel> in order to find the correct GetLinksFor method to use
+                // when generating the lambda function below (using SequenceEquals on types). In some cases, actual input will
+                // be List<TModel> or even TModel[]. For those cases, we just simplify the content type to its 'base form'.
+                contentTypeToUse = typeof(IEnumerable<>).MakeGenericType(singleContentType);
             }
             else
             {
                 singleContentType = contentType;
+                contentTypeToUse = contentType;
             }
 
+            return new Tuple<Type, Type>(singleContentType, contentTypeToUse);
+        }
+
+        private static Func<IConfigurationProvider, object, IEnumerable<IHateoasLink>> GetLinksForFunc(IConfigurationProvider configurationProvider, Type singleContentType, Type contentTypeToUse)
+        {
             var genericMethods = GetLinksForGenericMethods(configurationProvider);
 
             foreach (var genericMethod in genericMethods)
@@ -30,13 +53,13 @@ namespace FluentHateoas.Handling
                 var method = genericMethod.MakeGenericMethod(singleContentType);
 
                 var parameters = method.GetParameters().Select(p => p.ParameterType).ToArray();
-                if (!parameters.SequenceEqual(new[] { contentType }))
+                if (!parameters.SequenceEqual(new[] { contentTypeToUse }))
                     continue;
 
-                return CreateLinksForFunc(method, contentType);
+                return CreateLinksForFunc(method, contentTypeToUse);
             }
 
-            throw new InvalidOperationException($"No HATEOAS configuration for type {contentType.Name}");
+            throw new InvalidOperationException($"No HATEOAS configuration for type {contentTypeToUse.Name}");
         }
 
         private static IEnumerable<MethodInfo> GetLinksForGenericMethods(IConfigurationProvider configurationProvider)
@@ -47,14 +70,12 @@ namespace FluentHateoas.Handling
             var configurationProviderType = configurationProvider.GetType();
             _genericLinksForMethods = configurationProviderType
                 .GetMethods()
-                .Where(m => m.IsGenericMethod && m.Name == nameof(configurationProvider.GetLinksFor))
-                .ToList();
+                .Where(m => m.IsGenericMethod && m.Name == nameof(configurationProvider.GetLinksFor));
             return _genericLinksForMethods;
         }
 
         /// <summary>
-        /// Get the GetLinksFor[TModel or IEnumerable[TModel]] function delegate corresponding
-        /// to the given content type.
+        /// Get the GetLinksFor[TModel or IEnumerable[TModel]] function delegate corresponding to the given content type.
         /// </summary>
         /// <param name="method"></param>
         /// <param name="contentType"></param>
@@ -67,7 +88,7 @@ namespace FluentHateoas.Handling
 
             var instanceExpression = Expression.Parameter(typeof(IConfigurationProvider), "instance");
             var convertedInstanceExpression = method.DeclaringType != null
-                ? (Expression) Expression.Convert(instanceExpression, method.DeclaringType)
+                ? (Expression)Expression.Convert(instanceExpression, method.DeclaringType)
                 : instanceExpression;
 
             var methodCallExpr = Expression.Call(convertedInstanceExpression, method, convertedContentInputExpression);
