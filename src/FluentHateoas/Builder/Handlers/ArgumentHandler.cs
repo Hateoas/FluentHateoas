@@ -38,7 +38,7 @@ namespace FluentHateoas.Builder.Handlers
         /// <param name="resourceBuilder"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder, object data)
+        public override void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder resourceBuilder, object data)
         {
             var arguments = registration.ArgumentDefinitions;
             var templateArguments = (registration.Expression.TemplateParameters ?? new List<LambdaExpression>()).ToArray();
@@ -126,7 +126,7 @@ namespace FluentHateoas.Builder.Handlers
             return key;
         }
 
-        public override bool CanProcess<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder)
+        public override bool CanProcess<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder resourceBuilder)
         {
             return (registration.ArgumentDefinitions != null && registration.ArgumentDefinitions.Any()) 
                 || (registration.Expression.TemplateParameters != null && registration.Expression.TemplateParameters.Any())

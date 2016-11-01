@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Net.Http;
+using FluentHateoas.Builder.Model;
 using FluentHateoas.Handling;
 using FluentHateoas.Interfaces;
 using FluentHateoasTest.Assets.Model;
@@ -15,8 +16,9 @@ namespace FluentHateoasTest.Handling
     public abstract class BaseHandlerTest<THandler>
     {
         protected THandler Handler;
-        protected LinkBuilder LinkBuilder;
         protected Person Person;
+        protected Mock<ILinkBuilder> LinkBuilderMock;
+        protected ILinkBuilder LinkBuilder;
 
         [TestInitialize]
         public void BaseInitialize()
@@ -29,42 +31,8 @@ namespace FluentHateoasTest.Handling
                 Lastname = "Doe"
             };
 
-            LinkBuilder = new LinkBuilder(Person);
-        }
-
-        protected static IHateoasRegistration<TModel> GetRegistration<TModel, TController>(HttpMethod method = null)
-        {
-            return GetRegistration(default(Expression<Func<TController, Func<IEnumerable<TModel>>>>), default(Expression<Func<TModel, object>>), method, false);
-        }
-
-        protected static IHateoasRegistration<TModel> GetRegistration<TModel, TController>(Expression<Func<TModel, object>> argumentDefinitionExpression, HttpMethod method = null, bool template = false)
-        {
-            return GetRegistration(default(Expression<Func<TController, Func<IEnumerable<TModel>>>>), argumentDefinitionExpression, method, template);
-
-        }
-
-        protected static IHateoasRegistration<TModel> GetRegistration<TModel, TController>(Expression<Func<TController, Func<IEnumerable<TModel>>>> methodExpression, HttpMethod method = null, bool template = false)
-        {
-            return GetRegistration(methodExpression, default(Expression<Func<TModel, object>>), method, template);
-        }
-
-        private static IHateoasRegistration<TModel> GetRegistration<TModel, TController>(Expression<Func<TController, Func<IEnumerable<TModel>>>> methodExpression, Expression<Func<TModel, object>> argumentDefinitionExpression, HttpMethod method, bool template)
-        {
-            var registrationMock = new Mock<IHateoasRegistration<TModel>>();
-
-            if (argumentDefinitionExpression != null)
-            {
-                registrationMock.SetupGet(r => r.ArgumentDefinitions).Returns(new[] { argumentDefinitionExpression });
-            }
-
-            var expression = new Mock<IHateoasExpression<TModel>>();
-            expression.SetupGet(e => e.Controller).Returns(typeof(TController));
-            expression.SetupGet(e => e.Action).Returns(methodExpression);
-            expression.SetupGet(e => e.HttpMethod).Returns(method ?? HttpMethod.Get);
-            expression.SetupGet(e => e.Template).Returns(template);
-
-            registrationMock.SetupGet(r => r.Expression).Returns(expression.Object);
-            return registrationMock.Object;
+            LinkBuilderMock = new Mock<ILinkBuilder>(MockBehavior.Strict);
+            LinkBuilder = LinkBuilderMock.Object;
         }
     }
 }

@@ -171,7 +171,7 @@ namespace FluentHateoas.Helpers
                 return (DataBinder.Eval(o, Expression, "{0:" + Format + "}")
                     ?? string.Empty).ToString();
             }
-            catch (HttpException ex)
+            catch (HttpException)
             {
                 throw new FormatException();
             }

@@ -5,12 +5,12 @@ namespace FluentHateoas.Builder.Handlers
 {
     public class HttpMethodHandler : RegistrationLinkHandlerBase
     {
-        public override void ProcessInternal<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder, object data)
+        public override void ProcessInternal<TModel>(IHateoasRegistration<TModel> definition, ILinkBuilder resourceBuilder, object data)
         {
             resourceBuilder.Method = definition.Expression.HttpMethod;
         }
 
-        public override bool CanProcess<TModel>(IHateoasRegistration<TModel> definition, LinkBuilder resourceBuilder)
+        public override bool CanProcess<TModel>(IHateoasRegistration<TModel> definition, ILinkBuilder resourceBuilder)
         {
             return true;
         }

@@ -8,7 +8,7 @@ namespace FluentHateoas.Builder.Handlers
     {
         private IRegistrationLinkHandler _successor;
 
-        public LinkBuilder Process<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder, object data)
+        public ILinkBuilder Process<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder resourceBuilder, object data)
         {
             if (CanProcess(registration, resourceBuilder))
             {
@@ -20,7 +20,7 @@ namespace FluentHateoas.Builder.Handlers
                 : resourceBuilder;
         }
 
-        public abstract void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder, object data);
+        public abstract void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder resourceBuilder, object data);
 
         public void SetSuccessor(IRegistrationLinkHandler handler)
         {
@@ -28,6 +28,6 @@ namespace FluentHateoas.Builder.Handlers
             _successor = handler;
         }
 
-        public abstract bool CanProcess<TModel>(IHateoasRegistration<TModel> registration, LinkBuilder resourceBuilder);
+        public abstract bool CanProcess<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder resourceBuilder);
     }
 }

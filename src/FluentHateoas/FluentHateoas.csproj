@@ -104,6 +104,7 @@
     <Compile Include="Handling\HateOasResponse.cs" />
     <Compile Include="Handling\IConfigurationProvider.cs" />
     <Compile Include="Handling\IHateoasCommand.cs" />
+    <Compile Include="Handling\ILinkBuilder.cs" />
     <Compile Include="Handling\ILinkFactory.cs" />
     <Compile Include="Handling\IRegistrationLinkHandler.cs" />
     <Compile Include="Handling\IResponseProvider.cs" />

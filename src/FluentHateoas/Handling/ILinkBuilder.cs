@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Reflection;
+using FluentHateoas.Builder.Model;
+
+namespace FluentHateoas.Handling
+{
+    public interface ILinkBuilder
+    {
+        MethodInfo Action { get; set; }
+        IDictionary<string, Argument> Arguments { get; set; }
+        IHateoasCommand Command { get; set; }
+        Type Controller { get; set; }
+        object Data { get; }
+        string FixedRoute { get; set; }
+        bool IsFixed { get; set; }
+        bool IsTemplate { get; set; }
+        HttpMethod Method { get; set; }
+        string Relation { get; set; }
+        bool Success { get; set; }
+    }
+}

@@ -2,8 +2,8 @@ namespace FluentHateoas.Handling
 {
     public interface IRegistrationLinkHandler
     {
-        LinkBuilder Process<TModel>(Interfaces.IHateoasRegistration<TModel> registration, LinkBuilder linkBuilder, object data);
+        ILinkBuilder Process<TModel>(Interfaces.IHateoasRegistration<TModel> registration, ILinkBuilder linkBuilder, object data);
         void SetSuccessor(IRegistrationLinkHandler handler);
-        bool CanProcess<TModel>(Interfaces.IHateoasRegistration<TModel> registration, LinkBuilder linkBuilder);
+        bool CanProcess<TModel>(Interfaces.IHateoasRegistration<TModel> registration, ILinkBuilder linkBuilder);
     }
 }

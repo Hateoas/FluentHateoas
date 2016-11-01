@@ -1,8 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using System.Net.Http;
 using System.Web.Http.Dependencies;
 using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
+using FluentHateoas.Builder.Model;
 using FluentHateoas.Interfaces;
 using FluentHateoasTest.Assets.Controllers;
 using FluentHateoasTest.Assets.Model;
@@ -20,29 +24,43 @@ namespace FluentHateoasTest.Handling
         {
             var dependencyResolverMock = new Mock<IDependencyResolver>();
             Handler = new ArgumentHandler(dependencyResolverMock.Object);
+
         }
 
         [TestMethod]
         public void HandlerShouldProcessWhenValid()
         {
             // arrange
-            var registration = GetRegistration<Person, PersonController>(p => p.Id);
+            var registrationMock = new Mock<IHateoasRegistration<Person>>(MockBehavior.Strict);
+            registrationMock
+                .SetupGet(r => r.ArgumentDefinitions)
+                .Returns(new Expression<Func<Person, object>>[] { p => p.Id });
 
             // act & assert
-            Handler.CanProcess(registration, LinkBuilder).Should().BeTrue();
+            Handler.CanProcess(registrationMock.Object, LinkBuilder).Should().BeTrue();
         }
 
         [TestMethod]
         public void HandlerShouldSetId()
         {
             // arrange
-            var registration = GetRegistration<Person, PersonController>(p => p.Id);
+            var expressionMock = new Mock<IHateoasExpression<Person>>(MockBehavior.Strict);
+            expressionMock.SetupGet(e => e.TemplateParameters).Returns(new List<LambdaExpression>());
+            expressionMock.SetupGet(e => e.IdFromExpression).Returns (default(Expression<Func<object, Person, object>>));
+
+            var registrationMock = new Mock<IHateoasRegistration<Person>>(MockBehavior.Strict);
+            registrationMock.SetupGet(r => r.ArgumentDefinitions).Returns(new Expression<Func<Person, object>>[] { p => p.Id });
+            registrationMock.SetupGet(r => r.Expression).Returns(expressionMock.Object);
+
+            var argumentsMock = new Mock<IDictionary<string, Argument>>(MockBehavior.Strict);
+            argumentsMock.Setup(a => a.Add(It.IsAny<string>(), It.IsAny<Argument>()));
+            LinkBuilderMock.SetupGet(lb => lb.Arguments).Returns(argumentsMock.Object);
 
             // act
-            Handler.Process(registration, LinkBuilder, Person);
+            Handler.Process(registrationMock.Object, LinkBuilder, Person);
 
             // assert
-            LinkBuilder.Arguments["id"].Value.Should().Be(Person.Id);
+            argumentsMock.Verify(a => a.Add("id", It.Is<Argument>(arg => Person.Id.Equals(arg.Value))), Times.Once);
         }
 
         [TestMethod]

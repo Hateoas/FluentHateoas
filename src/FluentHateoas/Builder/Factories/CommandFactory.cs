@@ -22,10 +22,9 @@ namespace FluentHateoas.Builder.Factories
 
         public static IEnumerable<Property> AsCommandProperties(this Type source)
         {
-            if (source == null)
-                return new List<Property>();
-
-            return source.GetProperties().Select(CreateProperty);
+            return source == null
+                ? new List<Property>()
+                : source.GetProperties().Select(CreateProperty);
         }
 
         private static Property CreateProperty(PropertyInfo propertyInfo, int index)

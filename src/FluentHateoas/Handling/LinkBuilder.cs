@@ -4,7 +4,7 @@ using FluentHateoas.Builder.Model;
 
 namespace FluentHateoas.Handling
 {
-    public class LinkBuilder
+    public class LinkBuilder : ILinkBuilder
     {
         public LinkBuilder(object data)
         {

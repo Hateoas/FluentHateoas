@@ -1,9 +1,13 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
+using FluentHateoas.Interfaces;
 using FluentHateoasTest.Assets.Controllers;
 using FluentHateoasTest.Assets.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace FluentHateoasTest.Handling
 {
@@ -21,23 +25,33 @@ namespace FluentHateoasTest.Handling
         public void TemplateHandlerShouldAlwaysProcess()
         {
             // arrange
-            var registration = GetRegistration<Person, PersonController>(p => p.Id);
+            var registrationMock = new Mock<IHateoasRegistration<Person>>(MockBehavior.Strict);
+            registrationMock
+                .SetupGet(r => r.ArgumentDefinitions)
+                .Returns(new Expression<Func<Person, object>>[] { p => p.Id });
 
             // act & assert
-            Handler.CanProcess(registration, LinkBuilder).Should().BeTrue();
+            Handler.CanProcess(registrationMock.Object, LinkBuilder).Should().BeTrue();
         }
 
         [TestMethod]
         public void HandlerShouldSetTemplateFlag()
         {
             // arrange
-            var registration = GetRegistration<Person, PersonController>(p => p.Id, template: true);
+            var expressionMock = new Mock<IHateoasExpression<Person>>();
+            expressionMock.SetupGet(e => e.Template).Returns(true);
+
+            var registrationMock = new Mock<IHateoasRegistration<Person>>(MockBehavior.Strict);
+            registrationMock.SetupGet(r => r.ArgumentDefinitions).Returns(new Expression<Func<Person, object>>[] { p => p.Id });
+            registrationMock.SetupGet(r => r.Expression).Returns(expressionMock.Object);
+
+            LinkBuilderMock.SetupSet(lb => lb.IsTemplate = true);
 
             // act
-            Handler.Process(registration, LinkBuilder, Person);
+            Handler.ProcessInternal(registrationMock.Object, LinkBuilder, Person);
 
             // assert
-            LinkBuilder.IsTemplate.Should().BeTrue();
+            LinkBuilderMock.VerifySet(lb => lb.IsTemplate = true, Times.Once);
         }
     }
 }

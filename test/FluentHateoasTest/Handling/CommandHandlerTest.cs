@@ -1,9 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Net.Http;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
+using FluentHateoas.Handling;
 using FluentHateoas.Interfaces;
-using FluentHateoasTest.Assets.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SampleApi.Model;
@@ -22,40 +22,64 @@ namespace FluentHateoasTest.Handling
         }
 
         [TestMethod]
-        public void HandlerShouldProcessWithCommand()
+        public void CanProcessShouldReturnTrueIfRegistrationExpressionCommandPresent()
         {
             // arrange
-            var registrationMock = new Mock<IHateoasRegistration<Person>>();
-
-            var expression = new Mock<IHateoasExpression<Person>>();
-            expression.SetupGet(e => e.Controller).Returns(typeof(PersonController));
+            var expression = new Mock<IHateoasExpression<Person>>(MockBehavior.Strict);
             expression.SetupGet(e => e.Command).Returns(typeof(PersonPostCommand));
-            expression.SetupGet(e => e.HttpMethod).Returns(HttpMethod.Post);
 
+            var registrationMock = new Mock<IHateoasRegistration<Person>>(MockBehavior.Strict);
+            registrationMock.SetupGet(r => r.Expression).Returns(expression.Object);
+
+            // act
+            Handler.CanProcess(registrationMock.Object, LinkBuilder).Should().BeTrue();
+
+            // assert
+            expression.VerifyGet(e => e.Command, Times.Once);
+        }
+
+        [TestMethod]
+        public void CanProcessShouldReturnFalseIfRegistrationExpressionCommandNotPresent()
+        {
+            // arrange
+            var expression = new Mock<IHateoasExpression<Person>>(MockBehavior.Strict);
+            expression.SetupGet(e => e.Command).Returns(default(Type));
+
+            var registrationMock = new Mock<IHateoasRegistration<Person>>(MockBehavior.Strict);
             registrationMock.SetupGet(r => r.Expression).Returns(expression.Object);
             var registration = registrationMock.Object;
 
             // act
-            Handler.CanProcess(registration, LinkBuilder).Should().BeTrue();
-            Handler.Process(registration, LinkBuilder, Person);
+            var canProcess = Handler.CanProcess(registration, LinkBuilder);
 
             // assert
-            LinkBuilder.Command.Should().NotBeNull();
+            canProcess.Should().BeFalse();
+            expression.VerifyGet(e => e.Command, Times.Once);
         }
 
         [TestMethod]
-        public void HandlerShouldNotProcessWithoutCommand()
+        public void ProcessInternalShouldSetLinkBuilderCommand()
         {
             // arrange
-            var registrationMock = new Mock<IHateoasRegistration<Person>>();
-            var expression = new Mock<IHateoasExpression<Person>>();
-            expression.SetupGet(e => e.Controller).Returns(typeof(PersonController));
-            expression.SetupGet(e => e.HttpMethod).Returns(HttpMethod.Post);
+            const string relation = "self";
+            var registrationMock = new Mock<IHateoasRegistration<Person>>(MockBehavior.Strict);
+            registrationMock.SetupGet(r => r.Relation).Returns(relation);
+
+            var expression = new Mock<IHateoasExpression<Person>>(MockBehavior.Strict);
+            expression.SetupGet(e => e.Command).Returns(typeof(PersonPostCommand));
+
             registrationMock.SetupGet(r => r.Expression).Returns(expression.Object);
             var registration = registrationMock.Object;
 
-            // act & assert
-            Handler.CanProcess(registration, LinkBuilder).Should().BeFalse();
+            LinkBuilderMock.SetupSet(lb => lb.Command = It.Is<IHateoasCommand>(comm => (relation + "-command").Equals(comm.Name)));
+
+            // act
+            Handler.ProcessInternal(registration, LinkBuilder, Person);
+
+            // assert
+            registrationMock.VerifyGet(r => r.Relation, Times.Once);
+            expression.VerifyGet(e => e.Command, Times.Exactly(2));
+            LinkBuilderMock.VerifySet(lb => lb.Command = It.IsAny<IHateoasCommand>(), Times.Once);
         }
     }
 }
