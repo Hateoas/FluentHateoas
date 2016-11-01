@@ -13,9 +13,9 @@ namespace FluentHateoas.Builder.Handlers
             _authorizationProvider = authorizationProvider;
         }
 
-        public override void ProcessInternal<TModel>(IHateoasRegistration<TModel> definition, ILinkBuilder resourceBuilder, object data)
+        public override void ProcessInternal<TModel>(IHateoasRegistration<TModel> definition, ILinkBuilder linkBuilder, object data)
         {
-            resourceBuilder.Success = resourceBuilder.Action != null && _authorizationProvider.IsAuthorized(resourceBuilder.Action);
+            linkBuilder.Success = linkBuilder.Action != null && _authorizationProvider.IsAuthorized(linkBuilder.Action);
         }
 
         public override bool CanProcess<TModel>(IHateoasRegistration<TModel> definition, ILinkBuilder resourceBuilder)

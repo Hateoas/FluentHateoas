@@ -35,10 +35,10 @@ namespace FluentHateoas.Builder.Handlers
         /// </summary>
         /// <typeparam name="TModel"></typeparam>
         /// <param name="registration"></param>
-        /// <param name="resourceBuilder"></param>
+        /// <param name="linkBuilder"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder resourceBuilder, object data)
+        public override void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder linkBuilder, object data)
         {
             var arguments = registration.ArgumentDefinitions;
             var templateArguments = (registration.Expression.TemplateParameters ?? new List<LambdaExpression>()).ToArray();
@@ -50,13 +50,13 @@ namespace FluentHateoas.Builder.Handlers
                 var providerType = registration.Expression.IdFromExpression.Parameters[0].Type;
                 var provider = _dependencyResolver.GetService(providerType);
                 var result = compiledExpression.DynamicInvoke(provider, data);
-                resourceBuilder.Arguments.Add("id", CreateArgument("id", result.GetType(), result));
+                linkBuilder.Arguments.Add("id", CreateArgument("id", result.GetType(), result));
             }
             else if (arguments != null && arguments.Any())
             {
                 // Add the first argument so it always can be used as named property 'id'
                 var result = arguments.First().Compile().DynamicInvoke(data);
-                resourceBuilder.Arguments.Add("id", CreateArgument("id", result.GetType(), result));
+                linkBuilder.Arguments.Add("id", CreateArgument("id", result.GetType(), result));
                 arguments = arguments.Skip(1).ToArray();
 
                 // Handle arguments
@@ -65,21 +65,21 @@ namespace FluentHateoas.Builder.Handlers
                     var key = GetKey(data, ((MemberExpression)((UnaryExpression)expression.Body).Operand).Member);
                     var invokeResult = expression.Compile().DynamicInvoke(data);
 
-                    resourceBuilder.Arguments.Add(key, CreateArgument(key, invokeResult.GetType(), invokeResult));
+                    linkBuilder.Arguments.Add(key, CreateArgument(key, invokeResult.GetType(), invokeResult));
                 }
             }
 
             if (!templateArguments.Any()) return;
 
             // Handle templates
-            if (!resourceBuilder.Arguments.Any())
+            if (!linkBuilder.Arguments.Any())
             {
                 var first = templateArguments.First();
                 var member = first.Body is MemberExpression
                     ? ((MemberExpression)first.Body).Member
                     : ((MemberExpression)((UnaryExpression)first.Body).Operand).Member;
 
-                resourceBuilder.Arguments.Add("id", CreateTemplateArgument("id", ((PropertyInfo)member).PropertyType));
+                linkBuilder.Arguments.Add("id", CreateTemplateArgument("id", ((PropertyInfo)member).PropertyType));
 
                 templateArguments = templateArguments.Skip(1).ToArray();
             }
@@ -91,7 +91,7 @@ namespace FluentHateoas.Builder.Handlers
                     : ((MemberExpression)((UnaryExpression)expression.Body).Operand).Member;
 
                 var key = GetKey(data, member, registration.IsCollection);
-                resourceBuilder.Arguments.Add(key, CreateTemplateArgument(key, ((PropertyInfo)member).PropertyType));
+                linkBuilder.Arguments.Add(key, CreateTemplateArgument(key, ((PropertyInfo)member).PropertyType));
             }
         }
 

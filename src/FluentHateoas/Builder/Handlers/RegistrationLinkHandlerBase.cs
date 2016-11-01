@@ -20,7 +20,7 @@ namespace FluentHateoas.Builder.Handlers
                 : resourceBuilder;
         }
 
-        public abstract void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder resourceBuilder, object data);
+        public abstract void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder linkBuilder, object data);
 
         public void SetSuccessor(IRegistrationLinkHandler handler)
         {

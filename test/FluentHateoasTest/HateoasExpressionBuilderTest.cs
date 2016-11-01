@@ -78,7 +78,30 @@ namespace FluentHateoasTest
 
             // act
             Expression<Func<TestModelController, Func<IEnumerable<TestModel>>>> getAllExpression = c => c.GetAll;
-            builder.Get<TestModelController>(getAllExpression);
+            builder.Get(getAllExpression);
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+
+            Assert.AreEqual(typeof(TestModelController), expression.Controller);
+            Assert.AreEqual(HttpMethod.Get, expression.HttpMethod);
+            Assert.AreEqual(getAllExpression, expression.Action);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void GetWithCustomGetAllActionOfTypeObjectShouldSaveControllerAndSetHttpMethodGet()
+        {
+            // arrange
+            var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
+            var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
+            var builder = new ExpressionBuilder<TestModel>(registration);
+
+            // act
+            Expression<Func<TestModelController, Func<object>>> getAllExpression = c => c.GetAll;
+            builder.Get(getAllExpression);
             var expression = builder.GetExpression();
 
             // assert
@@ -102,6 +125,52 @@ namespace FluentHateoasTest
             // act
             Expression<Func<TestModelController, IEnumerable<TestModel>>> getAllExpression = c => c.GetAll();
             builder.Get<TestModelController>(getAllExpression);
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+
+            Assert.AreEqual(typeof(TestModelController), expression.Controller);
+            Assert.AreEqual(HttpMethod.Get, expression.HttpMethod);
+            Assert.AreEqual(getAllExpression, expression.Action);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void GetWithCustomGetAllMethodWithOneParameterSelectorShouldSaveControllerAndSetHttpMethodGet()
+        {
+            // arrange
+            var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
+            var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
+            var builder = new ExpressionBuilder<TestModel>(registration);
+
+            // act
+            Expression<Func<TestModelController, Func<TestModelFilter, object>>> getAllExpression = c=> c.GetAll;
+            builder.Get(getAllExpression);
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+
+            Assert.AreEqual(typeof(TestModelController), expression.Controller);
+            Assert.AreEqual(HttpMethod.Get, expression.HttpMethod);
+            Assert.AreEqual(getAllExpression, expression.Action);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void GetWithCustomGetAllMethodWithTwoParametersSelectorShouldSaveControllerAndSetHttpMethodGet()
+        {
+            // arrange
+            var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
+            var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
+            var builder = new ExpressionBuilder<TestModel>(registration);
+
+            // act
+            Expression<Func<TestModelController, Func<TestModelFilter, TestModelSorter, object>>> getAllExpression = c => c.GetAll;
+            builder.Get(getAllExpression);
             var expression = builder.GetExpression();
 
             // assert
@@ -159,6 +228,29 @@ namespace FluentHateoasTest
         }
 
         [TestMethod]
+        public void PostWithCustomPostWithModelActionShouldSaveControllerAndSetHttpMethodPost()
+        {
+            // arrange
+            var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
+            var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
+            var builder = new ExpressionBuilder<TestModel>(registration);
+
+            // act
+            Expression<Func<TestModelController, Action<TestModel>>> postExpression = c => c.Post;
+            builder.Post(postExpression);
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+
+            Assert.AreEqual(typeof(TestModelController), expression.Controller);
+            Assert.AreEqual(HttpMethod.Post, expression.HttpMethod);
+            Assert.AreEqual(postExpression, expression.Action);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
+        }
+
+        [TestMethod]
         public void PutShouldSaveControllerAndSetHttpMethodPut()
         {
             // arrange
@@ -199,6 +291,52 @@ namespace FluentHateoasTest
             Assert.AreEqual(typeof(TestModelController), expression.Controller);
             Assert.AreEqual(HttpMethod.Delete, expression.HttpMethod);
             Assert.IsNull(expression.Action);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void DeleteWithCustomDeleteWithModelActionShouldSaveControllerAndSetHttpMethodDelete()
+        {
+            // arrange
+            var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
+            var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
+            var builder = new ExpressionBuilder<TestModel>(registration);
+
+            // act
+            Expression<Func<TestModelController, Action<TestModel>>> deleteExpression = c => c.Delete;
+            builder.Delete(deleteExpression);
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+
+            Assert.AreEqual(typeof(TestModelController), expression.Controller);
+            Assert.AreEqual(HttpMethod.Delete, expression.HttpMethod);
+            Assert.AreEqual(deleteExpression, expression.Action);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void DeleteWithCustomDeleteWithIdActionShouldSaveControllerAndSetHttpMethodDelete()
+        {
+            // arrange
+            var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
+            var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
+            var builder = new ExpressionBuilder<TestModel>(registration);
+
+            // act
+            Expression<Func<TestModelController, Action<Guid>>> deleteExpression = c => c.Delete;
+            builder.Delete(deleteExpression);
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+
+            Assert.AreEqual(typeof(TestModelController), expression.Controller);
+            Assert.AreEqual(HttpMethod.Delete, expression.HttpMethod);
+            Assert.AreEqual(deleteExpression, expression.Action);
             containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
         }
 
@@ -386,6 +524,16 @@ namespace FluentHateoasTest
             public string Name { get; set; }
         }
 
+        private class TestModelFilter
+        {
+            
+        }
+
+        private class TestModelSorter
+        {
+            
+        }
+
         private class TestModelController : IHttpController
         {
             public IEnumerable<TestModel> GetAll()
@@ -393,7 +541,32 @@ namespace FluentHateoasTest
                 throw new InvalidOperationException();
             }
 
+            public IEnumerable<TestModel> GetAll(TestModelFilter filter)
+            {
+                throw new InvalidOperationException();
+            }
+
+            public IEnumerable<TestModel> GetAll(TestModelFilter filter, TestModelSorter sorter)
+            {
+                throw new InvalidOperationException();
+            }
+
             public TestModel GetSingle(Guid id)
+            {
+                throw new InvalidOperationException();
+            }
+
+            public void Post(TestModel model)
+            {
+                throw new InvalidOperationException();
+            }
+
+            public void Delete(TestModel model)
+            {
+                throw new InvalidOperationException();
+            }
+
+            public void Delete(Guid id)
             {
                 throw new InvalidOperationException();
             }

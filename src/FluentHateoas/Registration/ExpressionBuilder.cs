@@ -44,12 +44,13 @@ namespace FluentHateoas.Registration
             return this;
         }
 
-        public IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Action>> methodSelector) where TController : IHttpController
-        {
-            _expression.SetMethod<TController>(HttpMethod.Get, methodSelector);
-            _registration.Update();
-            return this;
-        }
+        // NOTE BL This method appears to be useless (an untyped action expects a void result which is unexpected for a Get operation)
+        //public IGetExpressionBuilder<TModel> Get<TController>(Expression<Func<TController, Action>> methodSelector) where TController : IHttpController
+        //{
+        //    _expression.SetMethod<TController>(HttpMethod.Get, methodSelector);
+        //    _registration.Update();
+        //    return this;
+        //}
 
         public IGetExpressionBuilder<TModel> Get<TController, T1>(Expression<Func<TController, Func<T1, object>>> methodSelector) where TController : IHttpController
         {

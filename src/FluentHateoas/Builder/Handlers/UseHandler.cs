@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using FluentHateoas.Handling;
 using FluentHateoas.Helpers;
 using FluentHateoas.Interfaces;
@@ -8,24 +7,19 @@ namespace FluentHateoas.Builder.Handlers
 {
     public class UseHandler : RegistrationLinkHandlerBase
     {
-        public override void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder resourceBuilder, object data)
+        public override void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder linkBuilder, object data)
         {
-            resourceBuilder.Controller = registration.Expression.Controller;
-
-            if (registration.Expression.Action != null)
-                resourceBuilder.Action = registration.Expression.Action.GetTargetAction(resourceBuilder.Relation, resourceBuilder.Method, resourceBuilder.Arguments);
-
-            else if (registration.Expression.Action == null)
-                resourceBuilder.Action = registration.Expression.Controller.GetAction(resourceBuilder.Relation, resourceBuilder.Method ?? HttpMethod.Get, resourceBuilder.Arguments);
-
-            else
-                throw new NotImplementedException();
+            var expression = registration.Expression;
+            linkBuilder.Controller = expression.Controller;
+            linkBuilder.Action = expression.Action != null
+                ? expression.Action.GetTargetAction(linkBuilder.Relation, linkBuilder.Method, linkBuilder.Arguments)
+                : expression.Controller.GetAction(linkBuilder.Relation, linkBuilder.Method ?? HttpMethod.Get, linkBuilder.Arguments);
         }
 
         public override bool CanProcess<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder resourceBuilder)
         {
-            return registration.Expression.Controller != null
-                   && (registration.Expression.Action != null || registration.Expression.HttpMethod != null);
+            var expression = registration.Expression;
+            return expression.Controller != null && (expression.Action != null || expression.HttpMethod != null);
         }
     }
 }
