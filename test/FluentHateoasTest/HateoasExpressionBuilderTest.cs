@@ -29,9 +29,9 @@ namespace FluentHateoasTest
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
-            const string Relation = "relation";
+            const string relation = "relation";
             Expression<Func<TestModel, object>> identityDefinition = m => m.Id;
-            var registration = new HateoasRegistration<TestModel>(Relation, new [] { identityDefinition }, containerMock.Object);
+            var registration = new HateoasRegistration<TestModel>(relation, new [] { identityDefinition }, containerMock.Object);
 
             // act
             var builder = new ExpressionBuilder<TestModel>(registration);
@@ -40,7 +40,7 @@ namespace FluentHateoasTest
             // assert
             Assert.IsNotNull(expression);
 
-            Assert.AreEqual(Relation, expression.Relation);
+            Assert.AreEqual(relation, expression.Relation);
             Assert.AreEqual(identityDefinition, expression.ArgumentDefinitions[0]);
             Assert.IsFalse(expression.IsCollection);
         }

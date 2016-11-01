@@ -103,6 +103,7 @@
     <Compile Include="Handling\ArgumentHandlerTest.cs" />
     <Compile Include="Handling\BaseHandlerTest.cs" />
     <Compile Include="Handling\CommandHandlerTest.cs" />
+    <Compile Include="Handling\HateoasHttpHandlerTest.cs" />
     <Compile Include="Handling\RegistrationLinkHandlerBaseTest.cs" />
     <Compile Include="Handling\RegistrationLinkHandlerExtensionsTest.cs" />
     <Compile Include="Handling\RelationNameHandlerTest.cs" />
