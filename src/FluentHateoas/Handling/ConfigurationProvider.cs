@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentHateoas.Helpers;
 using FluentHateoas.Registration;
 
 namespace FluentHateoas.Handling
@@ -44,7 +45,7 @@ namespace FluentHateoas.Handling
             if (!_cachedGetLinksForMethod.TryGetValue(contentType, out getLinksForFunction))
                 _cachedGetLinksForMethod[contentType] = getLinksForFunction = this.GetLinksForFunc(contentType, content);
 
-            return getLinksForFunction(this, content);
+            return getLinksForFunction(this, content.Materialize());
         }
     }
 }

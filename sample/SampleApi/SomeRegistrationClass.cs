@@ -127,9 +127,8 @@ namespace SampleApi
             //  Specify the GET-message expects a collection ==> todo: template is failing
             // =======================================================================================================================
             container
-                .Register<Person>("item")
+                .RegisterCollection<Person>("item")
                 .Get<PersonController>()
-                .AsCollection()
                 .AsTemplate(p => p.Id, p => p.Slug);
 
             //  {
