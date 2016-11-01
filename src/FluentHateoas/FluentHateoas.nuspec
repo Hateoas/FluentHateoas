@@ -7,7 +7,7 @@
     <owners>Inkredible, Interest IT</owners>
     <projectUrl>http://www.fluenthateoas.com</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Fluent library for registration and generation of HATEOAS-responses</description>
+    <description>Fluent library for registration and generation of HATEOAS-responses.</description>
     <releaseNotes></releaseNotes>
     <copyright>Interest IT, Inkredible 2016</copyright>
     <tags>HATEOAS</tags>
