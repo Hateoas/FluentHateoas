@@ -17,7 +17,13 @@ namespace FluentHateoas.Helpers
             if (!source.IsOrImplementsIEnumerable())
                 return source;
 
-            // ToList on object
+            // todo: Quikfix for materialising WehereSelectList and variants
+            // Check if it is an iterator?
+            var method = typeof(Enumerable)
+                .GetMethod(nameof(Enumerable.ToList))
+                .MakeGenericMethod(source.GetType().GetGenericArguments().Last());
+
+            return method.Invoke(null, new[] { source });
         }
 
         internal static bool IsOrImplementsIEnumerable(Type contentType)

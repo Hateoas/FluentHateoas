@@ -28,7 +28,7 @@ namespace FluentHateoas.Handling
 
             if(ObjectHelper.IsOrImplementsIEnumerable(contentType))
             {
-                singleContentType = contentType.GetGenericArguments()[0];
+                singleContentType = contentType.GetGenericArguments().Last();
                 // The content type to use must be IEnumerable<TModel> in order to find the correct GetLinksFor method to use
                 // when generating the lambda function below (using SequenceEquals on types). In some cases, actual input will
                 // be List<TModel> or even TModel[]. For those cases, we just simplify the content type to its 'base form'.
