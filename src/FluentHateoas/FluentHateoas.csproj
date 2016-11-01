@@ -120,6 +120,7 @@
     <Compile Include="Helpers\HaackFormater.cs" />
     <Compile Include="Helpers\HttpControllerHelper.cs" />
     <Compile Include="Helpers\LinkHelper.cs" />
+    <Compile Include="Helpers\ObjectHelper.cs" />
     <Compile Include="Interfaces\ITemplateExpressionBuilder.cs" />
     <Compile Include="Registration\IAuthorizationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

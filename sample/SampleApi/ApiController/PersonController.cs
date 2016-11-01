@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
+using AutoMapper;
 
 namespace SampleApi.ApiController
 {
@@ -14,11 +16,11 @@ namespace SampleApi.ApiController
     {
         public IEnumerable<Person> Get()
         {
-            return new List<Person>
+            return new List<Data.Model.Person>
             {
-                new Person {Id = Guid.Parse("0CFA46CC-116D-45F0-B57B-4C5586130072")},
-                new Person {Id = Guid.Parse("F6D0CF9E-5153-4218-8A22-8E71C5AC5A4A")}
-            };
+                new Data.Model.Person {Id = Guid.Parse("0CFA46CC-116D-45F0-B57B-4C5586130072")},
+                new Data.Model.Person {Id = Guid.Parse("F6D0CF9E-5153-4218-8A22-8E71C5AC5A4A")}
+            }.Select(Mapper.Map<Person>);
         }
 
         [Authorize]
