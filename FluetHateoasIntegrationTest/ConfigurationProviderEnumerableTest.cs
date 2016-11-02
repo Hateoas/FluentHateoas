@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Dependencies;
 using FluentAssertions;
+using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Handling;
 using FluentHateoas.Registration;
 using FluentHateoasTest.Assets.Controllers;
@@ -21,7 +22,7 @@ namespace FluetHateoasIntegrationTest
     public class ConfigurationProviderEnumerableTest
     {
         private Mock<IAuthorizationProvider> _authorizationProvider;
-        private Mock<IDependencyResolver> _dependencyResolver;
+        private Mock<IDependencyResolver> _dependencyResolverMock;
         private Mock<IPersonProvider> _personProvider;
 
         protected IConfigurationProvider ConfigurationProvider;
@@ -34,15 +35,23 @@ namespace FluetHateoasIntegrationTest
         public void Initialize()
         {
             _authorizationProvider = new Mock<IAuthorizationProvider>();
-            _dependencyResolver = new Mock<IDependencyResolver>();
+            _dependencyResolverMock = new Mock<IDependencyResolver>();
             _personProvider = new Mock<IPersonProvider>();
 
             _authorizationProvider.Setup(p => p.IsAuthorized(It.IsAny<MethodInfo>())).Returns(true);
-            _dependencyResolver.Setup(p => p.GetService(It.IsAny<Type>())).Returns(_personProvider.Object);
+            _dependencyResolverMock.Setup(p => p.GetService(It.IsAny<Type>())).Returns(_personProvider.Object);
+
+            var idFromExpressionProcessor = new IdFromExpressionProcessor(_dependencyResolverMock.Object);
+            var argumentsDefinitionsProcessor = new ArgumentDefinitionsProcessor();
+            var templateArgumentsProcessor = new TemplateArgumentsProcessor();
 
             var configuration = new HttpConfiguration();
             Container = HateoasContainerFactory.Create(configuration);
-            LinkFactory = new LinkFactory(_authorizationProvider.Object, _dependencyResolver.Object);
+            LinkFactory = new LinkFactory(
+                _authorizationProvider.Object, 
+                idFromExpressionProcessor,
+                argumentsDefinitionsProcessor,
+                templateArgumentsProcessor);
             ConfigurationProvider = new ConfigurationProvider(configuration, LinkFactory);
 
             Enumerable = new List<Person>

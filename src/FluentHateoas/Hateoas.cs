@@ -1,5 +1,6 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Dependencies;
+using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Contracts;
 using FluentHateoas.Handling;
 using FluentHateoas.Handling.Handlers;
@@ -17,7 +18,17 @@ namespace FluentHateoas
             {
                 authorizationProvider = new WebApiAuthorizationProvider();
             }
-            var linkFactory = new LinkFactory(authorizationProvider: authorizationProvider, dependencyResolver:dependencyResolver);
+
+            var idFromExpressionProcessor = new IdFromExpressionProcessor(dependencyResolver);
+            var argumentsDefinitionsProcessor = new ArgumentDefinitionsProcessor();
+            var templateArgumentsProcessor = new TemplateArgumentsProcessor();
+
+            var linkFactory = new LinkFactory(
+                authorizationProvider: authorizationProvider,
+                idFromExpressionProcessor: idFromExpressionProcessor,
+                argumentsDefinitionsProcessor: argumentsDefinitionsProcessor,
+                templateArgumentsProcessor: templateArgumentsProcessor
+            );
             var configurationProvider = new ConfigurationProvider(config, linkFactory);
             var responseProvider = new ResponseProvider(configurationProvider);
             var handler = new HateoasHttpHandler(responseProvider);

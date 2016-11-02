@@ -9,13 +9,23 @@ namespace FluentHateoas.Handling
     public class LinkFactory : ILinkFactory
     {
         private readonly IAuthorizationProvider _authorizationProvider;
-        private readonly IDependencyResolver _dependencyResolver;
         private readonly IRegistrationLinkHandler _handlerChain;
 
-        public LinkFactory(IAuthorizationProvider authorizationProvider, IDependencyResolver dependencyResolver, params IRegistrationLinkHandler[] handlers)
+        private readonly IArgumentProcessor _idFromExpressionProcessor;
+        private readonly IArgumentProcessor _argumentsDefinitionsProcessor;
+        private readonly IArgumentProcessor _templateArgumentsProcessor;
+
+        public LinkFactory(
+            IAuthorizationProvider authorizationProvider,
+            IArgumentProcessor idFromExpressionProcessor,
+            IArgumentProcessor argumentsDefinitionsProcessor,
+            IArgumentProcessor templateArgumentsProcessor,
+            params IRegistrationLinkHandler[] handlers)
         {
             _authorizationProvider = authorizationProvider;
-            _dependencyResolver = dependencyResolver;
+            _idFromExpressionProcessor = idFromExpressionProcessor;
+            _argumentsDefinitionsProcessor = argumentsDefinitionsProcessor;
+            _templateArgumentsProcessor = templateArgumentsProcessor;
             _handlerChain = (handlers.Length > 0 ? handlers : DefaultHandlers).CreateChain();
         }
 
@@ -26,7 +36,10 @@ namespace FluentHateoas.Handling
                 yield return new RelationHandler();
                 yield return new HttpMethodHandler();
                 yield return new CommandHandler();
-                yield return new ArgumentHandler(_dependencyResolver);
+                yield return new ArgumentHandler(
+                    _idFromExpressionProcessor,
+                    _argumentsDefinitionsProcessor,
+                    _templateArgumentsProcessor);
                 yield return new TemplateHandler();
                 yield return new UseHandler();
                 yield return new SuccessHandler(_authorizationProvider);

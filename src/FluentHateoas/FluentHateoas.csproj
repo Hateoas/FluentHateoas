@@ -86,11 +86,16 @@
     <Compile Include="Attributes\MaxValueAttribute.cs" />
     <Compile Include="Attributes\MinValueAttribute.cs" />
     <Compile Include="Builder\Factories\CommandFactory.cs" />
+    <Compile Include="Builder\Handlers\ArgumentDefinitionsProcessor.cs" />
+    <Compile Include="Builder\Handlers\ArgumentProcessor.cs" />
     <Compile Include="Builder\Handlers\CommandHandler.cs" />
     <Compile Include="Builder\Handlers\HttpMethodHandler.cs" />
+    <Compile Include="Builder\Handlers\IArgumentProcessor.cs" />
+    <Compile Include="Builder\Handlers\IdFromExpressionProcessor.cs" />
     <Compile Include="Builder\Handlers\RegistrationLinkHandlerBase.cs" />
     <Compile Include="Builder\Handlers\RelationHandler.cs" />
     <Compile Include="Builder\Handlers\SuccessHandler.cs" />
+    <Compile Include="Builder\Handlers\TemplateArgumentsProcessor.cs" />
     <Compile Include="Builder\Handlers\TemplateHandler.cs" />
     <Compile Include="Builder\Handlers\UseHandler.cs" />
     <Compile Include="Builder\Handlers\ArgumentHandler.cs" />
