@@ -14,7 +14,7 @@ using FluentHateoasTest.Assets.Providers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace FluentHateoasTest.EndToEnd
+namespace FluetHateoasIntegrationTest
 {
     [TestClass]
     [ExcludeFromCodeCoverage]

@@ -4,7 +4,7 @@ using System.Linq;
 using FluentHateoas.Contracts;
 using FluentHateoas.Interfaces;
 
-namespace FluentHateoasTest.EndToEnd
+namespace FluetHateoasIntegrationTest
 {
     [ExcludeFromCodeCoverage]
     public class TestContainer : IHateoasContainer

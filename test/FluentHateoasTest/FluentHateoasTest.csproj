@@ -95,10 +95,6 @@
     <Compile Include="Assets\Model\Car.cs" />
     <Compile Include="Assets\Model\Person.cs" />
     <Compile Include="Assets\Providers\IPersonProvider.cs" />
-    <Compile Include="EndToEnd\ConfigurationProviderExtensionsTest.cs" />
-    <Compile Include="EndToEnd\ConfigurationProviderEnumerableTest.cs" />
-    <Compile Include="EndToEnd\ConfigurationProviderSingleEntityTest.cs" />
-    <Compile Include="EndToEnd\TestContainer.cs" />
     <Compile Include="Factories\RegistrationFactory.cs" />
     <Compile Include="Handling\ArgumentHandlerTest.cs" />
     <Compile Include="Handling\BaseHandlerTest.cs" />
