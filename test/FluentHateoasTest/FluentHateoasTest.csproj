@@ -107,6 +107,7 @@
     <Compile Include="Handling\RelationNameHandlerTest.cs" />
     <Compile Include="Assets\Model\TestRegistration.cs" />
     <Compile Include="Handling\ResponseProviderTest.cs" />
+    <Compile Include="Handling\SuccessHandlerTest.cs" />
     <Compile Include="Handling\TemplateArgumentsProcessorTest.cs" />
     <Compile Include="Handling\TemplateHandlerTest.cs" />
     <Compile Include="Handling\UseHandlerTest.cs" />

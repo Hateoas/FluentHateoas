@@ -13,12 +13,25 @@ namespace FluentHateoasTest.Handling
 {
     [TestClass]
     [ExcludeFromCodeCoverage]
-    public class CommandHandlerTest : BaseHandlerTest<CommandHandler>
+    public class CommandHandlerTest
     {
+        private Person _person;
+        private Mock<ILinkBuilder> _linkBuilderMock;
+        private CommandHandler _handler;
+
         [TestInitialize]
         public void Initialize()
         {
-            Handler = new CommandHandler();
+            _person = new Person
+            {
+                Id = Guid.Parse("7AEC12CD-FD43-49DD-A2AB-3CDD19A3A5F4"),
+                Birthday = new DateTimeOffset(new DateTime(1980, 1, 1)),
+                Firstname = "John",
+                Lastname = "Doe"
+            };
+
+            _linkBuilderMock = new Mock<ILinkBuilder>(MockBehavior.Strict);
+            _handler = new CommandHandler();
         }
 
         [TestMethod]
@@ -32,7 +45,7 @@ namespace FluentHateoasTest.Handling
             registrationMock.SetupGet(r => r.Expression).Returns(expression.Object);
 
             // act
-            Handler.CanProcess(registrationMock.Object, LinkBuilder).Should().BeTrue();
+            _handler.CanProcess(registrationMock.Object, _linkBuilderMock.Object).Should().BeTrue();
 
             // assert
             expression.VerifyGet(e => e.Command, Times.Once);
@@ -50,7 +63,7 @@ namespace FluentHateoasTest.Handling
             var registration = registrationMock.Object;
 
             // act
-            var canProcess = Handler.CanProcess(registration, LinkBuilder);
+            var canProcess = _handler.CanProcess(registration, _linkBuilderMock.Object);
 
             // assert
             canProcess.Should().BeFalse();
@@ -71,15 +84,15 @@ namespace FluentHateoasTest.Handling
             registrationMock.SetupGet(r => r.Expression).Returns(expression.Object);
             var registration = registrationMock.Object;
 
-            LinkBuilderMock.SetupSet(lb => lb.Command = It.Is<IHateoasCommand>(comm => (relation + "-command").Equals(comm.Name)));
+            _linkBuilderMock.SetupSet(lb => lb.Command = It.Is<IHateoasCommand>(comm => (relation + "-command").Equals(comm.Name)));
 
             // act
-            Handler.ProcessInternal(registration, LinkBuilder, Person);
+            _handler.ProcessInternal(registration, _linkBuilderMock.Object, _person);
 
             // assert
             registrationMock.VerifyGet(r => r.Relation, Times.Once);
             expression.VerifyGet(e => e.Command, Times.Exactly(2));
-            LinkBuilderMock.VerifySet(lb => lb.Command = It.IsAny<IHateoasCommand>(), Times.Once);
+            _linkBuilderMock.VerifySet(lb => lb.Command = It.IsAny<IHateoasCommand>(), Times.Once);
         }
     }
 }

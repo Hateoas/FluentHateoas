@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http;
 using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Builder.Model;
+using FluentHateoas.Handling;
 using FluentHateoas.Interfaces;
 using FluentHateoasTest.Assets.Controllers;
 using FluentHateoasTest.Assets.Model;
@@ -17,12 +17,25 @@ namespace FluentHateoasTest.Handling
 {
     [TestClass]
     [ExcludeFromCodeCoverage]
-    public class UseHandlerTest : BaseHandlerTest<UseHandler>
+    public class UseHandlerTest
     {
+        private Person _person;
+        private Mock<ILinkBuilder> _linkBuilderMock;
+        private UseHandler _handler;
+
         [TestInitialize]
         public void Initialize()
         {
-            Handler = new UseHandler();
+            _person = new Person
+            {
+                Id = Guid.Parse("7AEC12CD-FD43-49DD-A2AB-3CDD19A3A5F4"),
+                Birthday = new DateTimeOffset(new DateTime(1980, 1, 1)),
+                Firstname = "John",
+                Lastname = "Doe"
+            };
+
+            _linkBuilderMock = new Mock<ILinkBuilder>(MockBehavior.Strict);
+            _handler = new UseHandler();
         }
 
         [TestMethod]
@@ -39,11 +52,11 @@ namespace FluentHateoasTest.Handling
             registrationMock.SetupGet(r => r.Expression).Returns(expressionMock.Object);
 
             // act & assert
-            Handler.CanProcess(registrationMock.Object, LinkBuilder).Should().BeTrue();
+            _handler.CanProcess(registrationMock.Object, _linkBuilderMock.Object).Should().BeTrue();
         }
 
         [TestMethod]
-        public void UseHandlerShouldNotProcessWhenInvalid()
+        public void Use_handlerShouldNotProcessWhenInvalid()
         {
             // arrange
             var registrationMock = new Mock<IHateoasRegistration<Person>>();
@@ -53,25 +66,25 @@ namespace FluentHateoasTest.Handling
             var registration = registrationMock.Object;
 
             // act & assert
-            Handler.CanProcess(registration, LinkBuilder).Should().BeFalse();
+            _handler.CanProcess(registration, _linkBuilderMock.Object).Should().BeFalse();
         }
 
         [TestMethod]
         [Ignore]
-        public void UseHandlerShouldRegisterActionWhenGiven()
+        public void Use_handlerShouldRegisterActionWhenGiven()
         {
             // arrange
             //var registration = GetRegistration<Person, PersonController>(p => p.GetParents);
 
             // act
-            //Handler.CanProcess(registration, LinkBuilder).Should().BeTrue();
-            //Handler.Process(registration, LinkBuilder, Person);
+            //_handler.CanProcess(registration, _linkBuilderMock.Object).Should().BeTrue();
+            //_handler.Process(registration, _linkBuilderMock.Object, Person);
 
             // assert
-            LinkBuilder.Controller.Should().NotBeNull();
-            LinkBuilder.Controller.Should().Be(typeof(PersonController));
-            LinkBuilder.Action.Should().NotBeNull();
-            LinkBuilder.Action.Name.Should().Be("GetParents");
+            _linkBuilderMock.Object.Controller.Should().NotBeNull();
+            _linkBuilderMock.Object.Controller.Should().Be(typeof(PersonController));
+            _linkBuilderMock.Object.Action.Should().NotBeNull();
+            _linkBuilderMock.Object.Action.Name.Should().Be("GetParents");
         }
 
         [TestMethod]
@@ -87,7 +100,7 @@ namespace FluentHateoasTest.Handling
             registrationMock.SetupGet(r => r.Expression).Returns(expressionMock.Object);
 
             // act
-            var canProcess = Handler.CanProcess(registrationMock.Object, LinkBuilder);
+            var canProcess = _handler.CanProcess(registrationMock.Object, _linkBuilderMock.Object);
 
             // assert
             canProcess.Should().BeTrue();
@@ -112,22 +125,22 @@ namespace FluentHateoasTest.Handling
             argumentsMock.SetupGet(a => a.Count).Returns(0);
             argumentsMock.Setup(a => a.GetEnumerator()).Returns(enumeratorMock.Object);
 
-            LinkBuilderMock.SetupGet(lb => lb.Arguments).Returns(argumentsMock.Object);
-            LinkBuilderMock.SetupSet(lb => lb.Controller = typeof(PersonController));
-            LinkBuilderMock.SetupGet(lb => lb.Relation).Returns("self");
-            LinkBuilderMock.SetupGet(lb => lb.Method).Returns(HttpMethod.Get);
-            LinkBuilderMock.SetupSet(lb => lb.Action = getAllMethod);
+            _linkBuilderMock.SetupGet(lb => lb.Arguments).Returns(argumentsMock.Object);
+            _linkBuilderMock.SetupSet(lb => lb.Controller = typeof(PersonController));
+            _linkBuilderMock.SetupGet(lb => lb.Relation).Returns("self");
+            _linkBuilderMock.SetupGet(lb => lb.Method).Returns(HttpMethod.Get);
+            _linkBuilderMock.SetupSet(lb => lb.Action = getAllMethod);
 
             // act
-            Handler.ProcessInternal(registrationMock.Object, LinkBuilder, Person);
+            _handler.ProcessInternal(registrationMock.Object, _linkBuilderMock.Object, _person);
 
             // assert
-            LinkBuilderMock.VerifyGet(lb => lb.Arguments, Times.Once);
+            _linkBuilderMock.VerifyGet(lb => lb.Arguments, Times.Once);
             argumentsMock.Verify(a => a.GetEnumerator(), Times.Once);
-            LinkBuilderMock.VerifySet(lb => lb.Controller = typeof(PersonController), Times.Once());
-            LinkBuilderMock.VerifyGet(lb => lb.Relation, Times.Once());
-            LinkBuilderMock.VerifyGet(lb => lb.Method, Times.Once);
-            LinkBuilderMock.VerifySet(lb => lb.Action = getAllMethod, Times.Once());
+            _linkBuilderMock.VerifySet(lb => lb.Controller = typeof(PersonController), Times.Once());
+            _linkBuilderMock.VerifyGet(lb => lb.Relation, Times.Once());
+            _linkBuilderMock.VerifyGet(lb => lb.Method, Times.Once);
+            _linkBuilderMock.VerifySet(lb => lb.Action = getAllMethod, Times.Once());
         }
     }
 }
