@@ -10,19 +10,6 @@ namespace FluentHateoas.Registration
     public static class HttpConfigurationExtensions
     {
         /// <summary>
-        /// Updates (or adds) the HATEOAS container
-        /// </summary>
-        /// <param name="configuration">HTTP configuration</param>
-        /// <param name="hateoasConfiguration">HATEOAS configuration</param>
-        public static void UpdateConfiguration(this HttpConfiguration configuration, IHateoasConfiguration hateoasConfiguration)
-        {
-            configuration.Properties.AddOrUpdate(
-                typeof(IHateoasConfiguration), 
-                hateoasConfiguration, 
-                (oldValue, newValue) => hateoasConfiguration);
-        }
-
-        /// <summary>
         /// Adds an HATEOAS registration
         /// </summary>
         /// <param name="configuration">HTTP configuration</param>
@@ -31,6 +18,19 @@ namespace FluentHateoas.Registration
         {
             var definitions = configuration.GetRegistrationsFor(registration.Model);
             definitions.Add(registration);
+        }
+
+        /// <summary>
+        /// Updates (or adds) the HATEOAS container
+        /// </summary>
+        /// <param name="configuration">HTTP configuration</param>
+        /// <param name="hateoasConfiguration">HATEOAS configuration</param>
+        public static void UpdateConfiguration(this HttpConfiguration configuration, IHateoasConfiguration hateoasConfiguration)
+        {
+            configuration.Properties.AddOrUpdate(
+                typeof(IHateoasConfiguration),
+                hateoasConfiguration,
+                (oldValue, newValue) => hateoasConfiguration);
         }
 
         /// <summary>
@@ -81,7 +81,10 @@ namespace FluentHateoas.Registration
         /// <returns>HATEOAS registrations for the model specified</returns>
         public static List<IHateoasRegistration<TModel>> GetRegistrationsFor<TModel>(this HttpConfiguration configuration)
         {
-            return configuration.GetRegistrationsFor(typeof(TModel)).Cast<IHateoasRegistration<TModel>>().ToList();
+            return configuration
+                .GetRegistrationsFor(typeof(TModel))
+                .Cast<IHateoasRegistration<TModel>>()
+                .ToList();
         }
 
         /// <summary>

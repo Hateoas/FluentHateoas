@@ -183,7 +183,7 @@ namespace FluentHateoasTest
         }
 
         [TestMethod]
-        public void GetWithCustomGetSingleMethodSelectorShouldSaveControllerAndSetHttpMethodGet()
+        public void GetWithCustomGetSingleMethodOfGuidSelectorShouldSaveControllerAndSetHttpMethodGet()
         {
             // arrange
             var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
@@ -194,6 +194,29 @@ namespace FluentHateoasTest
             // act
             Expression<Func<TestModelController, Func<Guid, TestModel>>> getSingleExpression = c => c.GetSingle;
             builder.Get<TestModelController>(getSingleExpression);
+            var expression = builder.GetExpression();
+
+            // assert
+            Assert.IsNotNull(expression);
+
+            Assert.AreEqual(typeof(TestModelController), expression.Controller);
+            Assert.AreEqual(HttpMethod.Get, expression.HttpMethod);
+            Assert.AreEqual(getSingleExpression, expression.Action);
+            containerMock.Verify(c => c.Update(It.IsAny<IHateoasRegistration>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void GetWithCustomGetSingleMethodOfObjectSelectorShouldSaveControllerAndSetHttpMethodGet()
+        {
+            // arrange
+            var containerMock = new Mock<IHateoasContainer>(MockBehavior.Strict);
+            containerMock.Setup(c => c.Update(It.IsAny<IHateoasRegistration>()));
+            var registration = new HateoasRegistration<TestModel>(null, null, containerMock.Object);
+            var builder = new ExpressionBuilder<TestModel>(registration);
+
+            // act
+            Expression<Func<TestModelController, Func<Guid, object>>> getSingleExpression = c => c.GetSingle;
+            builder.Get(getSingleExpression);
             var expression = builder.GetExpression();
 
             // assert

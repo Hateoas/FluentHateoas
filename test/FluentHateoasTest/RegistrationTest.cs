@@ -71,6 +71,21 @@ namespace FluentHateoasTest
             Assert.AreEqual(TemplateStyle.Rendered, container.Configuration.TemplateStyle);
         }
 
+        [TestMethod]
+        public void RegisterShouldRegisterEnumerableOfTModel()
+        {
+            // arrange
+            var httpConfiguration = new Mock<HttpConfiguration>().Object;
+            var container = HateoasContainerFactory.Create(httpConfiguration);
+
+            // act
+            container.RegisterCollection<IEnumerable<TestModel>>();
+
+            // assert
+            Assert.AreEqual(1, httpConfiguration.GetRegistrationsFor(typeof(IEnumerable<TestModel>)).Count);
+        }
+
+
         #region Internal test objects
         // ReSharper disable ClassNeverInstantiated.Local
 

@@ -1,3 +1,9 @@
+// ReSharper disable InconsistentNaming
+
+using FluentAssertions;
+using FluentHateoas.Interfaces;
+using Moq;
+
 namespace FluentHateoasTest
 {
     using System;
@@ -16,13 +22,13 @@ namespace FluentHateoasTest
         public void ConstructorWithoutParametersShouldSetCorrectProperties()
         {
             // arrange
-            const string Relation = "self";
+            const string relation = "self";
 
             // act
             var registration = new HateoasRegistration<TestModel>(null);
 
             // assert
-            Assert.AreEqual(Relation, registration.Relation);
+            Assert.AreEqual(relation, registration.Relation);
             Assert.IsNull(registration.ArgumentDefinitions);
             Assert.IsFalse(registration.IsCollection);
         }
@@ -31,13 +37,13 @@ namespace FluentHateoasTest
         public void ConstructorWithRelationParameterShouldSetCorrectProperties()
         {
             // arrange
-            const string Relation = "relation";
+            const string relation = "relation";
 
             // act
-            var registration = new HateoasRegistration<TestModel>(Relation, null);
+            var registration = new HateoasRegistration<TestModel>(relation, null);
 
             // assert
-            Assert.AreEqual(Relation, registration.Relation);
+            Assert.AreEqual(relation, registration.Relation);
             Assert.IsNull(registration.ArgumentDefinitions);
             Assert.IsFalse(registration.IsCollection);
         }
@@ -46,14 +52,14 @@ namespace FluentHateoasTest
         public void ConstructorWithRelationIdAndSpecificationParametersShouldSetCorrectProperties()
         {
             // arrange
-            const string Relation = "relation";
+            const string relation = "relation";
             Expression<Func<TestModel, object>> identityDefinition = m => m.Id;
 
             // act
-            var registration = new HateoasRegistration<TestModel>(Relation, new [] { identityDefinition }, null);
+            var registration = new HateoasRegistration<TestModel>(relation, new [] { identityDefinition }, null);
 
             // assert
-            Assert.AreEqual(Relation, registration.Relation);
+            Assert.AreEqual(relation, registration.Relation);
             Assert.AreEqual(identityDefinition, registration.ArgumentDefinitions[0]);
             Assert.IsFalse(registration.IsCollection);
         }
@@ -62,23 +68,40 @@ namespace FluentHateoasTest
         public void ConstructorWithRelationIdSpecificationAndCollectionFlagParametersShouldSetCorrectProperties()
         {
             // arrange
-            const string Relation = "relation";
+            const string relation = "relation";
             Expression<Func<TestModel, object>> identityDefinition = m => m.Id;
 
             // act
-            var registration = new HateoasRegistration<TestModel>(Relation, new [] { identityDefinition }, null, true);
+            var registration = new HateoasRegistration<TestModel>(relation, new [] { identityDefinition }, null, true);
 
             // assert
-            Assert.AreEqual(Relation, registration.Relation);
+            Assert.AreEqual(relation, registration.Relation);
             Assert.AreEqual(identityDefinition, registration.ArgumentDefinitions[0]);
             Assert.IsTrue(registration.IsCollection);
+        }
+
+        [TestMethod]
+        public void IHateoasRegistrationExpressionShouldSetExpressionProperty()
+        {
+            // arrange
+            var registration = new HateoasRegistration<TestModel>(null);
+
+            var expressionMock = new Mock<IHateoasExpression<TestModel>>(MockBehavior.Strict);
+            var registrationAsIHateoasRegistration = (IHateoasRegistration)registration;
+
+            registrationAsIHateoasRegistration.Expression = expressionMock.Object;
+            var assignedEpression = registrationAsIHateoasRegistration.Expression;
+            
+            // assert
+            assignedEpression.Should().NotBeNull().And.Be(expressionMock.Object);
+            registration.Expression.Should().NotBeNull().And.Be(expressionMock.Object);
         }
 
         #region Internal test objects
         // ReSharper disable ClassNeverInstantiated.Local
         // ReSharper disable UnusedAutoPropertyAccessor.Local
 
-        private class TestModel
+        public class TestModel
         {
             public Guid Id { get; set; }
         }

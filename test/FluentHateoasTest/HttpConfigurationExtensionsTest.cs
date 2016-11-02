@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Web.Http;
+using FluentAssertions;
 using FluentHateoas.Interfaces;
 using FluentHateoas.Registration;
+using FluentHateoasTest.Assets.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -116,6 +118,74 @@ namespace FluentHateoasTest
             Assert.AreEqual(1, registrations.Count);
             Assert.AreNotEqual(expected, registrations[0]); // registration itself is not overwritten ...
             Assert.AreEqual(expected.Expression, registrations[0].Expression); // ... just the Expression property
+        }
+
+        [TestMethod]
+        public void GetRegistrationsForOfTModelShouldGetAllRegistrationsForTModel()
+        {
+            // arrange
+            var httpConfigurationMock = new Mock<HttpConfiguration>();
+            var httpConfiguration = httpConfigurationMock.Object;
+
+            var registrationMock = new Mock<IHateoasRegistration<Person>>();
+            registrationMock.SetupGet(r => r.Model).Returns(typeof(Person));
+            var existing = registrationMock.Object;
+            httpConfiguration.AddRegistration(existing);
+
+            // act
+            var registrations = httpConfiguration.GetRegistrationsFor<Person>();
+
+            // assert
+            registrations.Should().NotBeNull().And.HaveCount(1);
+            registrationMock.VerifyGet(r => r.Model, Times.Once);
+        }
+
+        [TestMethod]
+        public void GetRegistrationsForOfTModelShouldGetEmptyListWhenNoRegistrationsExistForTModel()
+        {
+            // arrange
+            var httpConfigurationMock = new Mock<HttpConfiguration>();
+            var httpConfiguration = httpConfigurationMock.Object;
+
+            // act
+            var registrations = httpConfiguration.GetRegistrationsFor<Person>();
+
+            // assert
+            registrations.Should().NotBeNull().And.HaveCount(0);
+        }
+
+        [TestMethod]
+        public void GetRegistrationsForTypeShouldGetAllRegistrationsForType()
+        {
+            // arrange
+            var httpConfigurationMock = new Mock<HttpConfiguration>();
+            var httpConfiguration = httpConfigurationMock.Object;
+
+            var registrationMock = new Mock<IHateoasRegistration>();
+            registrationMock.SetupGet(r => r.Model).Returns(typeof(Person));
+            var existing = registrationMock.Object;
+            httpConfiguration.AddRegistration(existing);
+
+            // act
+            var registrations = httpConfiguration.GetRegistrationsFor(typeof(Person));
+
+            // assert
+            registrations.Should().NotBeNull().And.HaveCount(1);
+            registrationMock.VerifyGet(r => r.Model, Times.Once);
+        }
+
+        [TestMethod]
+        public void GetRegistrationsForTypeShouldGetEmptyListWhenNoRegistrationsExistForType()
+        {
+            // arrange
+            var httpConfigurationMock = new Mock<HttpConfiguration>();
+            var httpConfiguration = httpConfigurationMock.Object;
+
+            // act
+            var registrations = httpConfiguration.GetRegistrationsFor(typeof(Person));
+
+            // assert
+            registrations.Should().NotBeNull().And.HaveCount(0);
         }
     }
 }
