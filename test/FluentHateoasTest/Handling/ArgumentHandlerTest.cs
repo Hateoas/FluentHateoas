@@ -28,7 +28,7 @@ namespace FluentHateoasTest.Handling
         }
 
         [TestMethod]
-        public void HandlerShouldProcessWhenValid()
+        public void CanProcessShouldBeTrueWhenAllPrerequisitesHaveBeenMet()
         {
             // arrange
             var registrationMock = new Mock<IHateoasRegistration<Person>>(MockBehavior.Strict);
@@ -41,26 +41,116 @@ namespace FluentHateoasTest.Handling
         }
 
         [TestMethod]
-        public void HandlerShouldSetId()
+        public void ProcessInternalShouldAddIdToLinkBuilderUsingIdFromExpression()
         {
             // arrange
             var expressionMock = new Mock<IHateoasExpression<Person>>(MockBehavior.Strict);
-            expressionMock.SetupGet(e => e.TemplateParameters).Returns(new List<LambdaExpression>());
-            expressionMock.SetupGet(e => e.IdFromExpression).Returns (default(Expression<Func<object, Person, object>>));
+            expressionMock.SetupGet(e => e.TemplateParameters).Returns(default(IEnumerable<LambdaExpression>));
+            Expression<Func<object, Person, object>> idFromExpression = (provider, person) => person.Id;
+            expressionMock.SetupGet(e => e.IdFromExpression).Returns(idFromExpression);
 
             var registrationMock = new Mock<IHateoasRegistration<Person>>(MockBehavior.Strict);
-            registrationMock.SetupGet(r => r.ArgumentDefinitions).Returns(new Expression<Func<Person, object>>[] { p => p.Id });
+            registrationMock.SetupGet(r => r.ArgumentDefinitions).Returns(default(Expression<Func<Person, object>>[]));
             registrationMock.SetupGet(r => r.Expression).Returns(expressionMock.Object);
+
+            var registrationMockUntyped = registrationMock.As<IHateoasRegistration>();
+            registrationMockUntyped.SetupGet(r => r.Expression).Returns(expressionMock.Object);
 
             var argumentsMock = new Mock<IDictionary<string, Argument>>(MockBehavior.Strict);
             argumentsMock.Setup(a => a.Add(It.IsAny<string>(), It.IsAny<Argument>()));
             LinkBuilderMock.SetupGet(lb => lb.Arguments).Returns(argumentsMock.Object);
 
             // act
-            Handler.Process(registrationMock.Object, LinkBuilder, Person);
+            Handler.ProcessInternal(registrationMock.Object, LinkBuilder, Person);
 
             // assert
             argumentsMock.Verify(a => a.Add("id", It.Is<Argument>(arg => Person.Id.Equals(arg.Value))), Times.Once);
+        }
+
+        [TestMethod]
+        public void ProcessInternalShouldAddIdToLinkBuilderUsingArgumentDefinitions()
+        {
+            // arrange
+            var expressionMock = new Mock<IHateoasExpression<Person>>(MockBehavior.Strict);
+            expressionMock.SetupGet(e => e.TemplateParameters).Returns(default(IEnumerable<LambdaExpression>));
+            expressionMock.SetupGet(e => e.IdFromExpression).Returns(default(Expression<Func<object, Person, object>>));
+
+            var registrationMock = new Mock<IHateoasRegistration<Person>>(MockBehavior.Strict);
+            registrationMock.SetupGet(r => r.ArgumentDefinitions).Returns(new Expression<Func<Person, object>>[] { p => p.Id });
+            registrationMock.SetupGet(r => r.Expression).Returns(expressionMock.Object);
+
+            var registrationMockUntyped = registrationMock.As<IHateoasRegistration>();
+            registrationMockUntyped.SetupGet(r => r.Expression).Returns(expressionMock.Object);
+
+            var argumentsMock = new Mock<IDictionary<string, Argument>>(MockBehavior.Strict);
+            argumentsMock.Setup(a => a.Add(It.IsAny<string>(), It.IsAny<Argument>()));
+            LinkBuilderMock.SetupGet(lb => lb.Arguments).Returns(argumentsMock.Object);
+
+            // act
+            Handler.ProcessInternal(registrationMock.Object, LinkBuilder, Person);
+
+            // assert
+            argumentsMock.Verify(a => a.Add("id", It.Is<Argument>(arg => Person.Id.Equals(arg.Value))), Times.Once);
+        }
+
+        [TestMethod]
+        public void ProcessInternalShouldAddTemplateArgumentsToLinkBuilder()
+        {
+            // arrange
+            var expressionMock = new Mock<IHateoasExpression<Person>>(MockBehavior.Strict);
+            var templateParameters = new Expression<Func<Person, object>>[] { p => p.Id };
+            expressionMock.SetupGet(e => e.TemplateParameters).Returns(templateParameters);
+            expressionMock.SetupGet(e => e.IdFromExpression).Returns(default(Expression<Func<object, Person, object>>));
+
+            var registrationMock = new Mock<IHateoasRegistration<Person>>(MockBehavior.Strict);
+            registrationMock.SetupGet(r => r.ArgumentDefinitions).Returns(new Expression<Func<Person, object>>[] { p => p.Id });
+            registrationMock.SetupGet(r => r.Expression).Returns(expressionMock.Object);
+
+            var registrationMockUntyped = registrationMock.As<IHateoasRegistration>();
+            registrationMockUntyped.SetupGet(r => r.Expression).Returns(expressionMock.Object);
+            registrationMockUntyped.SetupGet(r => r.IsCollection).Returns(false);
+
+            var linkBuilderArgsDic = new Dictionary<string, Argument>();
+            var argumentsMock = new Mock<IDictionary<string, Argument>>(MockBehavior.Strict);
+            argumentsMock.Setup(a => a.Add(It.IsAny<string>(), It.IsAny<Argument>())).Callback((string key, Argument value) => linkBuilderArgsDic.Add(key, value));
+            argumentsMock.Setup(a => a.GetEnumerator()).Returns(() => linkBuilderArgsDic.GetEnumerator());
+            LinkBuilderMock.SetupGet(lb => lb.Arguments).Returns(argumentsMock.Object);
+
+            // act
+            Handler.ProcessInternal(registrationMock.Object, LinkBuilder, Person);
+
+            // assert
+            argumentsMock.Verify(a => a.Add("id", It.Is<Argument>(arg => Person.Id.Equals(arg.Value))), Times.Once);
+            argumentsMock.Verify(a => a.Add("personId", It.Is<Argument>(arg => "{personId}".Equals(arg.Value))), Times.Once);
+        }
+
+        [TestMethod]
+        public void ProcessInternalShouldAddTemplateArgumentsToLinkBuilderWithoutExplicitIdArgument()
+        {
+            // arrange
+            var expressionMock = new Mock<IHateoasExpression<Person>>(MockBehavior.Strict);
+            var templateParameters = new Expression<Func<Person, object>>[] {p => p.Id};
+            expressionMock.SetupGet(e => e.TemplateParameters).Returns(templateParameters);
+            expressionMock.SetupGet(e => e.IdFromExpression).Returns(default(Expression<Func<object, Person, object>>));
+
+            var registrationMock = new Mock<IHateoasRegistration<Person>>(MockBehavior.Strict);
+            registrationMock.SetupGet(r => r.ArgumentDefinitions).Returns(default(Expression<Func<Person, object>>[]));
+            registrationMock.SetupGet(r => r.Expression).Returns(expressionMock.Object);
+
+            var registrationMockUntyped = registrationMock.As<IHateoasRegistration>();
+            registrationMockUntyped.SetupGet(r => r.Expression).Returns(expressionMock.Object);
+
+            var linkBuilderArgsDic = new Dictionary<string, Argument>();
+            var argumentsMock = new Mock<IDictionary<string, Argument>>(MockBehavior.Strict);
+            argumentsMock.Setup(a => a.Add(It.IsAny<string>(), It.IsAny<Argument>())).Callback((string key, Argument value) => linkBuilderArgsDic.Add(key, value));
+            argumentsMock.Setup(a => a.GetEnumerator()).Returns(linkBuilderArgsDic.GetEnumerator());
+            LinkBuilderMock.SetupGet(lb => lb.Arguments).Returns(argumentsMock.Object);
+
+            // act
+            Handler.ProcessInternal(registrationMock.Object, LinkBuilder, Person);
+
+            // assert
+            argumentsMock.Verify(a => a.Add("id", It.Is<Argument>(arg => "{id}".Equals(arg.Value))), Times.Once);
         }
 
         [TestMethod]

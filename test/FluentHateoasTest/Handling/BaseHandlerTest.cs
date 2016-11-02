@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
-using System.Net.Http;
-using FluentHateoas.Builder.Model;
 using FluentHateoas.Handling;
-using FluentHateoas.Interfaces;
 using FluentHateoasTest.Assets.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

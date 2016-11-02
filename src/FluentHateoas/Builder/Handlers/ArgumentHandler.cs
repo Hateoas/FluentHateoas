@@ -28,8 +28,8 @@ namespace FluentHateoas.Builder.Handlers
         /// Session.MenuId = 5;
         /// 
         /// container
-        ///     .Register<Session>(p => p.MenuId)
-        ///     .Use<MenuController>()
+        ///     .Register&lt;Session&gt;(p => p.MenuId)
+        ///     .Use&lt;MenuController&gt;()
         /// 
         /// MenuId becomes Id in a later process
         /// </summary>
@@ -40,58 +40,62 @@ namespace FluentHateoas.Builder.Handlers
         /// <returns></returns>
         public override void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder linkBuilder, object data)
         {
-            var arguments = registration.ArgumentDefinitions;
-            var templateArguments = (registration.Expression.TemplateParameters ?? new List<LambdaExpression>()).ToArray();
-
-            if (registration.Expression.IdFromExpression != null)
+            if (!ProcessIdFromExpression(registration, linkBuilder, data))
             {
-                var compiledExpression = registration.Expression.IdFromExpression.Compile();
-
-                var providerType = registration.Expression.IdFromExpression.Parameters[0].Type;
-                var provider = _dependencyResolver.GetService(providerType);
-                var result = compiledExpression.DynamicInvoke(provider, data);
-                linkBuilder.Arguments.Add("id", CreateArgument("id", result.GetType(), result));
-            }
-            else if (arguments != null && arguments.Any())
-            {
-                // Add the first argument so it always can be used as named property 'id'
-                var result = arguments.First().Compile().DynamicInvoke(data);
-                linkBuilder.Arguments.Add("id", CreateArgument("id", result.GetType(), result));
-                arguments = arguments.Skip(1).ToArray();
-
-                // Handle arguments
-                foreach (var expression in arguments)
-                {
-                    var key = GetKey(data, ((MemberExpression)((UnaryExpression)expression.Body).Operand).Member);
-                    var invokeResult = expression.Compile().DynamicInvoke(data);
-
-                    linkBuilder.Arguments.Add(key, CreateArgument(key, invokeResult.GetType(), invokeResult));
-                }
+                ProcessArgumentDefinitions(registration, linkBuilder, data);
             }
 
-            if (!templateArguments.Any()) return;
+            ProcessTemplateArguments(registration, linkBuilder, data);
+        }
 
-            // Handle templates
-            if (!linkBuilder.Arguments.Any())
+        private bool ProcessIdFromExpression<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder linkBuilder, object data)
+        {
+            if (registration.Expression.IdFromExpression == null) return false;
+
+            var compiledExpression = registration.Expression.IdFromExpression.Compile();
+            var providerType = registration.Expression.IdFromExpression.Parameters[0].Type;
+            var provider = _dependencyResolver.GetService(providerType);
+            var result = compiledExpression.DynamicInvoke(provider, data);
+            linkBuilder.Arguments.Add("id", CreateArgument("id", result.GetType(), result));
+
+            return true;
+        }
+
+        private static void ProcessArgumentDefinitions<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder linkBuilder, object data)
+        {
+            if (registration.ArgumentDefinitions == null) return;
+
+            var argumentDefinitionIndex = 0;
+            foreach (var argumentDefinition in registration.ArgumentDefinitions)
             {
-                var first = templateArguments.First();
-                var member = first.Body is MemberExpression
-                    ? ((MemberExpression)first.Body).Member
-                    : ((MemberExpression)((UnaryExpression)first.Body).Operand).Member;
+                // Add the first argument as 'id' so it always can be used as named property 'id'
+                var key = argumentDefinitionIndex == 0
+                    ? "id"
+                    : GetKey(data,
+                        ((MemberExpression) ((UnaryExpression) argumentDefinition.Body).Operand).Member);
+                var value = argumentDefinition.Compile().DynamicInvoke(data);
 
-                linkBuilder.Arguments.Add("id", CreateTemplateArgument("id", ((PropertyInfo)member).PropertyType));
-
-                templateArguments = templateArguments.Skip(1).ToArray();
+                linkBuilder.Arguments.Add(key, CreateArgument(key, value.GetType(), value));
+                argumentDefinitionIndex++;
             }
+        }
 
-            foreach (var expression in templateArguments)
+        private static void ProcessTemplateArguments(IHateoasRegistration registration, ILinkBuilder linkBuilder, object data)
+        {
+            var templateArguments = registration.Expression.TemplateParameters ?? new List<LambdaExpression>();
+            var templateArgumentIndex = 0;
+            foreach (var templateArgument in templateArguments)
             {
-                var member = expression.Body is MemberExpression
-                    ? ((MemberExpression) expression.Body).Member
-                    : ((MemberExpression)((UnaryExpression)expression.Body).Operand).Member;
+                var memberExpression = templateArgument.Body as MemberExpression ??
+                                       (MemberExpression) ((UnaryExpression) templateArgument.Body).Operand;
+                var member = memberExpression.Member;
 
-                var key = GetKey(data, member, registration.IsCollection);
-                linkBuilder.Arguments.Add(key, CreateTemplateArgument(key, ((PropertyInfo)member).PropertyType));
+                var key = templateArgumentIndex == 0 && !linkBuilder.Arguments.Any()
+                    ? "id"
+                    : GetKey(data, member, registration.IsCollection);
+
+                linkBuilder.Arguments.Add(key, CreateTemplateArgument(key, ((PropertyInfo) member).PropertyType));
+                templateArgumentIndex++;
             }
         }
 
@@ -128,7 +132,7 @@ namespace FluentHateoas.Builder.Handlers
 
         public override bool CanProcess<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder resourceBuilder)
         {
-            return (registration.ArgumentDefinitions != null && registration.ArgumentDefinitions.Any()) 
+            return (registration.ArgumentDefinitions != null && registration.ArgumentDefinitions.Any())
                 || (registration.Expression.TemplateParameters != null && registration.Expression.TemplateParameters.Any())
                 || registration.Expression.IdFromExpression != null;
         }
