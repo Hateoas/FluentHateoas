@@ -1,13 +1,13 @@
-﻿namespace FluentHateoas.Registration
-{
-    using System.Web.Http;
+﻿using FluentHateoas.Contracts;
+using FluentHateoas.Handling;
+using FluentHateoas.Interfaces;
 
-    using FluentHateoas.Contracts;
-    using FluentHateoas.Interfaces;
+namespace FluentHateoas.Registration
+{
 
     public class HateoasContainer : IHateoasContainer
     {
-        internal HateoasContainer(HttpConfiguration httpConfiguration, HateoasConfiguration configuration)
+        internal HateoasContainer(IHttpConfiguration httpConfiguration, HateoasConfiguration configuration)
         {
             Configuration = configuration;
             //Registrations = new List<IHateoasRegistration>();
@@ -20,7 +20,7 @@
         public IHateoasConfiguration Configuration { get; }
         //public IList<IHateoasRegistration> Registrations { get; }
 
-        private readonly HttpConfiguration _httpConfiguration;
+        private readonly IHttpConfiguration _httpConfiguration;
 
         public void Add(IHateoasRegistration registration)
         {

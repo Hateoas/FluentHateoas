@@ -1,25 +1,34 @@
-﻿using FluentHateoas.Registration;
+﻿using System.Collections.Concurrent;
+using FluentHateoas.Handling;
+using FluentHateoas.Registration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FluentHateoasTest
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Web.Http;
-
     using Moq;
 
     [TestClass]
     [ExcludeFromCodeCoverage]
     public class HateoasContainerExtensionsTest
     {
+        private Mock<IHttpConfiguration> _httpConfigurationMock;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            _httpConfigurationMock = new Mock<IHttpConfiguration>();
+            var properties = new ConcurrentDictionary<object, object>();
+            _httpConfigurationMock.SetupGet(c => c.Properties).Returns(() => properties);
+        }
+
         [TestMethod]
         [TestCategory("UnitTest")]
         public void ConfigureMergeTypedOptionsWithDefault()
         {
             // arrange
-            var httpConfigurationMock = new Mock<HttpConfiguration>();
-            var hateoasContainer = HateoasContainerFactory.Create(httpConfigurationMock.Object);
+            var hateoasContainer = HateoasContainerFactory.Create(_httpConfigurationMock.Object);
             var configuration = new { HrefStyle = HrefStyle.Relative, LinkStyle = LinkStyle.Array, TemplateStyle = TemplateStyle.Rendered };
 
             // act
@@ -37,8 +46,7 @@ namespace FluentHateoasTest
         public void ConfigureMergeStringOptionsWithDefault()
         {
             // arrange
-            var httpConfigurationMock = new Mock<HttpConfiguration>();
-            var hateoasContainer = HateoasContainerFactory.Create(httpConfigurationMock.Object);
+            var hateoasContainer = HateoasContainerFactory.Create(_httpConfigurationMock.Object);
             var configuration = new { HrefStyle = "Absolute", LinkStyle = "Array", TemplateStyle = "Rendered" };
             
             // act
@@ -56,8 +64,7 @@ namespace FluentHateoasTest
         public void ConfigureMergeEmptyOptionsWithDefault()
         {
             // arrange
-            var httpConfigurationMock = new Mock<HttpConfiguration>();
-            var hateoasContainer = HateoasContainerFactory.Create(httpConfigurationMock.Object);
+            var hateoasContainer = HateoasContainerFactory.Create(_httpConfigurationMock.Object);
             var configuration = new { };
 
             // act

@@ -104,13 +104,17 @@
     <Compile Include="Contracts\IHateoasContainer.cs" />
     <Compile Include="Contracts\IHateoasRegistrationProfile.cs" />
     <Compile Include="Handling\ConfigurationProvider.cs" />
-    <Compile Include="Handling\ConfigurationProviderExtensions.cs" />
+    <Compile Include="Handling\ConfigurationProviderGetLinksForFuncProvider.cs" />
     <Compile Include="Handling\HateoasLink.cs" />
     <Compile Include="Handling\HateOasResponse.cs" />
+    <Compile Include="Handling\HttpConfigurationWrapper.cs" />
+    <Compile Include="Handling\ICache.cs" />
     <Compile Include="Handling\IConfigurationProvider.cs" />
+    <Compile Include="Handling\IConfigurationProviderGetLinksForFuncProvider.cs" />
     <Compile Include="Handling\IHateoasCommand.cs" />
     <Compile Include="Handling\ILinkBuilder.cs" />
     <Compile Include="Handling\ILinkFactory.cs" />
+    <Compile Include="Handling\InMemoryCache.cs" />
     <Compile Include="Handling\IRegistrationLinkHandler.cs" />
     <Compile Include="Handling\IResponseProvider.cs" />
     <Compile Include="Handling\LinkBuilder.cs" />
@@ -126,6 +130,7 @@
     <Compile Include="Helpers\LinkHelper.cs" />
     <Compile Include="Helpers\LinkResponse.cs" />
     <Compile Include="Helpers\ObjectHelper.cs" />
+    <Compile Include="Helpers\TypeHelper.cs" />
     <Compile Include="Interfaces\ITemplateExpressionBuilder.cs" />
     <Compile Include="Registration\IAuthorizationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

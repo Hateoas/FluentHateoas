@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using System.Web.Http.Dependencies;
 using System.Web.Mvc;
 using FluentHateoas;
-using FluentHateoas.Handling;
-using FluentHateoas.Handling.Handlers;
-using FluentHateoas.Registration;
-using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using SampleApi.App_Start;
-using SampleApi.Providers;
 
 namespace SampleApi
 {

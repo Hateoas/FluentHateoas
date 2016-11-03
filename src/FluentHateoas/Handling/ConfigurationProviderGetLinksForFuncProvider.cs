@@ -9,42 +9,30 @@ using FluentHateoas.Helpers;
 
 namespace FluentHateoas.Handling
 {
-    public static class ConfigurationProviderExtensions
+    public class ConfigurationProviderGetLinksForFuncProvider : IConfigurationProviderGetLinksForFuncProvider
     {
-        private static IEnumerable<MethodInfo> _genericLinksForMethods;
+        private readonly ICache<int, MethodInfo> _genericLinksForMethodsCache;
 
-        public static Func<IConfigurationProvider, object, IEnumerable<IHateoasLink>> GetLinksForFunc(this IConfigurationProvider configurationProvider, Type contentType, object content)
+        public ConfigurationProviderGetLinksForFuncProvider(ICache<int, MethodInfo> genericLinksForMethodsCache)
         {
-            var determinedContentTypes = DetermineContentTypes(contentType);
-            return GetLinksForFunc(
-                configurationProvider,
-                singleContentType: determinedContentTypes.Item1,
-                contentTypeToUse: determinedContentTypes.Item2);
+            _genericLinksForMethodsCache = genericLinksForMethodsCache;
         }
 
-        private static Tuple<Type, Type> DetermineContentTypes(Type contentType)
+        public Func<IConfigurationProvider, object, IEnumerable<IHateoasLink>> GetLinksForFunc(IConfigurationProvider configurationProvider, Type contentType, object content)
         {
             Type singleContentType, contentTypeToUse;
-
-            if(ObjectHelper.IsOrImplementsIEnumerable(contentType))
-            {
-                singleContentType = contentType.GetGenericArguments().Last();
-                // The content type to use must be IEnumerable<TModel> in order to find the correct GetLinksFor method to use
-                // when generating the lambda function below (using SequenceEquals on types). In some cases, actual input will
-                // be List<TModel> or even TModel[]. For those cases, we just simplify the content type to its 'base form'.
-                contentTypeToUse = typeof(IEnumerable<>).MakeGenericType(singleContentType);
-            }
+            if (contentType.TryGetSingleItemType(out singleContentType))
+                contentTypeToUse = singleContentType.MakeIEnumerableOfType();
             else
-            {
-                singleContentType = contentType;
-                contentTypeToUse = contentType;
-            }
+                singleContentType = contentTypeToUse = contentType;
 
-            return new Tuple<Type, Type>(singleContentType, contentTypeToUse);
+            return GetLinksForFunc(
+                configurationProvider,
+                singleContentType,
+                contentTypeToUse);
         }
-
-
-        private static Func<IConfigurationProvider, object, IEnumerable<IHateoasLink>> GetLinksForFunc(IConfigurationProvider configurationProvider, Type singleContentType, Type contentTypeToUse)
+        
+        public Func<IConfigurationProvider, object, IEnumerable<IHateoasLink>> GetLinksForFunc(IConfigurationProvider configurationProvider, Type singleContentType, Type contentTypeToUse)
         {
             var genericMethods = GetLinksForGenericMethods(configurationProvider);
 
@@ -62,16 +50,24 @@ namespace FluentHateoas.Handling
             throw new InvalidOperationException($"No HATEOAS configuration for type {contentTypeToUse.Name}");
         }
 
-        private static IEnumerable<MethodInfo> GetLinksForGenericMethods(IConfigurationProvider configurationProvider)
+        private IEnumerable<MethodInfo> GetLinksForGenericMethods(IConfigurationProvider configurationProvider)
         {
-            if (_genericLinksForMethods != null)
-                return _genericLinksForMethods;
+            var cachedGenericMethods = _genericLinksForMethodsCache.Get();
+            if (cachedGenericMethods.Any())
+                return cachedGenericMethods;
 
             var configurationProviderType = configurationProvider.GetType();
-            _genericLinksForMethods = configurationProviderType
+            cachedGenericMethods = configurationProviderType
                 .GetMethods()
-                .Where(m => m.IsGenericMethod && m.Name == nameof(configurationProvider.GetLinksFor));
-            return _genericLinksForMethods;
+                .Where(m => m.IsGenericMethod && m.Name == nameof(configurationProvider.GetLinksFor))
+                .ToList();
+
+            // ReSharper disable PossibleMultipleEnumeration
+            foreach (var cachedGenericMethod in cachedGenericMethods)
+                _genericLinksForMethodsCache.Add(cachedGenericMethod.GetHashCode(), cachedGenericMethod);
+
+            return cachedGenericMethods;
+            // ReSharper restore PossibleMultipleEnumeration
         }
 
         /// <summary>

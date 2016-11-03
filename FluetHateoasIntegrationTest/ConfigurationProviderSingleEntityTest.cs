@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using System.Web.Http;
 using System.Web.Http.Dependencies;
 using FluentAssertions;
 using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Handling;
-using FluentHateoas.Interfaces;
 using FluentHateoas.Registration;
 using FluentHateoasTest.Assets.Controllers;
 using FluentHateoasTest.Assets.Model;
@@ -21,8 +21,6 @@ namespace FluetHateoasIntegrationTest
     [ExcludeFromCodeCoverage]
     public class ConfigurationProviderSingleEntityTest
     {
-        private IHateoasConfiguration _configuration;
-
         private Mock<IAuthorizationProvider> _authorizationProvider;
         private Mock<IDependencyResolver> _dependencyResolverMock;
         private Mock<IPersonProvider> _personProvider;
@@ -36,8 +34,6 @@ namespace FluetHateoasIntegrationTest
         [TestInitialize]
         public void Initialize()
         {
-            _configuration = new HateoasConfiguration();
-
             _authorizationProvider = new Mock<IAuthorizationProvider>();
             _dependencyResolverMock = new Mock<IDependencyResolver>();
             _personProvider = new Mock<IPersonProvider>();
@@ -49,14 +45,18 @@ namespace FluetHateoasIntegrationTest
             var argumentsDefinitionsProcessor = new ArgumentDefinitionsProcessor();
             var templateArgumentsProcessor = new TemplateArgumentsProcessor();
 
-            var configuration = new HttpConfiguration();
-            Container = HateoasContainerFactory.Create(configuration);
+            var configurationMock = new Mock<IHttpConfiguration>(MockBehavior.Strict);
+            var properties = new ConcurrentDictionary<object, object>();
+            configurationMock.SetupGet(c => c.Properties).Returns(() => properties);
+
+            Container = HateoasContainerFactory.Create(configurationMock.Object);
             LinkFactory = new LinkFactory(
                 _authorizationProvider.Object,
                 idFromExpressionProcessor,
                 argumentsDefinitionsProcessor,
                 templateArgumentsProcessor);
-            ConfigurationProvider = new ConfigurationProvider(configuration, LinkFactory);
+            var linksForFuncProvider = new ConfigurationProviderGetLinksForFuncProvider(new InMemoryCache<int, MethodInfo>());
+            ConfigurationProvider = new ConfigurationProvider(configurationMock.Object, LinkFactory, linksForFuncProvider, new InMemoryCache<Type, Func<ConfigurationProvider, object, IEnumerable<IHateoasLink>>>());
 
             Entity = new Person()
             {

@@ -8,17 +8,18 @@ namespace FluentHateoas.Handling
 {
     public class ConfigurationProvider : IConfigurationProvider
     {
-        private readonly System.Web.Http.HttpConfiguration _httpConfiguration;
+        private readonly IHttpConfiguration _httpConfiguration;
         private readonly ILinkFactory _linkFactory;
 
-        private readonly Dictionary<Type, Func<ConfigurationProvider, object, IEnumerable<IHateoasLink>>> _cachedGetLinksForMethod;
+        private readonly ICache<Type, Func<ConfigurationProvider, object, IEnumerable<IHateoasLink>>> _getLinksForMethodCache;
+        private readonly IConfigurationProviderGetLinksForFuncProvider _linksForFuncProvider;
 
-        public ConfigurationProvider(System.Web.Http.HttpConfiguration httpConfiguration, ILinkFactory linkFactory)
+        public ConfigurationProvider(IHttpConfiguration httpConfiguration, ILinkFactory linkFactory, IConfigurationProviderGetLinksForFuncProvider linksForFuncProvider, ICache<Type, Func<ConfigurationProvider, object, IEnumerable<IHateoasLink>>> getLinksForMethodCache)
         {
             _httpConfiguration = httpConfiguration;
             _linkFactory = linkFactory;
-
-            _cachedGetLinksForMethod = new Dictionary<Type, Func<ConfigurationProvider, object, IEnumerable<IHateoasLink>>> ();
+            _linksForFuncProvider = linksForFuncProvider;
+            _getLinksForMethodCache = getLinksForMethodCache;
         }
 
         public IEnumerable<IHateoasLink> GetLinksFor<TModel>(TModel data)
@@ -41,10 +42,12 @@ namespace FluentHateoas.Handling
         public IEnumerable<IHateoasLink> GetLinksFor(Type contentType, object content)
         {
             // TODO Dynamically creating/caching those link functions is heavy and should move to the registration phase.
-            Func<ConfigurationProvider, object, IEnumerable<IHateoasLink>> getLinksForFunction;
-            if (!_cachedGetLinksForMethod.TryGetValue(contentType, out getLinksForFunction))
-                _cachedGetLinksForMethod[contentType] = getLinksForFunction = this.GetLinksForFunc(contentType, content);
-
+            var getLinksForFunction = _getLinksForMethodCache.Get(contentType);
+            if (getLinksForFunction == null)
+                _getLinksForMethodCache.Add(
+                    contentType,
+                    getLinksForFunction = _linksForFuncProvider.GetLinksForFunc(this, contentType, content)
+                );
             return getLinksForFunction(this, content.Materialize());
         }
     }

@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Web.Mvc;
 using AutoMapper;
 
 namespace SampleApi.ApiController

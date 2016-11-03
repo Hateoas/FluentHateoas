@@ -1,7 +1,4 @@
-﻿using System;
-using FluentHateoas;
-
-namespace SampleApi
+﻿namespace SampleApi
 {
     using System.Diagnostics.CodeAnalysis;
 

@@ -1,4 +1,7 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Web.Http;
 using System.Web.Http.Dependencies;
 using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Contracts;
@@ -29,12 +32,19 @@ namespace FluentHateoas
                 argumentsDefinitionsProcessor: argumentsDefinitionsProcessor,
                 templateArgumentsProcessor: templateArgumentsProcessor
             );
-            var configurationProvider = new ConfigurationProvider(config, linkFactory);
+
+            var inMemoryGenericLinksForMethodsCache = new InMemoryCache<int, MethodInfo>();
+            var linksForFuncProvider = new ConfigurationProviderGetLinksForFuncProvider(inMemoryGenericLinksForMethodsCache);
+
+            var getLinksForMethodCache = new InMemoryCache<Type, Func<ConfigurationProvider, object, IEnumerable<IHateoasLink>>>();
+            var httpConfiguration = new HttpConfigurationWrapper(config);
+            var configurationProvider = new ConfigurationProvider(httpConfiguration, linkFactory, linksForFuncProvider, getLinksForMethodCache);
+
             var responseProvider = new ResponseProvider(configurationProvider);
             var handler = new HateoasHttpHandler(responseProvider);
             config.MessageHandlers.Add(handler); // todo: dependency resolver
 
-            var container = HateoasContainerFactory.Create(config);
+            var container = HateoasContainerFactory.Create(httpConfiguration);
             var registration = new TRegistrationClass();
 
             registration.Register(container);

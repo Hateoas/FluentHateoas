@@ -1,6 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Web.Http;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
+using FluentHateoas.Handling;
 using FluentHateoas.Interfaces;
 using FluentHateoas.Registration;
 using FluentHateoasTest.Assets.Model;
@@ -13,21 +14,29 @@ namespace FluentHateoasTest
     [ExcludeFromCodeCoverage]
     public class HttpConfigurationExtensionsTest
     {
+        private Mock<IHttpConfiguration> _httpConfigurationMock;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            _httpConfigurationMock = new Mock<IHttpConfiguration>();
+            var properties = new ConcurrentDictionary<object, object>();
+            _httpConfigurationMock.SetupGet(c => c.Properties).Returns(() => properties);
+        }
+
         [TestMethod]
         public void UpdateConfigurationShouldAddConfigurationWhenItDoesNotExist()
         {
             // arrange
-            var httpConfigurationMock = new Mock<HttpConfiguration>();
-            var httpConfiguration = httpConfigurationMock.Object;
 
             // act
             var configurationMock = new Mock<IHateoasConfiguration>();
             var expectedConfiguration = configurationMock.Object;
-            httpConfiguration.UpdateConfiguration(expectedConfiguration);
+            _httpConfigurationMock.Object.UpdateConfiguration(expectedConfiguration);
 
             // assert
             object actualConfiguration;
-            Assert.IsTrue(httpConfiguration.Properties.TryGetValue(typeof(IHateoasConfiguration), out actualConfiguration));
+            Assert.IsTrue(_httpConfigurationMock.Object.Properties.TryGetValue(typeof(IHateoasConfiguration), out actualConfiguration));
             Assert.AreEqual(expectedConfiguration, actualConfiguration);
         }
 
@@ -35,20 +44,17 @@ namespace FluentHateoasTest
         public void UpdateConfigurationShouldOverwriteConfigurationWhenItDoesExist()
         {
             // arrange
-            var httpConfigurationMock = new Mock<HttpConfiguration>();
-            var httpConfiguration = httpConfigurationMock.Object;
-
             var existingConfiguration = new Mock<IHateoasConfiguration>().Object;
-            httpConfiguration.UpdateConfiguration(existingConfiguration);
+            _httpConfigurationMock.Object.UpdateConfiguration(existingConfiguration);
 
             // act
             var expectedConfigurationMock = new Mock<IHateoasConfiguration>();
             var expectedConfiguration = expectedConfigurationMock.Object;
-            httpConfiguration.UpdateConfiguration(expectedConfiguration);
+            _httpConfigurationMock.Object.UpdateConfiguration(expectedConfiguration);
 
             // assert
             object actualConfiguration;
-            Assert.IsTrue(httpConfiguration.Properties.TryGetValue(typeof(IHateoasConfiguration), out actualConfiguration));
+            Assert.IsTrue(_httpConfigurationMock.Object.Properties.TryGetValue(typeof(IHateoasConfiguration), out actualConfiguration));
             Assert.AreEqual(expectedConfiguration, actualConfiguration);
         }
 
@@ -56,18 +62,15 @@ namespace FluentHateoasTest
         public void AddRegistrationShouldAddRegistration()
         {
             // arrange
-            var httpConfigurationMock = new Mock<HttpConfiguration>();
-            var httpConfiguration = httpConfigurationMock.Object;
-
             var registrationMock = new Mock<IHateoasRegistration>();
             registrationMock.SetupGet(r=>r.Model).Returns(typeof(IHateoasRegistration));
             var expected = registrationMock.Object;
 
             // act
-            httpConfiguration.AddRegistration(expected);
+            _httpConfigurationMock.Object.AddRegistration(expected);
 
             // assert
-            var registrations = httpConfiguration.GetRegistrationsFor(typeof(IHateoasRegistration));
+            var registrations = _httpConfigurationMock.Object.GetRegistrationsFor(typeof(IHateoasRegistration));
             Assert.IsNotNull(registrations);
             Assert.AreEqual(1, registrations.Count);
             Assert.AreEqual(expected, registrations[0]);
@@ -77,18 +80,15 @@ namespace FluentHateoasTest
         public void UpdateRegistrationShouldAddRegistrationWhenItDoesNotExist()
         {
             // arrange
-            var httpConfigurationMock = new Mock<HttpConfiguration>();
-            var httpConfiguration = httpConfigurationMock.Object;
-
             var registrationMock = new Mock<IHateoasRegistration>();
             registrationMock.SetupGet(r => r.Model).Returns(typeof(IHateoasRegistration));
             var expected = registrationMock.Object;
 
             // act
-            httpConfiguration.UpdateRegistration(expected);
+            _httpConfigurationMock.Object.UpdateRegistration(expected);
 
             // assert
-            var registrations = httpConfiguration.GetRegistrationsFor(typeof(IHateoasRegistration));
+            var registrations = _httpConfigurationMock.Object.GetRegistrationsFor(typeof(IHateoasRegistration));
             Assert.IsNotNull(registrations);
             Assert.AreEqual(1, registrations.Count);
             Assert.AreEqual(expected, registrations[0]);
@@ -98,22 +98,19 @@ namespace FluentHateoasTest
         public void UpdateRegistrationShouldUpdateExpressionWhenItDoesExist()
         {
             // arrange
-            var httpConfigurationMock = new Mock<HttpConfiguration>();
-            var httpConfiguration = httpConfigurationMock.Object;
-
             var existingMock = new Mock<IHateoasRegistration>();
             existingMock.SetupGet(r => r.Model).Returns(typeof(IHateoasRegistration));
             var existing = existingMock.Object;
-            httpConfiguration.UpdateRegistration(existing);
+            _httpConfigurationMock.Object.UpdateRegistration(existing);
 
             // act
             var expectedMock = new Mock<IHateoasRegistration>();
             expectedMock.SetupGet(r => r.Model).Returns(typeof(IHateoasRegistration));
             var expected = expectedMock.Object;
-            httpConfiguration.UpdateRegistration(expected);
+            _httpConfigurationMock.Object.UpdateRegistration(expected);
 
             // assert
-            var registrations = httpConfiguration.GetRegistrationsFor(typeof(IHateoasRegistration));
+            var registrations = _httpConfigurationMock.Object.GetRegistrationsFor(typeof(IHateoasRegistration));
             Assert.IsNotNull(registrations);
             Assert.AreEqual(1, registrations.Count);
             Assert.AreNotEqual(expected, registrations[0]); // registration itself is not overwritten ...
@@ -124,16 +121,13 @@ namespace FluentHateoasTest
         public void GetRegistrationsForOfTModelShouldGetAllRegistrationsForTModel()
         {
             // arrange
-            var httpConfigurationMock = new Mock<HttpConfiguration>();
-            var httpConfiguration = httpConfigurationMock.Object;
-
             var registrationMock = new Mock<IHateoasRegistration<Person>>();
             registrationMock.SetupGet(r => r.Model).Returns(typeof(Person));
             var existing = registrationMock.Object;
-            httpConfiguration.AddRegistration(existing);
+            _httpConfigurationMock.Object.AddRegistration(existing);
 
             // act
-            var registrations = httpConfiguration.GetRegistrationsFor<Person>();
+            var registrations = _httpConfigurationMock.Object.GetRegistrationsFor<Person>();
 
             // assert
             registrations.Should().NotBeNull().And.HaveCount(1);
@@ -144,11 +138,9 @@ namespace FluentHateoasTest
         public void GetRegistrationsForOfTModelShouldGetEmptyListWhenNoRegistrationsExistForTModel()
         {
             // arrange
-            var httpConfigurationMock = new Mock<HttpConfiguration>();
-            var httpConfiguration = httpConfigurationMock.Object;
 
             // act
-            var registrations = httpConfiguration.GetRegistrationsFor<Person>();
+            var registrations = _httpConfigurationMock.Object.GetRegistrationsFor<Person>();
 
             // assert
             registrations.Should().NotBeNull().And.HaveCount(0);
@@ -158,16 +150,13 @@ namespace FluentHateoasTest
         public void GetRegistrationsForTypeShouldGetAllRegistrationsForType()
         {
             // arrange
-            var httpConfigurationMock = new Mock<HttpConfiguration>();
-            var httpConfiguration = httpConfigurationMock.Object;
-
             var registrationMock = new Mock<IHateoasRegistration>();
             registrationMock.SetupGet(r => r.Model).Returns(typeof(Person));
             var existing = registrationMock.Object;
-            httpConfiguration.AddRegistration(existing);
+            _httpConfigurationMock.Object.AddRegistration(existing);
 
             // act
-            var registrations = httpConfiguration.GetRegistrationsFor(typeof(Person));
+            var registrations = _httpConfigurationMock.Object.GetRegistrationsFor(typeof(Person));
 
             // assert
             registrations.Should().NotBeNull().And.HaveCount(1);
@@ -178,11 +167,9 @@ namespace FluentHateoasTest
         public void GetRegistrationsForTypeShouldGetEmptyListWhenNoRegistrationsExistForType()
         {
             // arrange
-            var httpConfigurationMock = new Mock<HttpConfiguration>();
-            var httpConfiguration = httpConfigurationMock.Object;
 
             // act
-            var registrations = httpConfiguration.GetRegistrationsFor(typeof(Person));
+            var registrations = _httpConfigurationMock.Object.GetRegistrationsFor(typeof(Person));
 
             // assert
             registrations.Should().NotBeNull().And.HaveCount(0);

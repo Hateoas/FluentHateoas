@@ -87,7 +87,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ConfigurationProviderEnumerableTest.cs" />
-    <Compile Include="ConfigurationProviderExtensionsTest.cs" />
     <Compile Include="ConfigurationProviderSingleEntityTest.cs" />
     <Compile Include="TestContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

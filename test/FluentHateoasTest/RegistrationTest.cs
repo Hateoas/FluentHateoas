@@ -1,39 +1,48 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using FluentHateoas.Registration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Web.Http;
+using FluentHateoas.Handling;
+using System.Diagnostics.CodeAnalysis;
+
+using Moq;
 
 namespace FluentHateoasTest
 {
-    using System.Diagnostics.CodeAnalysis;
-
-    using Moq;
 
     [TestClass]
     [ExcludeFromCodeCoverage]
     public class RegistrationTest
     {
+        private Mock<IHttpConfiguration> _httpConfigurationMock;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            _httpConfigurationMock = new Mock<IHttpConfiguration>();
+            var properties = new ConcurrentDictionary<object, object>();
+            _httpConfigurationMock.SetupGet(c => c.Properties).Returns(() => properties);
+        }
+
         [TestMethod]
         public void RegisterShouldRegisterModel()
         {
             // arrange
-            var httpConfiguration = new Mock<HttpConfiguration>().Object;
-            var container = HateoasContainerFactory.Create(httpConfiguration);
+            var container = HateoasContainerFactory.Create(_httpConfigurationMock.Object);
 
             // act
             container.Register<TestModel>();
 
             // assert
-            Assert.AreEqual(1, httpConfiguration.GetRegistrationsFor(typeof(TestModel)).Count);
+            Assert.AreEqual(1, _httpConfigurationMock.Object.GetRegistrationsFor(typeof(TestModel)).Count);
         }
 
         [TestMethod]
         public void RegisterIEnumerableAsModelShouldThrowArgumentException()
         {
             // arrange
-            var httpConfiguration = new Mock<HttpConfiguration>().Object;
-            var container = HateoasContainerFactory.Create(httpConfiguration);
+            var container = HateoasContainerFactory.Create(_httpConfigurationMock.Object);
 
             try
             {
@@ -54,8 +63,7 @@ namespace FluentHateoasTest
         public void ConfigureShouldMergeDefaultAndProvidedParameters()
         {
             // arrange
-            var httpConfiguration = new Mock<HttpConfiguration>().Object;
-            var container = HateoasContainerFactory.Create(httpConfiguration);
+            var container = HateoasContainerFactory.Create(_httpConfigurationMock.Object);
 
             // act
             container.Configure(new
@@ -75,14 +83,13 @@ namespace FluentHateoasTest
         public void RegisterShouldRegisterEnumerableOfTModel()
         {
             // arrange
-            var httpConfiguration = new Mock<HttpConfiguration>().Object;
-            var container = HateoasContainerFactory.Create(httpConfiguration);
+            var container = HateoasContainerFactory.Create(_httpConfigurationMock.Object);
 
             // act
             container.RegisterCollection<IEnumerable<TestModel>>();
 
             // assert
-            Assert.AreEqual(1, httpConfiguration.GetRegistrationsFor(typeof(IEnumerable<TestModel>)).Count);
+            Assert.AreEqual(1, _httpConfigurationMock.Object.GetRegistrationsFor(typeof(IEnumerable<TestModel>)).Count);
         }
 
 

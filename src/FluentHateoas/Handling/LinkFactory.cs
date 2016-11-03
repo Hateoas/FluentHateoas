@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http.Dependencies;
 using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Registration;
 

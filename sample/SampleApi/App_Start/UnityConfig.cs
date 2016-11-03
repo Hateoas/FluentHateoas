@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Practices.Unity;
-using Microsoft.Practices.Unity.Configuration;
 using SampleApi.Providers;
 
 namespace SampleApi.App_Start

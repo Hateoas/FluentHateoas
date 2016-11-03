@@ -126,8 +126,9 @@
     <Compile Include="Factories\RegistrationFactory.cs" />
     <Compile Include="Handling\ArgumentDefinitionsProcessorTest.cs" />
     <Compile Include="Handling\ArgumentHandlerTest.cs" />
-    <Compile Include="Handling\BaseHandlerTest.cs" />
     <Compile Include="Handling\CommandHandlerTest.cs" />
+    <Compile Include="Handling\ConfigurationProviderTest.cs" />
+    <Compile Include="Handling\ConfigurationProviderGetLinksForFuncProviderTest.cs" />
     <Compile Include="Handling\HateoasHttpHandlerTest.cs" />
     <Compile Include="Handling\IdFromExpressionProcessorTest.cs" />
     <Compile Include="Handling\RegistrationLinkHandlerBaseTest.cs" />
