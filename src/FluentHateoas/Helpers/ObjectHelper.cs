@@ -33,8 +33,11 @@ namespace FluentHateoas.Helpers
             return method.Invoke(null, new[] { source });
         }
 
-        internal static bool IsOrImplementsIEnumerable(Type contentType)
+        public static bool IsOrImplementsIEnumerable(Type contentType)
         {
+            if (contentType.IsSimpleType())
+                return false;
+
             if (contentType.IsInterface &&
                 contentType.IsGenericType &&
                 contentType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
@@ -44,6 +47,14 @@ namespace FluentHateoas.Helpers
                 contentType
                     .GetInterfaces()
                     .Any(ti => ti.IsGenericType && ti.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+        }
+
+        private static bool IsSimpleType(this Type contentType)
+        {
+            return contentType.IsPrimitive
+                   || contentType.IsEnum
+                   || contentType == typeof(string)
+                   || contentType == typeof(decimal);
         }
     }
 }

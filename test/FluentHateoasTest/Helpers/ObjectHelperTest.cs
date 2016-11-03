@@ -92,5 +92,20 @@ namespace FluentHateoasTest.Helpers
                 .BeOfType<List<Person>>().And
                 .Be(persons);
         }
-    }
+
+        [TestMethod]
+        [TestCategory("UnitTest")]
+        public void IsOrImplementsIEnumerableShouldNotValidateSimpleTypeAsEnumerable()
+        {
+            typeof(string).IsOrImplementsIEnumerable().Should().BeFalse();
+            typeof(String).IsOrImplementsIEnumerable().Should().BeFalse();
+            typeof(int).IsOrImplementsIEnumerable().Should().BeFalse();
+            typeof(Int32).IsOrImplementsIEnumerable().Should().BeFalse();
+            typeof(Int64).IsOrImplementsIEnumerable().Should().BeFalse();
+            typeof(long).IsOrImplementsIEnumerable().Should().BeFalse();
+            typeof(decimal).IsOrImplementsIEnumerable().Should().BeFalse();
+            typeof(double).IsOrImplementsIEnumerable().Should().BeFalse();
+            typeof(Double).IsOrImplementsIEnumerable().Should().BeFalse();
+        }
+        }
 }
