@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
@@ -46,7 +47,7 @@ namespace FluentHateoasTest.Helpers
         public void MaterialzeShouldMaterializeWhereSelectListToListOfTModel()
         {
             // arrange
-            var persons = new List<Person> {new Person {Lastname = "LastName"}};
+            var persons = new List<Person> { new Person { Lastname = "LastName" } };
             var list = persons.Select(p => p);
 
             // act
@@ -97,6 +98,7 @@ namespace FluentHateoasTest.Helpers
         [TestCategory("UnitTest")]
         public void IsOrImplementsIEnumerableShouldNotValidateSimpleTypeAsEnumerable()
         {
+            // ReSharper disable BuiltInTypeReferenceStyle
             typeof(string).IsOrImplementsIEnumerable().Should().BeFalse();
             typeof(String).IsOrImplementsIEnumerable().Should().BeFalse();
             typeof(int).IsOrImplementsIEnumerable().Should().BeFalse();
@@ -106,6 +108,7 @@ namespace FluentHateoasTest.Helpers
             typeof(decimal).IsOrImplementsIEnumerable().Should().BeFalse();
             typeof(double).IsOrImplementsIEnumerable().Should().BeFalse();
             typeof(Double).IsOrImplementsIEnumerable().Should().BeFalse();
+            // ReSharper restore BuiltInTypeReferenceStyle
         }
-        }
+    }
 }
