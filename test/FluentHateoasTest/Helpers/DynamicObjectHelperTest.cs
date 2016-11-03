@@ -16,9 +16,9 @@
         public void ToExpandoObjectConvertsDynamicToExpandobjectAndIsUsableAsDynamic()
         {
             // arrange
-            const string Property1Value = "";
-            const int Property2Value = 0;
-            var sourceDynamicObject = new { Property1 = Property1Value, Property2 = Property2Value };
+            const string property1Value = "";
+            const int property2Value = 0;
+            var sourceDynamicObject = new { Property1 = property1Value, Property2 = property2Value };
 
             // act
             var destinationExpandoObject = DynamicObjectHelper.ToExpandoObject(sourceDynamicObject);
@@ -26,8 +26,8 @@
             // assert
             Assert.IsNotNull(destinationExpandoObject);
             var destinationDynamicObject = (dynamic)destinationExpandoObject;
-            Assert.AreEqual(Property1Value, destinationDynamicObject.Property1);
-            Assert.AreEqual(Property2Value, destinationDynamicObject.Property2);
+            Assert.AreEqual(property1Value, destinationDynamicObject.Property1);
+            Assert.AreEqual(property2Value, destinationDynamicObject.Property2);
         }
 
         [TestMethod]
@@ -35,9 +35,9 @@
         public void ToExpandoObjectConvertsDynamicToExpandobjectAndIsUsableAsIDictionary()
         {
             // arrange
-            const string Property1Value = "";
-            const int Property2Value = 0;
-            var sourceDynamicObject = new { Property1 = Property1Value, Property2 = Property2Value };
+            const string property1Value = "";
+            const int property2Value = 0;
+            var sourceDynamicObject = new { Property1 = property1Value, Property2 = property2Value };
 
             // act
             var destinationExpandoObject = DynamicObjectHelper.ToExpandoObject(sourceDynamicObject);
@@ -45,8 +45,8 @@
             // assert
             Assert.IsNotNull(destinationExpandoObject);
             var destinationDictionaryObject = (IDictionary<string, object>)destinationExpandoObject;
-            Assert.AreEqual(Property1Value, destinationDictionaryObject["Property1"]);
-            Assert.AreEqual(Property2Value, destinationDictionaryObject["Property2"]);
+            Assert.AreEqual(property1Value, destinationDictionaryObject["Property1"]);
+            Assert.AreEqual(property2Value, destinationDictionaryObject["Property2"]);
         }
 
         [TestMethod]

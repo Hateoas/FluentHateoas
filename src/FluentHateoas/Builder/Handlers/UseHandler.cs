@@ -12,7 +12,7 @@ namespace FluentHateoas.Builder.Handlers
             var expression = registration.Expression;
             linkBuilder.Controller = expression.Controller;
             linkBuilder.Action = expression.Action != null
-                ? expression.Action.GetTargetAction(linkBuilder.Relation, linkBuilder.Method, linkBuilder.Arguments)
+                ? expression.Action.GetTargetMethod(linkBuilder.Relation, linkBuilder.Method, linkBuilder.Arguments)
                 : expression.Controller.GetAction(linkBuilder.Relation, linkBuilder.Method ?? HttpMethod.Get, linkBuilder.Arguments);
         }
 

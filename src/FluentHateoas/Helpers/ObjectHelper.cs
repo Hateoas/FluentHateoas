@@ -1,27 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace FluentHateoas.Helpers
 {
-    internal static class ObjectHelper
+    public static class ObjectHelper
     {
-        internal static bool IsOrImplementsIEnumerable(this object source)
+        public static bool IsOrImplementsIEnumerable(this object source)
         {
             return IsOrImplementsIEnumerable(source.GetType());
         }
 
 
-        internal static object Materialize(this object source)
+        public static object Materialize(this object source)
         {
-            if (!source.IsOrImplementsIEnumerable())
+            var sourceType = source.GetType();
+            if (!IsOrImplementsIEnumerable(sourceType))
                 return source;
 
-            // todo: Quikfix for materialising WehereSelectList and variants
+            var genericTypeArgument = sourceType.GetGenericArguments().Last();
+            var concreteListType = typeof(List<>).MakeGenericType(genericTypeArgument);
+            if (sourceType == concreteListType)
+                return source;
+
+            // TODO: Quickfix for materialising WhereSelectListIterator and variants
             // Check if it is an iterator?
             var method = typeof(Enumerable)
                 .GetMethod(nameof(Enumerable.ToList))
-                .MakeGenericMethod(source.GetType().GetGenericArguments().Last());
+                .MakeGenericMethod(genericTypeArgument);
 
             return method.Invoke(null, new[] { source });
         }

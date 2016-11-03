@@ -44,11 +44,11 @@ namespace FluentHateoas.Helpers
             var methodAttribute = method.GetCustomAttribute<RouteAttribute>();
             var classAttribute = method.DeclaringType.GetCustomAttribute<RoutePrefixAttribute>();
 
-            if (classAttribute == null && methodAttribute != null && !string.IsNullOrWhiteSpace(methodAttribute.Template))
+            if (classAttribute == null && !string.IsNullOrWhiteSpace(methodAttribute?.Template))
                 return methodAttribute.Template;
 
-            if (classAttribute != null && methodAttribute != null && !string.IsNullOrWhiteSpace(methodAttribute.Template))
-                return string.Format("{0}/{1}", classAttribute.Prefix, methodAttribute.Template);
+            if (classAttribute != null && !string.IsNullOrWhiteSpace(methodAttribute?.Template))
+                return $"{classAttribute.Prefix}/{methodAttribute.Template}";
 
             var parameters = method.GetParameters();
             var parameterString = parameters.Any(p => p.Name == "id")
@@ -56,14 +56,14 @@ namespace FluentHateoas.Helpers
                 : "";
 
             if (classAttribute != null && methodAttribute == null)
-                return string.Format("{0}{1}", classAttribute.Prefix, parameterString);
+                return $"{classAttribute.Prefix}{parameterString}";
 
             if (method.DeclaringType == null)
                 throw new NullReferenceException("DeclaringType can't be null");
 
             var typeName = method.DeclaringType.Name;
 
-            return string.Format("{0}", typeName.Substring(0, typeName.IndexOf("Controller", StringComparison.Ordinal)).ToLower());
+            return $"{typeName.Substring(0, typeName.IndexOf("Controller", StringComparison.Ordinal)).ToLower()}";
 
         }
 
@@ -106,31 +106,31 @@ namespace FluentHateoas.Helpers
                 .ToList();
 
             if (!methods.Any())
-                throw new Exception(string.Format("No suitable action found for {0} on {1} (relation: {2})", method, source.Name, relation));
+                throw new Exception($"No suitable action found for {method} on {source.Name} (relation: {relation})");
 
             // If there's only one method on the controller, pass this one
-            if (methods.Count() == 1)
+            if (methods.Count == 1)
                 return methods.First().methodInfo;
 
             // Check if there are actions available with minimal or matching count of arguments with matching type
             // todo: Should be: Check if there are actions available with matching arguments NAMES
 
             var actionsWithEqualArguments = methods
-                .Where(p => arguments.Count == p.parameters.Count()
+                .Where(p => arguments.Count == p.parameters.Length
                          && arguments.All(a => p.parameters.Any(r => r.Name == a.Key && r.ParameterType == a.Value.Type)))
                 .ToList();
 
-            if (actionsWithEqualArguments.Count() > 1)
+            if (actionsWithEqualArguments.Count > 1)
             {
                 // multiple actions supporting this method try finding one without route template (=default action)
                 var withoutRoute = actionsWithEqualArguments
                     .Where(p => p.methodInfo.GetCustomAttribute<RouteAttribute>() == null)
                     .ToList();
 
-                if (withoutRoute.Count() > 1)
-                    throw new Exception(string.Format("There are multiple actions supporting {0}, try specifying explicit", method));
+                if (withoutRoute.Count > 1)
+                    throw new Exception($"There are multiple actions supporting {method}, try specifying explicit");
 
-                if (withoutRoute.Count() == 1)
+                if (withoutRoute.Count == 1)
                     return withoutRoute.Single().methodInfo;
             }
 

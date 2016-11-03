@@ -121,11 +121,10 @@
     <Compile Include="Handling\ResponseHelper.cs" />
     <Compile Include="Hateoas.cs" />
     <Compile Include="Helpers\ConfigurationKeys.cs" />
-    <Compile Include="Helpers\ExpandoHelper.cs" />
     <Compile Include="Helpers\ExpressionHelper.cs" />
-    <Compile Include="Helpers\HaackFormater.cs" />
     <Compile Include="Helpers\HttpControllerHelper.cs" />
     <Compile Include="Helpers\LinkHelper.cs" />
+    <Compile Include="Helpers\LinkResponse.cs" />
     <Compile Include="Helpers\ObjectHelper.cs" />
     <Compile Include="Interfaces\ITemplateExpressionBuilder.cs" />
     <Compile Include="Registration\IAuthorizationProvider.cs" />

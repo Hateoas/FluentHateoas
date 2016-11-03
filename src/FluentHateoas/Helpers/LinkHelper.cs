@@ -6,14 +6,14 @@ namespace FluentHateoas.Helpers
 {
     public static class LinkHelper
     {
-        public static IEnumerable<object> ToLinkList(this IEnumerable<IHateoasLink> source)
+        public static IEnumerable<LinkResponse> ToLinkList(this IEnumerable<IHateoasLink> source)
         {
-            return source.Select(p => new
+            return source.Select(p => new LinkResponse
             {
                 Href = p.LinkPath,
                 Template = p.Template?.Replace("{", ":").Replace("}", ""),
                 Rel = p.Relation,
-                p.Method,
+                Method = p.Method,
                 Command = p.Command?.Name,
             });
         }
