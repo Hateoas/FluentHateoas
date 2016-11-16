@@ -8,7 +8,7 @@ using FluentHateoasTest.Assets.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace FluentHateoasTest
+namespace FluentHateoasTest.Registration
 {
     [TestClass]
     [ExcludeFromCodeCoverage]

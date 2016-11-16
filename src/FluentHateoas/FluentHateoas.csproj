@@ -131,6 +131,8 @@
     <Compile Include="Helpers\LinkResponse.cs" />
     <Compile Include="Helpers\ObjectHelper.cs" />
     <Compile Include="Helpers\TypeHelper.cs" />
+    <Compile Include="HttpContextWrapper.cs" />
+    <Compile Include="IHttpContext.cs" />
     <Compile Include="Interfaces\ITemplateExpressionBuilder.cs" />
     <Compile Include="Registration\IAuthorizationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using HttpConfigurationExtensions = FluentHateoas.Registration.HttpConfigurationExtensions;
 
-namespace FluentHateoasTest
+namespace FluentHateoasTest.Registration
 {
     [TestClass]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]

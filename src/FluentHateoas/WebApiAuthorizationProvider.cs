@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using System.Web;
 using System.Web.Http;
 using FluentHateoas.Registration;
 
@@ -10,6 +9,12 @@ namespace FluentHateoas
 {
     public class WebApiAuthorizationProvider : IAuthorizationProvider
     {
+        private readonly IHttpContext _httpContext;
+        
+        public WebApiAuthorizationProvider(IHttpContext httpContext)
+        {
+            _httpContext = httpContext;
+        }
         public string[] GetRoles(AuthorizeAttribute authorizeAttribute)
         {
             return SplitString(authorizeAttribute.Roles);
@@ -27,7 +32,7 @@ namespace FluentHateoas
             if (authorizeAttribute == null)
                 return true;
 
-            var user = HttpContext.Current.User ?? Thread.CurrentPrincipal;
+            var user = _httpContext.User ?? Thread.CurrentPrincipal;
             if (user == null || user.Identity == null || !user.Identity.IsAuthenticated)
             {
                 return false;

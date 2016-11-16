@@ -41,6 +41,9 @@ namespace FluentHateoas.Helpers
 
         public static string GetRouteTemplate(this MethodInfo method)
         {
+            if (method.DeclaringType == null)
+                throw new NullReferenceException("DeclaringType can't be null");
+
             var methodAttribute = method.GetCustomAttribute<RouteAttribute>();
             var classAttribute = method.DeclaringType.GetCustomAttribute<RoutePrefixAttribute>();
 
@@ -58,12 +61,10 @@ namespace FluentHateoas.Helpers
             if (classAttribute != null && methodAttribute == null)
                 return $"{classAttribute.Prefix}{parameterString}";
 
-            if (method.DeclaringType == null)
-                throw new NullReferenceException("DeclaringType can't be null");
 
             var typeName = method.DeclaringType.Name;
 
-            return $"{typeName.Substring(0, typeName.IndexOf("Controller", StringComparison.Ordinal)).ToLower()}";
+            return $"{typeName.Substring(0, typeName.IndexOf("Controller", StringComparison.Ordinal)).ToLower()}{parameterString}";
 
         }
 

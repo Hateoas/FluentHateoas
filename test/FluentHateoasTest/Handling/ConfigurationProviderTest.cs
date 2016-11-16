@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
 using FluentHateoas.Handling;
 using FluentHateoas.Interfaces;
 using FluentHateoas.Registration;

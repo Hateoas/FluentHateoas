@@ -1,25 +1,22 @@
 // ReSharper disable RedundantTypeArgumentsOfMethod
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web.Http.Controllers;
 using FluentHateoas.Contracts;
 using FluentHateoas.Interfaces;
+using FluentHateoas.Registration;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace FluentHateoasTest
+namespace FluentHateoasTest.Registration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using System.Web.Http.Controllers;
-
-    using FluentHateoas.Registration;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     [ExcludeFromCodeCoverage]
     public class HateoasExpressionBuilderTest

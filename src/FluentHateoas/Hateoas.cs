@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Dependencies;
 using FluentHateoas.Builder.Handlers;
@@ -19,7 +20,8 @@ namespace FluentHateoas
             // todo: this is not very clean; user dependencyresolver etc
             if (authorizationProvider == null)
             {
-                authorizationProvider = new WebApiAuthorizationProvider();
+                var httpContextWrapper = new HttpContextWrapper();
+                authorizationProvider = new WebApiAuthorizationProvider(httpContextWrapper);
             }
 
             var idFromExpressionProcessor = new IdFromExpressionProcessor(dependencyResolver);

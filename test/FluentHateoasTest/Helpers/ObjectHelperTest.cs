@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using FluentHateoas.Helpers;
+using FluentHateoasTest.Assets.Enumerations;
 using FluentHateoasTest.Assets.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 // ReSharper disable InvokeAsExtensionMethod
@@ -40,6 +41,32 @@ namespace FluentHateoasTest.Helpers
 
             // assert
             result.Should().Be(false);
+        }
+
+        [TestMethod]
+        [TestCategory("UnitTest")]
+        public void IsOrImplementsIEnumerableShouldReturnFalseForSimpleTypes()
+        {
+            // arrange
+            var simpleTypes = new[] { typeof(int), typeof(Gender), typeof(string), typeof(decimal) };
+
+            foreach (var simpleType in simpleTypes)
+            {
+                // act & assert
+                ObjectHelper
+                    .IsOrImplementsIEnumerable(simpleType)
+                    .Should().BeFalse();
+            }
+        }
+
+        [TestMethod]
+        [TestCategory("UnitTest")]
+        public void IsOrImplementsIEnumerableShouldReturnFalseForIEnumerableInterfaceType()
+        {
+            // arrange & act & assert
+            ObjectHelper
+                .IsOrImplementsIEnumerable(typeof(IEnumerable<>))
+                .Should().BeTrue();
         }
 
         [TestMethod]

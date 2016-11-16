@@ -10,7 +10,7 @@ using FluentHateoasTest.Assets.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace FluetHateoasIntegrationTest
+namespace FluentHateoasTest.Handling
 {
     [TestClass]
     [ExcludeFromCodeCoverage]

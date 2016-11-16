@@ -58,6 +58,15 @@ namespace FluentHateoasTest.Assets.Controllers
             return new Person { Id = request.Id };
         }
 
+        [HttpPut]
+        public Person AttributedPut(UpdatePersonRequest request)
+        {
+            return new Person { Id = request.Id };
+        }
+
         public void Delete(Guid id) { }
+
+        [HttpDelete]
+        public void AttributedDelete(Guid id) { }
     }
 }

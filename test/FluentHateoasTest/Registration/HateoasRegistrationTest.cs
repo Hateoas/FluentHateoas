@@ -1,19 +1,16 @@
 // ReSharper disable InconsistentNaming
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using FluentAssertions;
 using FluentHateoas.Interfaces;
+using FluentHateoas.Registration;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace FluentHateoasTest
+namespace FluentHateoasTest.Registration
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq.Expressions;
-
-    using FluentHateoas.Registration;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     [ExcludeFromCodeCoverage]
     public class HateoasRegistrationTest

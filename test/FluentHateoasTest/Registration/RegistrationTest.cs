@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using FluentHateoas.Handling;
 using FluentHateoas.Registration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FluentHateoas.Handling;
-using System.Diagnostics.CodeAnalysis;
-
 using Moq;
 
-namespace FluentHateoasTest
+namespace FluentHateoasTest.Registration
 {
 
     [TestClass]
