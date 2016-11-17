@@ -1,6 +1,6 @@
 namespace FluentHateoas.Interfaces
 {
-    public interface IDeleteExpressionBuilder<TModel> : IExpressionBuilderBase<TModel>
+    public interface IDeleteExpressionBuilder<TModel> : ITemplateExpressionBuilder<TModel>
     {
     }
 }
