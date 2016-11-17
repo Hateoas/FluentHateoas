@@ -8,6 +8,8 @@ namespace FluentHateoas.Handling
 {
     public interface ILinkBuilder
     {
+        IHateoasLink Build();
+
         MethodInfo Action { get; set; }
         IDictionary<string, Argument> Arguments { get; set; }
         IHateoasCommand Command { get; set; }

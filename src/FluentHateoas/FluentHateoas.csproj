@@ -112,13 +112,16 @@
     <Compile Include="Handling\IConfigurationProvider.cs" />
     <Compile Include="Handling\IConfigurationProviderGetLinksForFuncProvider.cs" />
     <Compile Include="Handling\IHateoasCommand.cs" />
+    <Compile Include="Handling\IHttpConfiguration.cs" />
     <Compile Include="Handling\ILinkBuilder.cs" />
+    <Compile Include="Handling\ILinkBuilderFactory.cs" />
     <Compile Include="Handling\ILinkFactory.cs" />
     <Compile Include="Handling\InMemoryCache.cs" />
     <Compile Include="Handling\IRegistrationLinkHandler.cs" />
     <Compile Include="Handling\IResponseProvider.cs" />
     <Compile Include="Handling\LinkBuilder.cs" />
     <Compile Include="Handling\LinkBuilderExtensions.cs" />
+    <Compile Include="Handling\LinkBuilderFactory.cs" />
     <Compile Include="Handling\LinkFactory.cs" />
     <Compile Include="Handling\RegistrationLinkHandlerExtensions.cs" />
     <Compile Include="Handling\Handlers\HateoasHttpHandler.cs" />

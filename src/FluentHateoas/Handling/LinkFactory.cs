@@ -7,6 +7,7 @@ namespace FluentHateoas.Handling
 {
     public class LinkFactory : ILinkFactory
     {
+        private readonly ILinkBuilderFactory _linkBuilderFactory;
         private readonly IAuthorizationProvider _authorizationProvider;
         private readonly IRegistrationLinkHandler _handlerChain;
 
@@ -15,12 +16,14 @@ namespace FluentHateoas.Handling
         private readonly IArgumentProcessor _templateArgumentsProcessor;
 
         public LinkFactory(
+            ILinkBuilderFactory linkBuilderFactory,
             IAuthorizationProvider authorizationProvider,
             IArgumentProcessor idFromExpressionProcessor,
             IArgumentProcessor argumentsDefinitionsProcessor,
             IArgumentProcessor templateArgumentsProcessor,
             params IRegistrationLinkHandler[] handlers)
         {
+            _linkBuilderFactory = linkBuilderFactory;
             _authorizationProvider = authorizationProvider;
             _idFromExpressionProcessor = idFromExpressionProcessor;
             _argumentsDefinitionsProcessor = argumentsDefinitionsProcessor;
@@ -52,7 +55,7 @@ namespace FluentHateoas.Handling
         {
             return registrations.Select(registration =>
             {
-                var linkBuilder = new LinkBuilder(data);
+                var linkBuilder = _linkBuilderFactory.GetLinkBuilder(data);
                 _handlerChain.Process(registration, linkBuilder, data);
                 return linkBuilder;
             })

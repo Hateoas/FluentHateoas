@@ -38,6 +38,7 @@ namespace FluetHateoasIntegrationTest
             _dependencyResolverMock = new Mock<IDependencyResolver>();
             _personProvider = new Mock<IPersonProvider>();
 
+            var linkBuilderFactory = new LinkBuilderFactory();
             _authorizationProvider.Setup(p => p.IsAuthorized(It.IsAny<MethodInfo>())).Returns(true);
             _dependencyResolverMock.Setup(p => p.GetService(It.IsAny<Type>())).Returns(_personProvider.Object);
 
@@ -51,6 +52,7 @@ namespace FluetHateoasIntegrationTest
 
             Container = HateoasContainerFactory.Create(configurationMock.Object);
             LinkFactory = new LinkFactory(
+                linkBuilderFactory,
                 _authorizationProvider.Object,
                 idFromExpressionProcessor,
                 argumentsDefinitionsProcessor,

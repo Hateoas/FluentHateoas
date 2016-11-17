@@ -70,6 +70,7 @@
       <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
@@ -124,6 +125,7 @@
     <Compile Include="Assets\Model\Car.cs" />
     <Compile Include="Assets\Model\Person.cs" />
     <Compile Include="Assets\Providers\IPersonProvider.cs" />
+    <Compile Include="Builder\Factories\CommandFactoryTest.cs" />
     <Compile Include="Factories\RegistrationFactory.cs" />
     <Compile Include="Handling\ArgumentDefinitionsProcessorTest.cs" />
     <Compile Include="Handling\ArgumentHandlerTest.cs" />
@@ -131,8 +133,13 @@
     <Compile Include="Handling\ConfigurationProviderTest.cs" />
     <Compile Include="Handling\ConfigurationProviderGetLinksForFuncProviderTest.cs" />
     <Compile Include="Handling\HateoasHttpHandlerTest.cs" />
+    <Compile Include="Handling\HttpConfigurationWrapperTest.cs" />
+    <Compile Include="Handling\HttpContextWrapperTest.cs" />
     <Compile Include="Handling\IdFromExpressionProcessorTest.cs" />
     <Compile Include="Handling\InMemoryCacheTest.cs" />
+    <Compile Include="Handling\LinkBuilderFactoryTest.cs" />
+    <Compile Include="Handling\LinkBuilderTest.cs" />
+    <Compile Include="Handling\LinkFactoryTest.cs" />
     <Compile Include="Handling\RegistrationLinkHandlerBaseTest.cs" />
     <Compile Include="Handling\RegistrationLinkHandlerExtensionsTest.cs" />
     <Compile Include="Handling\RelationNameHandlerTest.cs" />
@@ -142,6 +149,7 @@
     <Compile Include="Handling\TemplateArgumentsProcessorTest.cs" />
     <Compile Include="Handling\TemplateHandlerTest.cs" />
     <Compile Include="Handling\UseHandlerTest.cs" />
+    <Compile Include="HateoasTest.cs" />
     <Compile Include="Helpers\HttpControllerHelperTest.cs" />
     <Compile Include="Registration\HateoasContainerTest.cs" />
     <Compile Include="Helpers\DynamicObjectHelperTest.cs" />

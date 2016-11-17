@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using FluentHateoas.Builder.Model;
 using FluentHateoas.Helpers;
@@ -10,41 +9,16 @@ namespace FluentHateoas.Handling
 {
     public static class LinkBuilderExtensions
     {
-        public static IHateoasLink Build(this LinkBuilder source)
+        public static string GetPathAsTemplate(this ILinkBuilder linkBuilder)
         {
-            var result = new HateoasLink
-            {
-                Relation = source.Relation
-            };
-
-            if (source.IsTemplate)
-                result.Template = source.Arguments.Any(p => p.Value.IsTemplateArgument)
-                    ? source.GetPath()
-                    : source.GetPathAsTemplate();
-            else
-                result.LinkPath = source.GetPath();
-
-            if (source.Method != HttpMethod.Get)
-                result.Method = source.Method.ToString();
-
-            if (source.Command != null)
-            {
-                result.Command = source.Command;
-            }
-
-            return result;
+            return RouteFromMethod(linkBuilder.Action);
         }
 
-        public static string GetPathAsTemplate(this LinkBuilder source)
+        public static string GetPath(this ILinkBuilder linkBuilder)
         {
-            return RouteFromMethod(source.Action);
-        }
-
-        public static string GetPath(this LinkBuilder source)
-        {
-            return RouteFromMethod(source.Action)
-                .FormatArguments(source.Arguments);
-            //.HaackFormat(source.Data);
+            return RouteFromMethod(linkBuilder.Action)
+                .FormatArguments(linkBuilder.Arguments);
+            //.HaackFormat(linkBuilder.Data);
         }
 
         public static string FormatArguments(this string source, IDictionary<string, Argument> dict)
@@ -62,8 +36,8 @@ namespace FluentHateoas.Handling
             var controllerAttribute = methodInfo.DeclaringType.GetCustomAttribute<System.Web.Http.RoutePrefixAttribute>();
             var actionAttribute = methodInfo.GetCustomAttribute<System.Web.Http.RouteAttribute>();
 
-            var hasPrefix = (controllerAttribute != null && !string.IsNullOrWhiteSpace(controllerAttribute.Prefix));
-            var hasTemplate = (actionAttribute != null && !string.IsNullOrWhiteSpace(actionAttribute.Template));
+            var hasPrefix = !string.IsNullOrWhiteSpace(controllerAttribute?.Prefix);
+            var hasTemplate = !string.IsNullOrWhiteSpace(actionAttribute?.Template);
 
             var controllerType = methodInfo.DeclaringType;
             var controllerTypeName = controllerType == null ? string.Empty : controllerType.Name;
@@ -73,10 +47,9 @@ namespace FluentHateoas.Handling
                 : apiPrefix + controllerAttribute.Prefix;
 
             if (hasTemplate)
-                return string.Format("{0}/{1}", prefix, actionAttribute.Template);
+                return $"{prefix}/{actionAttribute.Template}";
 
-            var parameters = GetParameterString(methodInfo);
-            return string.Format("{0}{1}", prefix, string.IsNullOrWhiteSpace(parameters) ? string.Empty : parameters);
+            return $"{prefix}{GetParameterString(methodInfo)?.Trim()}";
         }
 
         private static string GetParameterString(MethodInfo methodInfo)

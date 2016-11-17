@@ -218,7 +218,7 @@ namespace FluentHateoasTest.Helpers
             //argumentsMock.SetupGet(a=>a.)
             var arguments = new Dictionary<string, Argument>
             {
-                {"id", new Argument {Name = "id", IsTemplateArgument = false, Type = typeof(int), Value = 1}}
+                {"id", new Argument {/*Name = "id", */IsTemplateArgument = false, Type = typeof(int), Value = 1}}
             };
 
             // act & assert
@@ -238,7 +238,7 @@ namespace FluentHateoasTest.Helpers
             var relation = "self";
             var arguments = new Dictionary<string, Argument>
             {
-                {"id", new Argument {Name = "id", IsTemplateArgument = false, Type = typeof(int), Value = 1}}
+                {"id", new Argument {/*Name = "id", */IsTemplateArgument = false, Type = typeof(int), Value = 1}}
             };
 
 

@@ -5,6 +5,13 @@ namespace FluentHateoas
 {
     public class HttpContextWrapper : IHttpContext
     {
-        public IPrincipal User => HttpContext.Current.User;
+        private readonly HttpContext _context;
+
+        public HttpContextWrapper(HttpContext context)
+        {
+            _context = context;
+        }
+
+        public IPrincipal User => _context.User;
     }
 }

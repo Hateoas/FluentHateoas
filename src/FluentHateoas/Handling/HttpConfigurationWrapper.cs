@@ -1,4 +1,6 @@
 using System.Collections.Concurrent;
+using System.Collections.ObjectModel;
+using System.Net.Http;
 using System.Web.Http;
 
 namespace FluentHateoas.Handling
@@ -12,11 +14,7 @@ namespace FluentHateoas.Handling
             _httpConfiguration = httpConfiguration;
         }
 
+        public Collection<DelegatingHandler> MessageHandlers => _httpConfiguration.MessageHandlers;
         public ConcurrentDictionary<object, object> Properties => _httpConfiguration.Properties;
-    }
-
-    public interface IHttpConfiguration
-    {
-        ConcurrentDictionary<object, object> Properties { get; }
     }
 }

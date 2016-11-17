@@ -9,18 +9,38 @@ using FluentHateoas.Contracts;
 using FluentHateoas.Handling;
 using FluentHateoas.Handling.Handlers;
 using FluentHateoas.Registration;
+// ReSharper disable ArgumentsStyleNamedExpression
 
 namespace FluentHateoas
 {
     public static class Hateoas
     {
-        public static void Startup<TRegistrationClass>(HttpConfiguration config, IAuthorizationProvider authorizationProvider = null, IDependencyResolver dependencyResolver = null)
+        public static void Startup<TRegistrationClass>(
+            HttpConfiguration configuration,
+            IAuthorizationProvider authorizationProvider = null,
+            IDependencyResolver dependencyResolver = null)
             where TRegistrationClass : IHateoasRegistrationProfile, new()
         {
+            var configurationWrapper = new HttpConfigurationWrapper(configuration);
+
+            Startup<TRegistrationClass>(
+                configurationWrapper,
+                authorizationProvider,
+                dependencyResolver);
+        }
+
+        public static void Startup<TRegistrationClass>(
+            IHttpConfiguration configuration,
+            IAuthorizationProvider authorizationProvider = null,
+            IDependencyResolver dependencyResolver = null)
+            where TRegistrationClass : IHateoasRegistrationProfile, new()
+        {
+            var linkBuilderFactory = new LinkBuilderFactory();
+
             // todo: this is not very clean; user dependencyresolver etc
             if (authorizationProvider == null)
             {
-                var httpContextWrapper = new HttpContextWrapper();
+                var httpContextWrapper = new HttpContextWrapper(HttpContext.Current);
                 authorizationProvider = new WebApiAuthorizationProvider(httpContextWrapper);
             }
 
@@ -29,6 +49,7 @@ namespace FluentHateoas
             var templateArgumentsProcessor = new TemplateArgumentsProcessor();
 
             var linkFactory = new LinkFactory(
+                linkBuilderFactory: linkBuilderFactory,
                 authorizationProvider: authorizationProvider,
                 idFromExpressionProcessor: idFromExpressionProcessor,
                 argumentsDefinitionsProcessor: argumentsDefinitionsProcessor,
@@ -39,16 +60,14 @@ namespace FluentHateoas
             var linksForFuncProvider = new ConfigurationProviderGetLinksForFuncProvider(inMemoryGenericLinksForMethodsCache);
 
             var getLinksForMethodCache = new InMemoryCache<Type, Func<ConfigurationProvider, object, IEnumerable<IHateoasLink>>>();
-            var httpConfiguration = new HttpConfigurationWrapper(config);
-            var configurationProvider = new ConfigurationProvider(httpConfiguration, linkFactory, linksForFuncProvider, getLinksForMethodCache);
+            var configurationProvider = new ConfigurationProvider(configuration, linkFactory, linksForFuncProvider, getLinksForMethodCache);
 
             var responseProvider = new ResponseProvider(configurationProvider);
             var handler = new HateoasHttpHandler(responseProvider);
-            config.MessageHandlers.Add(handler); // todo: dependency resolver
+            configuration.MessageHandlers.Add(handler);
 
-            var container = HateoasContainerFactory.Create(httpConfiguration);
+            var container = HateoasContainerFactory.Create(configuration);
             var registration = new TRegistrationClass();
-
             registration.Register(container);
         }
     }
