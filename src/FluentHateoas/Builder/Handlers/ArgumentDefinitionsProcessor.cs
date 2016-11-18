@@ -21,13 +21,12 @@ namespace FluentHateoas.Builder.Handlers
             foreach (var argumentDefinition in registration.ArgumentDefinitions)
             {
                 // Add the first argument as 'id' so it always can be used as named property 'id'
-                var key = argumentDefinitionIndex == 0
-                    ? "id"
-                    : GetKey(data,
-                        ((MemberExpression)((UnaryExpression)argumentDefinition.Body).Operand).Member);
+                var keyOrigin = GetKey(data, ((MemberExpression)((UnaryExpression)argumentDefinition.Body).Operand).Member);
+                var key = argumentDefinitionIndex == 0 ? "id" : keyOrigin;
+
                 var value = argumentDefinition.Compile().DynamicInvoke(data);
 
-                linkBuilder.Arguments.Add(key, new Argument { Name = key, Type = value.GetType(), Value = value });
+                linkBuilder.Arguments.Add(key, new Argument { Name = key, Origin = keyOrigin, Type = value.GetType(), Value = value });
                 argumentDefinitionIndex++;
             }
 
