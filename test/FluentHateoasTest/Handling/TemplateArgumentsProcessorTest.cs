@@ -66,6 +66,7 @@ namespace FluentHateoasTest.Handling
 
             var registrationMock = new Mock<IHateoasRegistration<Person>>(MockBehavior.Strict);
             registrationMock.SetupGet(r => r.Expression).Returns(expressionMock.Object);
+            registrationMock.SetupGet(r => r.IsCollection).Returns(false);
 
             var linkBuilderArgsDic = new Dictionary<string, Argument>();
             var argumentsMock = new Mock<IDictionary<string, Argument>>(MockBehavior.Strict);

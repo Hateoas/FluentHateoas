@@ -26,22 +26,22 @@ namespace FluentHateoas.Builder.Handlers
                                        (MemberExpression)((UnaryExpression)templateArgument.Body).Operand;
                 var member = memberExpression.Member;
 
-                var key = templateArgumentIndex == 0 && !linkBuilder.Arguments.Any()
-                    ? "id"
-                    : GetKey(data, member, registration.IsCollection);
+                var keyOrigin = GetKey(data, member, registration.IsCollection);
+                var key = templateArgumentIndex == 0 && !linkBuilder.Arguments.Any() ? "id" : keyOrigin;
 
-                linkBuilder.Arguments.Add(key, CreateTemplateArgument(key, ((PropertyInfo)member).PropertyType));
+                linkBuilder.Arguments.Add(key, CreateTemplateArgument(key, keyOrigin, ((PropertyInfo)member).PropertyType));
                 templateArgumentIndex++;
             }
 
             return true;
         }
 
-        private static Argument CreateTemplateArgument(string name, Type type)
+        private static Argument CreateTemplateArgument(string name, string origin, Type type)
         {
             return new Argument
             {
                 Name = name,
+                Origin = origin,
                 Type = type,
                 Value = $"{{{name}}}",
                 IsTemplateArgument = true

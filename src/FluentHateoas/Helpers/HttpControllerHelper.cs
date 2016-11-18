@@ -118,7 +118,7 @@ namespace FluentHateoas.Helpers
 
             var actionsWithEqualArguments = methods
                 .Where(p => arguments.Count == p.parameters.Length
-                         && arguments.All(a => p.parameters.Any(r => r.Name == a.Key && r.ParameterType == a.Value.Type)))
+                         && arguments.All(a => p.parameters.Any(r => (r.Name == a.Value.Name || r.Name == a.Value.Origin) && r.ParameterType == a.Value.Type)))
                 .ToList();
 
             if (actionsWithEqualArguments.Count > 1)

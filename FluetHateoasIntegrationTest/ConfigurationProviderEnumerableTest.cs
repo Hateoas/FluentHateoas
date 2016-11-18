@@ -174,6 +174,22 @@ namespace FluetHateoasIntegrationTest
         }
 
         [TestMethod]
+        public void GetNoneIdArgument()
+        {
+            Container
+                .RegisterCollection<Person>("get-engine-by-name")
+                .Get<EngineController>()
+                .AsTemplate(p => p.Firstname);
+
+            var link = GetLink();
+
+            link.Relation.Should().Be("get-engine-by-name");
+            link.LinkPath.Should().BeNull();
+            link.Template.Should().Be("/api/engine/{firstname}");
+            link.Command.Should().BeNull();
+        }
+
+        [TestMethod]
         [Ignore]
         public void GetByIdWithDefinedAction()
         {

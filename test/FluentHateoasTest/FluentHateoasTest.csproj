@@ -118,11 +118,13 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Assets\Controllers\AddressController.cs" />
+    <Compile Include="Assets\Controllers\EngineController.cs" />
     <Compile Include="Assets\Controllers\CarController.cs" />
     <Compile Include="Assets\Controllers\PersonController.cs" />
     <Compile Include="Assets\Enumerations\Gender.cs" />
     <Compile Include="Assets\Model\Address.cs" />
     <Compile Include="Assets\Model\Car.cs" />
+    <Compile Include="Assets\Model\Engine.cs" />
     <Compile Include="Assets\Model\Person.cs" />
     <Compile Include="Assets\Providers\IPersonProvider.cs" />
     <Compile Include="Builder\Factories\CommandFactoryTest.cs" />
