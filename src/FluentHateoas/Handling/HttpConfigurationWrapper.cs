@@ -7,14 +7,14 @@ namespace FluentHateoas.Handling
 {
     public class HttpConfigurationWrapper : IHttpConfiguration
     {
-        private readonly HttpConfiguration _httpConfiguration;
+        public HttpConfiguration HttpConfiguration { get; }
 
         public HttpConfigurationWrapper(HttpConfiguration httpConfiguration)
         {
-            _httpConfiguration = httpConfiguration;
+            HttpConfiguration = httpConfiguration;
         }
 
-        public Collection<DelegatingHandler> MessageHandlers => _httpConfiguration.MessageHandlers;
-        public ConcurrentDictionary<object, object> Properties => _httpConfiguration.Properties;
+        public Collection<DelegatingHandler> MessageHandlers => HttpConfiguration.MessageHandlers;
+        public ConcurrentDictionary<object, object> Properties => HttpConfiguration.Properties;
     }
 }

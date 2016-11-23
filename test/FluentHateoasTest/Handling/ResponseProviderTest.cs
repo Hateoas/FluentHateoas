@@ -42,7 +42,7 @@ namespace FluentHateoasTest.Handling
             request.Properties.Add(HttpPropertyKeys.HttpConfigurationKey, configuration);
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new ObjectContent(person.GetType(), person, new BsonMediaTypeFormatter(), "application/json")
+                Content = new ObjectContent(person.GetType(), person, new JsonMediaTypeFormatter(), "application/json")
             };
 
             // act
@@ -50,12 +50,12 @@ namespace FluentHateoasTest.Handling
                 .Create(request, response).Content;
 
             // assert
-            content.Should().NotBeNull().And.BeOfType<ObjectContent<HateOasResponse>>();
-            ((ObjectContent<HateOasResponse>) content).Value
-                .Should().BeOfType<HateOasResponse>()
-                .And.Match((HateOasResponse r) => person.Equals(r.Data))
-                .And.Match((HateOasResponse r) => 0.Equals(r.Links.Count()))
-                .And.Match((HateOasResponse r) => 0.Equals(r.Commands.Count()));
+            content.Should().NotBeNull().And.BeOfType<ObjectContent<HateoasResponse>>();
+            ((ObjectContent<HateoasResponse>) content).Value
+                .Should().BeOfType<HateoasResponse>()
+                .And.Match((HateoasResponse r) => person.Equals(r.Data))
+                .And.Match((HateoasResponse r) => 0.Equals(r.Links.Count()))
+                .And.Match((HateoasResponse r) => 0.Equals(r.Commands.Count()));
         }
 
         [TestMethod]
@@ -65,7 +65,7 @@ namespace FluentHateoasTest.Handling
             var request = new HttpRequestMessage();
             var response = new HttpResponseMessage(HttpStatusCode.BadRequest)
             {
-                Content = new ObjectContent(typeof(Person), default(Person), new BsonMediaTypeFormatter(), "application/json")
+                Content = new ObjectContent(typeof(Person), default(Person), new JsonMediaTypeFormatter(), "application/json")
             };
 
             // act & assert

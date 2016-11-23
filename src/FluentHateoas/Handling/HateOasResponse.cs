@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 namespace FluentHateoas.Handling
 {
-    public class HateOasResponse
+    public class HateoasResponse
     {
-        internal HateOasResponse() { }
+        internal HateoasResponse() { }
 
         public object Data { get; set; }
         public IEnumerable<object> Links { get; set; }

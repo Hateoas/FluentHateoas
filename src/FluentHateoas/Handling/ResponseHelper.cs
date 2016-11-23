@@ -11,9 +11,9 @@ namespace FluentHateoas.Handling
             return CreateResponse(request, CreateHateoasResponse(model, links, commands), System.Net.HttpStatusCode.OK);
         }
 
-        private static HateOasResponse CreateHateoasResponse(object model, System.Collections.Generic.IEnumerable<IHateoasLink> links, System.Collections.Generic.IEnumerable<IHateoasCommand> commands)
+        private static HateoasResponse CreateHateoasResponse(object model, System.Collections.Generic.IEnumerable<IHateoasLink> links, System.Collections.Generic.IEnumerable<IHateoasCommand> commands)
         {
-            return new HateOasResponse
+            return new HateoasResponse
             {
                 Data = model,
                 Links = links.ToLinkList(),
@@ -21,7 +21,7 @@ namespace FluentHateoas.Handling
             };
         }
 
-        private static HttpResponseMessage CreateResponse(HttpRequestMessage request, HateOasResponse response, System.Net.HttpStatusCode statusCode)
+        private static HttpResponseMessage CreateResponse(HttpRequestMessage request, HateoasResponse response, System.Net.HttpStatusCode statusCode)
         {
             return request.CreateResponse(statusCode, response);
         }

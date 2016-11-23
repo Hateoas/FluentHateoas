@@ -6,8 +6,8 @@
     <ProjectGuid>{FCB05584-60AB-4F2A-B603-AA49E4A27BFB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FluetHateoasIntegrationTest</RootNamespace>
-    <AssemblyName>FluetHateoasIntegrationTest</AssemblyName>
+    <RootNamespace>FluentHateoasIntegrationTest</RootNamespace>
+    <AssemblyName>FluentHateoasIntegrationTest</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -81,26 +81,31 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
     <Compile Include="ConfigurationProviderEnumerableTest.cs" />
     <Compile Include="ConfigurationProviderSingleEntityTest.cs" />
+    <Compile Include="RegistrationResultTestBase.cs" />
     <Compile Include="TestContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegistrationResultTest.cs" />
+    <Compile Include="TestResponseExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\FluentHateoas\FluentHateoas.csproj">
+    <ProjectReference Include="..\..\src\FluentHateoas\FluentHateoas.csproj">
       <Project>{f7857e78-29ae-4edf-99b6-147113462ba4}</Project>
       <Name>FluentHateoas</Name>
     </ProjectReference>
-    <ProjectReference Include="..\test\FluentHateoasTest\FluentHateoasTest.csproj">
+    <ProjectReference Include="..\FluentHateoasTest\FluentHateoasTest.csproj">
       <Project>{722dff56-945e-433f-aa39-2431cc4fde90}</Project>
       <Name>FluentHateoasTest</Name>
     </ProjectReference>
