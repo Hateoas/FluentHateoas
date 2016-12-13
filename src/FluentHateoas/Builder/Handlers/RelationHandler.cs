@@ -8,6 +8,7 @@ namespace FluentHateoas.Builder.Handlers
         public override void ProcessInternal<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder linkBuilder, object data)
         {
             linkBuilder.Relation = registration.Relation;
+            linkBuilder.IsMember = registration.IsMember;
         }
 
         public override bool CanProcess<TModel>(IHateoasRegistration<TModel> registration, ILinkBuilder linkBuilder)

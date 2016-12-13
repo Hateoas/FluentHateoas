@@ -12,6 +12,7 @@ namespace FluentHateoas.Registration
         public string Relation { get; }
         public Expression<Func<TModel, object>>[] ArgumentDefinitions { get; }
         public bool IsCollection { get; }
+        public bool IsMember { get; set; }
 
         IHateoasExpression IHateoasRegistration.Expression
         {
@@ -33,12 +34,13 @@ namespace FluentHateoas.Registration
         {
         }
 
-        public HateoasRegistration(string relation, Expression<Func<TModel, object>>[] argumentDefinitions, IHateoasContainer container, bool isCollection = false)
+        public HateoasRegistration(string relation, Expression<Func<TModel, object>>[] argumentDefinitions, IHateoasContainer container, bool isCollection = false, bool isMember = false)
         {
             Model = typeof(TModel);
             Relation = relation;
             ArgumentDefinitions = argumentDefinitions;
             IsCollection = isCollection;
+            IsMember = isMember;
 
             _container = container;
         }

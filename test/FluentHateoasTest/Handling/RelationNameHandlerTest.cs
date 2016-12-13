@@ -29,7 +29,7 @@ namespace FluentHateoasTest.Handling
         public void RelationNameShouldBeUsed()
         {
             var relation = "some-relation";
-            var registration = RegistrationFactory.Create<Person>(relation, false);
+            var registration = RegistrationFactory.Create<Person>(relation, false, false);
 
             var result = _handler.Process(registration, _linkBuilder, _object);
 
@@ -39,7 +39,7 @@ namespace FluentHateoasTest.Handling
         [TestMethod]
         public void EmptyStringRelationNameCantBeProcessed()
         {
-            var registration = RegistrationFactory.Create<Person>("", false);
+            var registration = RegistrationFactory.Create<Person>("", false, false);
 
             _handler.CanProcess(registration, _linkBuilder).Should().BeFalse();
         }
@@ -47,7 +47,7 @@ namespace FluentHateoasTest.Handling
         [TestMethod]
         public void NullStringRelationNameCantBeProcessed()
         {
-            var registration = RegistrationFactory.Create<Person>(null, false);
+            var registration = RegistrationFactory.Create<Person>(null, false, false);
 
             _handler.CanProcess(registration, _linkBuilder).Should().BeFalse();
         }

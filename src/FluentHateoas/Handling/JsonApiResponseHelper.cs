@@ -28,7 +28,8 @@ namespace FluentHateoas.Handling
                     Type = model.GetType().Name,
                     Id = idProperty.GetValue(model).ToString(),
                     Attributes = model.AsJsonApiAttributes(idProperty),
-                    Links = links.AsJsonApiLinks()
+                    Relationships = links.Where(p => p.IsMember).AsJsonApiRelationships(model),
+                    Links = links.Where(p => !p.IsMember).AsJsonApiLinks()
                 }
             };
         }
@@ -41,14 +42,20 @@ namespace FluentHateoas.Handling
 
     internal static class JsonApiExtensions
     {
-        internal static Dictionary<string, JsonApiRelation> AsJsonApiRelationships(this IEnumerable<IHateoasLink> source)
+        internal static Dictionary<string, JsonApiRelation> AsJsonApiRelationships(this IEnumerable<IHateoasLink> source, object model)
         {
             var result = new Dictionary<string, JsonApiRelation>();
+            var properties = model.GetType().GetProperties().ToList();
 
-            //Array.ForEach(source.ToArray(), p =>
-            //{
-            //    result.Add(p.Relation, );
-            //});
+            Array.ForEach(source.ToArray(), hateoasLink =>
+            {
+                var property = properties.Single(p => p.Name == hateoasLink.Relation);
+
+                result.Add(hateoasLink.Relation, new JsonApiRelation
+                {
+                    Type = property.PropertyType.Name
+                });
+            });
 
             return result;
         }

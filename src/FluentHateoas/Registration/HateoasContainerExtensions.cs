@@ -28,7 +28,7 @@ namespace FluentHateoas.Registration
             if (typeof(TModel).GetInterfaces().Contains(typeof(IEnumerable)))
                 throw new ArgumentException("Cannot register collections; use .RegisterCollection<TModel>(\"name\") instead");
 
-            var registration = new HateoasRegistration<TModel>(((MemberExpression) relation.Body).Member.Name, identityDefinition, container);
+            var registration = new HateoasRegistration<TModel>(((MemberExpression) relation.Body).Member.Name, identityDefinition, container, false, true);
             var builder = HateoasExpressionFactory.CreateBuilder(registration);
             container.Add(registration);
             return builder;
@@ -44,7 +44,7 @@ namespace FluentHateoas.Registration
 
         public static IExpressionBuilder<TModel> RegisterCollection<TModel>(this IHateoasContainer container, Expression<Func<TModel, object>> relation, params Expression<Func<TModel, object>>[] identityDefinition)
         {
-            var registration = new HateoasRegistration<TModel>(((MemberExpression)relation.Body).Member.Name, null, container, true);
+            var registration = new HateoasRegistration<TModel>(((MemberExpression)relation.Body).Member.Name, null, container, true, true);
             var builder = HateoasExpressionFactory.CreateBuilder(registration);
             container.Add(registration);
             return builder;

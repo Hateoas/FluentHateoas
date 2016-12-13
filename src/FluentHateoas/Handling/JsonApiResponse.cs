@@ -14,7 +14,7 @@ namespace FluentHateoas.Handling
     {
         public string Type { get; set; }
         public string Id { get; set; }
-        public Dictionary<string, JsonApiEntity> Relationships { get; set; }
+        public Dictionary<string, JsonApiRelation> Relationships { get; set; }
         public Dictionary<string, string> Links { get; set; }
         public Dictionary<string, object> Attributes { get; set; }
     }

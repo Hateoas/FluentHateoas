@@ -26,7 +26,8 @@ namespace FluentHateoas.Handling
 
             var result = new HateoasLink
             {
-                Relation = Relation
+                Relation = Relation,
+                IsMember = IsMember
             };
 
             if (IsTemplate)
@@ -53,6 +54,7 @@ namespace FluentHateoas.Handling
         public bool Success { get; set; }
         public HttpMethod Method { get; set; }
         public bool IsTemplate { get; set; }
+        public bool IsMember { get; set; }
         public bool IsFixed { get; set; }
         public string FixedRoute { get; set; }
         public IHateoasCommand Command { get; set; }

@@ -13,6 +13,11 @@ namespace SampleApi.Model
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public DateTimeOffset Birthday { get; set; }
+
+        public Guid MomId { get; set; }
+        public Person Mom { get; set; }
+        public Guid DadId { get; set; }
+        public Person Dad { get; set; }
     }
 
     [ExcludeFromCodeCoverage]

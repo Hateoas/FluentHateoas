@@ -18,6 +18,7 @@ namespace FluentHateoas.Handling
         string FixedRoute { get; set; }
         bool IsFixed { get; set; }
         bool IsTemplate { get; set; }
+        bool IsMember { get; set; }
         HttpMethod Method { get; set; }
         string Relation { get; set; }
         bool Success { get; set; }

@@ -8,6 +8,7 @@
         Type Model { get; }
         string Relation { get; }
         bool IsCollection { get; }
+        bool IsMember { get; }
         IHateoasExpression Expression { get; set; }
     }
 
