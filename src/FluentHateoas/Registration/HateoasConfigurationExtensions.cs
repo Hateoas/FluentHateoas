@@ -39,7 +39,7 @@ namespace FluentHateoas.Registration
                 T templateStyleEnum;
                 if (Enum.TryParse(value.ToString(), true, out templateStyleEnum))
                 {
-                    configuration.GetType().GetProperties().Single(p => p.Name == property).SetValue(configuration, value);
+                    configuration.GetType().GetProperties().Single(p => p.Name == property).SetValue(configuration, templateStyleEnum);
                 }
             }
         }
