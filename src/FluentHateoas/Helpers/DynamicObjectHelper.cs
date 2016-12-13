@@ -29,7 +29,7 @@
                 expandoDictionary[property.Name] = property.GetValue(dynamicObject);
             }
 
-            return expandoObject;
+            return (ExpandoObject) expandoDictionary;
         }
 
         public static bool HasProperty(dynamic dynamicObject, string name)

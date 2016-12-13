@@ -4,14 +4,14 @@ using FluentHateoas.Helpers;
 
 namespace FluentHateoas.Handling
 {
-    public static class ResponseHelper
+    public static class HateoasResponseHelper
     {
-        public static HttpResponseMessage Ok(HttpRequestMessage request, object model, System.Collections.Generic.IEnumerable<IHateoasLink> links, System.Collections.Generic.IEnumerable<IHateoasCommand> commands)
+        public static HttpResponseMessage Ok(HttpRequestMessage request, object model, System.Collections.Generic.IEnumerable<IHateoasLink> links)
         {
-            return CreateResponse(request, CreateHateoasResponse(model, links, commands), System.Net.HttpStatusCode.OK);
+            return CreateResponse(request, CreateHateoasResponse(model, links), System.Net.HttpStatusCode.OK);
         }
 
-        private static HateoasResponse CreateHateoasResponse(object model, System.Collections.Generic.IEnumerable<IHateoasLink> links, System.Collections.Generic.IEnumerable<IHateoasCommand> commands)
+        private static HateoasResponse CreateHateoasResponse(object model, System.Collections.Generic.IEnumerable<IHateoasLink> links)
         {
             return new HateoasResponse
             {

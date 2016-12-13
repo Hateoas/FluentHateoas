@@ -20,7 +20,7 @@ namespace FluentHateoas.Registration
         }
 
         /// <summary>
-        /// Updates (or adds) the HATEOAS container
+        /// Updates (or adds) the HATEOAS configuration
         /// </summary>
         /// <param name="configuration">HTTP configuration</param>
         /// <param name="hateoasConfiguration">HATEOAS configuration</param>
@@ -30,6 +30,16 @@ namespace FluentHateoas.Registration
                 typeof(IHateoasConfiguration),
                 hateoasConfiguration,
                 (oldValue, newValue) => hateoasConfiguration);
+        }
+
+        /// <summary>
+        /// Gets (or adds) the HATEOAS configuration
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
+        public static IHateoasConfiguration GetConfiguration(this IHttpConfiguration configuration)
+        {
+            return (IHateoasConfiguration)configuration.Properties.GetOrAdd(typeof(IHateoasConfiguration), p => new HateoasConfiguration());
         }
 
         /// <summary>

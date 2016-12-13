@@ -119,13 +119,15 @@
     <Compile Include="Handling\InMemoryCache.cs" />
     <Compile Include="Handling\IRegistrationLinkHandler.cs" />
     <Compile Include="Handling\IResponseProvider.cs" />
+    <Compile Include="Handling\JsonApiResponse.cs" />
+    <Compile Include="Handling\JsonApiResponseHelper.cs" />
     <Compile Include="Handling\LinkBuilder.cs" />
     <Compile Include="Handling\LinkBuilderExtensions.cs" />
     <Compile Include="Handling\LinkBuilderFactory.cs" />
     <Compile Include="Handling\LinkFactory.cs" />
     <Compile Include="Handling\RegistrationLinkHandlerExtensions.cs" />
     <Compile Include="Handling\Handlers\HateoasHttpHandler.cs" />
-    <Compile Include="Handling\ResponseHelper.cs" />
+    <Compile Include="Handling\HateoasResponseHelper.cs" />
     <Compile Include="Hateoas.cs" />
     <Compile Include="Helpers\ConfigurationKeys.cs" />
     <Compile Include="Helpers\ExpressionHelper.cs" />

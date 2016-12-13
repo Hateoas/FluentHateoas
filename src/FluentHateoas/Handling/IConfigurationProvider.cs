@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FluentHateoas.Registration;
 
 namespace FluentHateoas.Handling
 {
@@ -9,5 +10,6 @@ namespace FluentHateoas.Handling
 
         IEnumerable<IHateoasLink> GetLinksFor<TModel>(TModel data);
         IEnumerable<IHateoasLink> GetLinksFor<TModel>(IEnumerable<TModel> data);
+        ResponseStyle GetResponseStyle();
     }
 }

@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.CodeDom;
+using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace FluentHateoas.Registration
 {
@@ -11,73 +14,32 @@ namespace FluentHateoas.Registration
         {
             var varsDictionary = (IDictionary<string, object>)vars;
 
-            TryExtendHrefStyle(configuration, varsDictionary);
-            TryExtendLinkStyle(configuration, varsDictionary);
-            TryExtendTemplateStyle(configuration, varsDictionary);
+            TryExtend(configuration, varsDictionary, c => c.HrefStyle);
+            TryExtend(configuration, varsDictionary, c => c.LinkStyle);
+            TryExtend(configuration, varsDictionary, c => c.TemplateStyle);
+            TryExtend(configuration, varsDictionary, c => c.ResponseStyle);
         }
 
-        private static void TryExtendHrefStyle(Interfaces.IHateoasConfiguration configuration, IDictionary<string, object> varsDictionary)
+        private static void TryExtend<T>(Interfaces.IHateoasConfiguration configuration, IDictionary<string, object> varsDictionary, Expression<Func<Interfaces.IHateoasConfiguration, T>> expression) where T : struct
         {
-            object hrefStyle;
-            if (!varsDictionary.TryGetValue("HrefStyle", out hrefStyle))
+            var property = ((MemberExpression) expression.Body).Member.Name;
+
+            object value;
+            if (!varsDictionary.TryGetValue(property, out value))
             {
                 return;
             }
 
-            if (hrefStyle is HrefStyle)
+            if (value is T)
             {
-                configuration.HrefStyle = (HrefStyle)hrefStyle;
+                configuration.GetType().GetProperties().Single(p => p.Name == property).SetValue(configuration, value);
             }
-            else if (hrefStyle is string)
+            else if (value is string)
             {
-                HrefStyle hrefStyleEnum;
-                if (Enum.TryParse(hrefStyle.ToString(), true, out hrefStyleEnum))
+                T templateStyleEnum;
+                if (Enum.TryParse(value.ToString(), true, out templateStyleEnum))
                 {
-                    configuration.HrefStyle = hrefStyleEnum;
-                }
-            }
-        }
-
-        private static void TryExtendLinkStyle(Interfaces.IHateoasConfiguration configuration, IDictionary<string, object> varsDictionary)
-        {
-            object linkStyle;
-            if (!varsDictionary.TryGetValue("LinkStyle", out linkStyle))
-            {
-                return;
-            }
-
-            if (linkStyle is LinkStyle)
-            {
-                configuration.LinkStyle = (LinkStyle)linkStyle;
-            }
-            else if (linkStyle is string)
-            {
-                LinkStyle linkStyleEnum;
-                if (Enum.TryParse(linkStyle.ToString(), true, out linkStyleEnum))
-                {
-                    configuration.LinkStyle = linkStyleEnum;
-                }
-            }
-        }
-
-        private static void TryExtendTemplateStyle(Interfaces.IHateoasConfiguration configuration, IDictionary<string, object> varsDictionary)
-        {
-            object templateStyle;
-            if (!varsDictionary.TryGetValue("TemplateStyle", out templateStyle))
-            {
-                return;
-            }
-
-            if (templateStyle is TemplateStyle)
-            {
-                configuration.TemplateStyle = (TemplateStyle)templateStyle;
-            }
-            else if (templateStyle is string)
-            {
-                TemplateStyle templateStyleEnum;
-                if (Enum.TryParse(templateStyle.ToString(), true, out templateStyleEnum))
-                {
-                    configuration.TemplateStyle = templateStyleEnum;
+                    configuration.GetType().GetProperties().Single(p => p.Name == property).SetValue(configuration, value);
                 }
             }
         }
