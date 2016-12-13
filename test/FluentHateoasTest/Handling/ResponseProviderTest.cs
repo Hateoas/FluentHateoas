@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Http.Hosting;
 using FluentAssertions;
 using FluentHateoas.Handling;
+using FluentHateoas.Registration;
 using FluentHateoasTest.Assets.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -35,6 +36,7 @@ namespace FluentHateoasTest.Handling
             var person = new Person();
 
             _configurationProviderMock.Setup(cp => cp.GetLinksFor(typeof(Person), person)).Returns(new List<IHateoasLink>());
+            _configurationProviderMock.Setup(cp => cp.GetResponseStyle()).Returns(ResponseStyle.Hateoas);
 
             var request = new HttpRequestMessage();
 

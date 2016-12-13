@@ -38,6 +38,7 @@ namespace FluentHateoasTest.Registration
             Assert.AreEqual(HrefStyle.Relative, hateoasContainer.Configuration.HrefStyle);
             Assert.AreEqual(LinkStyle.Array, hateoasContainer.Configuration.LinkStyle);
             Assert.AreEqual(TemplateStyle.Rendered, hateoasContainer.Configuration.TemplateStyle);
+            Assert.AreEqual(ResponseStyle.Hateoas, hateoasContainer.Configuration.ResponseStyle);
         }
 
         [TestMethod]
@@ -56,6 +57,7 @@ namespace FluentHateoasTest.Registration
             Assert.AreEqual(HrefStyle.Absolute, hateoasContainer.Configuration.HrefStyle);
             Assert.AreEqual(LinkStyle.Array, hateoasContainer.Configuration.LinkStyle);
             Assert.AreEqual(TemplateStyle.Rendered, hateoasContainer.Configuration.TemplateStyle);
+            Assert.AreEqual(ResponseStyle.Hateoas, hateoasContainer.Configuration.ResponseStyle);
         }
 
         [TestMethod]
