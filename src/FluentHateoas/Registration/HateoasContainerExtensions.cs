@@ -11,7 +11,7 @@ namespace FluentHateoas.Registration
 {
     public static class HateoasContainerExtensions
     {
-        public static IExpressionBuilder<TModel> Register<TModel>(this IHateoasContainer container, string relation = null, params Expression<Func<TModel, object>>[] identityDefinition)
+        public static IExpressionBuilder<TModel> Register<TModel>(this IHateoasContainer container, string relation, params Expression<Func<TModel, object>>[] identityDefinition)
         {
             if (typeof(TModel).GetInterfaces().Contains(typeof(IEnumerable)))
                 throw new ArgumentException("Cannot register collections; use .RegisterCollection<TModel>(\"name\") instead");
@@ -23,9 +23,28 @@ namespace FluentHateoas.Registration
             return builder;
         }
 
-        public static IExpressionBuilder<TModel> RegisterCollection<TModel>(this IHateoasContainer container, string relation = null, params Expression<Func<TModel, object>>[] identityDefinition)
+        public static IExpressionBuilder<TModel> Register<TModel>(this IHateoasContainer container, Expression<Func<TModel, object>> relation, params Expression<Func<TModel, object>>[] identityDefinition)
+        {
+            if (typeof(TModel).GetInterfaces().Contains(typeof(IEnumerable)))
+                throw new ArgumentException("Cannot register collections; use .RegisterCollection<TModel>(\"name\") instead");
+
+            var registration = new HateoasRegistration<TModel>(((MemberExpression) relation.Body).Member.Name, identityDefinition, container);
+            var builder = HateoasExpressionFactory.CreateBuilder(registration);
+            container.Add(registration);
+            return builder;
+        }
+
+        public static IExpressionBuilder<TModel> RegisterCollection<TModel>(this IHateoasContainer container, string relation, params Expression<Func<TModel, object>>[] identityDefinition)
         {
             var registration = new HateoasRegistration<TModel>(relation, null, container, true);
+            var builder = HateoasExpressionFactory.CreateBuilder(registration);
+            container.Add(registration);
+            return builder;
+        }
+
+        public static IExpressionBuilder<TModel> RegisterCollection<TModel>(this IHateoasContainer container, Expression<Func<TModel, object>> relation, params Expression<Func<TModel, object>>[] identityDefinition)
+        {
+            var registration = new HateoasRegistration<TModel>(((MemberExpression)relation.Body).Member.Name, null, container, true);
             var builder = HateoasExpressionFactory.CreateBuilder(registration);
             container.Add(registration);
             return builder;

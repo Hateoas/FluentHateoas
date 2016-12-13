@@ -31,7 +31,7 @@ namespace FluentHateoasTest.Registration
             var container = HateoasContainerFactory.Create(_httpConfigurationMock.Object);
 
             // act
-            container.Register<TestModel>();
+            container.Register<TestModel>("test");
 
             // assert
             Assert.AreEqual(1, _httpConfigurationMock.Object.GetRegistrationsFor(typeof(TestModel)).Count);
@@ -46,7 +46,7 @@ namespace FluentHateoasTest.Registration
             try
             {
                 // act
-                container.Register<IEnumerable<TestModel>>();
+                container.Register<IEnumerable<TestModel>>("test");
 
                 // assert
                 Assert.Fail("Expected exception has not been thrown.");
@@ -85,7 +85,7 @@ namespace FluentHateoasTest.Registration
             var container = HateoasContainerFactory.Create(_httpConfigurationMock.Object);
 
             // act
-            container.RegisterCollection<IEnumerable<TestModel>>();
+            container.RegisterCollection<IEnumerable<TestModel>>("test");
 
             // assert
             Assert.AreEqual(1, _httpConfigurationMock.Object.GetRegistrationsFor(typeof(IEnumerable<TestModel>)).Count);
