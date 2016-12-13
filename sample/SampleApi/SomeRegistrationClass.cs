@@ -19,7 +19,8 @@
                 {
                     HrefStyle = HrefStyle.Relative,
                     LinkStyle = LinkStyle.Array,
-                    TemplateStyle = TemplateStyle.Rendered
+                    TemplateStyle = TemplateStyle.Rendered,
+                    ResponseStyle = ResponseStyle.Hateoas
                 });
 
             ////
