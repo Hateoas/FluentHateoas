@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentHateoas.Handling;
+using FluentHateoas.Helpers;
 using FluentHateoas.Interfaces;
 
 namespace FluentHateoas.Registration
@@ -70,7 +71,7 @@ namespace FluentHateoas.Registration
         public static IHateoasRegistration GetRegistrationFor(this IHttpConfiguration configuration, Type model, string relation)
         {
             var definitions = configuration.GetRegistrationsFor(model);
-            var definition = definitions.SingleOrDefault(def => def.Model == model && def.Relation == relation);
+            var definition = definitions.SingleOrDefault(def => def.Model == model && def.Relation == relation && def.IsCollection == model.IsOrImplementsIEnumerable());
 
             //if (definition == null)
             //{
