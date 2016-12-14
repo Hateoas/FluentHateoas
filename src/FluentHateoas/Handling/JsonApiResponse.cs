@@ -7,7 +7,7 @@ namespace FluentHateoas.Handling
     {
         internal JsonApiResponse() { }
 
-        public JsonApiEntity Data { get; set; }
+        public object Data { get; set; }
         public List<JsonApiRelation> Includes { get; set; }
     }
 

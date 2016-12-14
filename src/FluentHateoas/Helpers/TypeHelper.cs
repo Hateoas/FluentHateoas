@@ -10,7 +10,9 @@ namespace FluentHateoas.Helpers
         {
             if (ObjectHelper.IsOrImplementsIEnumerable(potentialEnumerableType))
             {
-                singleItemType = potentialEnumerableType.GetGenericArguments().Last();
+                singleItemType = potentialEnumerableType.IsArray
+                    ? potentialEnumerableType.GetElementType()
+                    : potentialEnumerableType.GetGenericArguments().Last();
                 return true;
             }
 

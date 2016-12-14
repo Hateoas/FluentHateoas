@@ -14,7 +14,56 @@ namespace FluentHateoas.Handling
     {
         public static HttpResponseMessage Ok(HttpRequestMessage request, object model, IEnumerable<IHateoasLink> links)
         {
-            return CreateResponse(request, CreateResponse(model, links), System.Net.HttpStatusCode.OK);
+            return CreateResponse(request, model.IsOrImplementsIEnumerable() 
+                ? CreateCollectionResponse(model as IEnumerable<object>, links) 
+                : CreateResponse(model, links), System.Net.HttpStatusCode.OK);
+        }
+
+        private static JsonApiResponse CreateCollectionResponse<TModel>(IEnumerable<TModel> model, IEnumerable<IHateoasLink> links)
+        {
+            var objectType = model.GetType().GenericTypeArguments[0];
+            var collectionType = objectType.MakeIEnumerableOfType();
+
+            var array = ((IEnumerable<object>) model).ToArray();
+            var properties = objectType.GetProperties();
+
+            var linksArray = links.ToArray();
+
+            var memberNames = linksArray
+                .Where(p => p.IsMember)
+                .Select(p => new { origin = p.MemberId.Origin.ToLowerInvariant(), relation = p.Relation.ToLowerInvariant() })
+                .ToArray();
+
+            var idProperty = GetIdProperty(objectType, properties);
+            var includes = new List<JsonApiRelation>();
+            var entities = array.Select(item =>
+            {
+                var entity = CreateRelation<JsonApiEntity>(item, objectType, idProperty, properties, memberNames.SelectMany(p => new[] {p.origin, p.relation}).ToArray());
+                includes.AddRange(GetIncludes(item, memberNames.Select(p => p.relation).ToArray()));
+
+                entity.Links = CreateLinks(linksArray);
+                entity.Relationships = CreateRelationships(item, properties, linksArray);
+
+                return entity;
+            }).ToList();
+
+            return new JsonApiResponse
+            {
+                Data = entities,
+                Includes = includes.DistinctBy(p => new { p.Id, p.Type }).ToList()
+            };
+        }
+
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey> (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        {
+            HashSet<TKey> seenKeys = new HashSet<TKey>();
+            foreach (TSource element in source)
+            {
+                if (seenKeys.Add(keySelector(element)))
+                {
+                    yield return element;
+                }
+            }
         }
 
         private static JsonApiResponse CreateResponse(object model, IEnumerable<IHateoasLink> links)
@@ -39,7 +88,7 @@ namespace FluentHateoas.Handling
             return new JsonApiResponse
             {
                 Data = entity,
-                Includes = includes
+                Includes = includes.DistinctBy(p => new { p.Id, p.Type }).ToList()
             };
         }
 
@@ -63,7 +112,11 @@ namespace FluentHateoas.Handling
 
         private static List<JsonApiRelation> GetIncludes(object model, params string[] memberNames)
         {
-            var properties = model.GetType().GetProperties().Where(p => memberNames.All(m => m == p.Name.ToLowerInvariant()));
+            var properties = model
+                .GetType()
+                .GetProperties()
+                .Where(p => memberNames.Any(m => m == p.Name.ToLowerInvariant()))
+                .ToList();
 
             return properties.Select(p =>
             {
@@ -97,16 +150,21 @@ namespace FluentHateoas.Handling
         {
             var result = new TModel
             {
-                Id = idProperty.GetValue(model).ToString(),
+                Id = GetValueFromModel(model, idProperty),
                 Type = objectType.Name
             };
 
             return result;
         }
 
+        private static string GetValueFromModel<TModel>(TModel model, PropertyInfo idProperty)
+        {
+            return model.GetType().GetProperty(idProperty.Name).GetValue(model).ToString();
+        }
+
         private static Dictionary<string, object> GetAttributes(object model, IEnumerable<string> memberNames, IEnumerable<PropertyInfo> modelProperties, PropertyInfo idProperty)
         {
-            return modelProperties
+            return model.GetType().GetProperties()
                 .Where(p => p.Name != idProperty.Name)
                 .Where(p => memberNames.All(m => m != p.Name.ToLowerInvariant()))
                 .ToDictionary(p => p.Name, p => p.GetValue(model));

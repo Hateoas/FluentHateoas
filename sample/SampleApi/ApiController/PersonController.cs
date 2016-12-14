@@ -11,6 +11,7 @@ namespace SampleApi.ApiController
     using SampleApi.Model;
 
     [ExcludeFromCodeCoverage]
+    [RoutePrefix("api/person")]
     public class PersonController : ApiController
     {
         public IEnumerable<Person> Get()
@@ -53,13 +54,30 @@ namespace SampleApi.ApiController
         }
 
         [Route("{id}/parents")]
+        [HttpGet]
         public IEnumerable<Person> GetParents()
         {
             return new[]
             {
-                new Person {Id = Guid.Parse("0CFA46CC-116D-45F0-B57B-4C5586130072")},
-                new Person {Id = Guid.Parse("F6D0CF9E-5153-4218-8A22-8E71C5AC5A4A")}
-            };
+                new Person
+                {
+                    Id = Guid.Parse("0CFA46CC-116D-45F0-B57B-4C5586130072"),
+                    DadId = Guid.Parse("E89006B3-DE81-47E2-9E1B-B202B8B107A6"),
+                    Dad = new Person
+                    {
+                        Id = Guid.Parse("E89006B3-DE81-47E2-9E1B-B202B8B107A6")
+                    }
+                },
+                new Person
+                {
+                    Id = Guid.Parse("F6D0CF9E-5153-4218-8A22-8E71C5AC5A4A"),
+                    DadId = Guid.Parse("E89006B3-DE81-47E2-9E1B-B202B8B107A6"),
+                    Dad = new Person
+                    {
+                        Id = Guid.Parse("E89006B3-DE81-47E2-9E1B-B202B8B107A6")
+                    }
+                }
+            }.ToList();
         }
 
         public Person Post(CreatePersonRequest request)
