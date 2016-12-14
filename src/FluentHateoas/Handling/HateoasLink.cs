@@ -1,9 +1,12 @@
-﻿namespace FluentHateoas.Handling
+﻿using FluentHateoas.Builder.Model;
+
+namespace FluentHateoas.Handling
 {
     public interface IHateoasLink
     {
         string Relation { get; set; }
         bool IsMember { get; set; }
+        Argument MemberId { get; set; }
         string LinkPath { get; set; }
         string Method { get; set; }
         string Template { get; set; }
@@ -18,5 +21,6 @@
         public string Template { get; set; }
         public IHateoasCommand Command { get; set; }
         public bool IsMember { get; set; }
+        public Argument MemberId { get; set; }
     }
 }

@@ -14,77 +14,106 @@ namespace FluentHateoas.Handling
     {
         public static HttpResponseMessage Ok(HttpRequestMessage request, object model, IEnumerable<IHateoasLink> links)
         {
-            return CreateResponse(request, CreateHateoasResponse(model, links), System.Net.HttpStatusCode.OK);
+            return CreateResponse(request, CreateResponse(model, links), System.Net.HttpStatusCode.OK);
         }
 
-        private static JsonApiResponse CreateHateoasResponse(object model, IEnumerable<IHateoasLink> links)
+        private static JsonApiResponse CreateResponse(object model, IEnumerable<IHateoasLink> links)
         {
-            var idProperty = model.GetIdProperty();
+            var objectType = model.GetType();
+            var properties = objectType.GetProperties();
+
+            var linksArray = links.ToArray();
+
+            var memberNames = linksArray
+                .Where(p => p.IsMember)
+                .Select(p => new { origin = p.MemberId.Origin.ToLowerInvariant(), relation = p.Relation.ToLowerInvariant() })
+                .ToArray();
+
+            var idProperty = GetIdProperty(objectType, properties);
+            var entity = CreateRelation<JsonApiEntity>(model, objectType, idProperty, properties, memberNames.SelectMany(p => new[] { p.origin, p.relation }).ToArray());
+            var includes = GetIncludes(model, memberNames.Select(p => p.relation).ToArray());
+
+            entity.Links = CreateLinks(linksArray);
+            entity.Relationships = CreateRelationships(model, properties, linksArray);
 
             return new JsonApiResponse
             {
-                Data = new JsonApiEntity
-                {
-                    Type = model.GetType().Name,
-                    Id = idProperty.GetValue(model).ToString(),
-                    Attributes = model.AsJsonApiAttributes(idProperty),
-                    Relationships = links.Where(p => p.IsMember).AsJsonApiRelationships(model),
-                    Links = links.Where(p => !p.IsMember && string.IsNullOrWhiteSpace(p.Template)).AsJsonApiLinks()
-                },
-                Includes = links.AsJsonApiIncludes(model)
+                Data = entity,
+                Includes = includes
             };
         }
 
-        private static HttpResponseMessage CreateResponse(HttpRequestMessage request, JsonApiResponse response, System.Net.HttpStatusCode statusCode)
-        {
-            return request.CreateResponse(statusCode, response);
-        }
-    }
-
-    internal static class JsonApiExtensions
-    {
-        internal static List<JsonApiRelation> AsJsonApiIncludes(this IEnumerable<IHateoasLink> source, object model)
-        {
-            var result = new List<JsonApiRelation>();
-
-            return result;
-        }
-
-        internal static Dictionary<string, JsonApiRelation> AsJsonApiRelationships(this IEnumerable<IHateoasLink> source, object model)
+        private static Dictionary<string, JsonApiRelation> CreateRelationships(object model, IEnumerable<PropertyInfo> properties, IHateoasLink[] linksArray)
         {
             var result = new Dictionary<string, JsonApiRelation>();
-            var properties = model.GetType().GetProperties().ToList();
 
-            Array.ForEach(source.ToArray(), hateoasLink =>
-            {
-                var property = properties.Single(p => p.Name == hateoasLink.Relation);
+            var links = linksArray.Where(p => p.IsMember).ToArray();
 
-                result.Add(hateoasLink.Relation, new JsonApiRelation
-                {
-                    Type = property.PropertyType.Name
-                });
-            });
+            Array.ForEach(links, hateoasLink => result.Add(hateoasLink.Relation, CreateRelation(properties.Single(p => p.Name == hateoasLink.Relation), hateoasLink)));
 
             return result;
         }
 
-        internal static Dictionary<string, string> AsJsonApiLinks(this IEnumerable<IHateoasLink> source)
+        private static Dictionary<string, string> CreateLinks(IHateoasLink[] linksArray)
         {
-            var result = new Dictionary<string, string>();
+            return linksArray
+                .Where(p => !p.IsMember && string.IsNullOrWhiteSpace(p.Template) && (string.IsNullOrWhiteSpace(p.Method) || p.Method == "GET"))
+                .ToDictionary(p => p.Relation, p => p.LinkPath ?? p.Template);
+        }
 
-            Array.ForEach(source.ToArray(), p =>
+        private static List<JsonApiRelation> GetIncludes(object model, params string[] memberNames)
+        {
+            var properties = model.GetType().GetProperties().Where(p => memberNames.All(m => m == p.Name.ToLowerInvariant()));
+
+            return properties.Select(p =>
             {
-                result.Add(p.Relation, p.LinkPath ?? p.Template);
-            });
+                var propertyModel = p.GetValue(model);
+                var propertyProperties = p.PropertyType.GetProperties();
+                var idProperty = GetIdProperty(p.PropertyType, propertyProperties);
+
+                return CreateRelation<JsonApiRelation>(propertyModel, p.PropertyType, idProperty, propertyProperties);
+            }).ToList();
+        }
+
+        private static JsonApiRelation CreateRelation(PropertyInfo property, IHateoasLink hateoasLink)
+        {
+            return new JsonApiRelation
+            {
+                Type = property.PropertyType.Name,
+                Id = hateoasLink.MemberId.Value.ToString()
+            };
+        }
+
+        private static TModel CreateRelation<TModel>(object model, Type objectType, PropertyInfo idProperty, PropertyInfo[] properties, params string[] memberNames) where TModel : JsonApiRelation, new()
+        {
+            var result = CreateSimpleRelation<TModel>(model, objectType, idProperty, properties);
+
+            var attributes = GetAttributes(model, memberNames, properties, idProperty);
+            result.Attributes = attributes;
+
+            return result;
+        }
+        private static TModel CreateSimpleRelation<TModel>(object model, Type objectType, PropertyInfo idProperty, PropertyInfo[] properties) where TModel : JsonApiSimpleRelation, new()
+        {
+            var result = new TModel
+            {
+                Id = idProperty.GetValue(model).ToString(),
+                Type = objectType.Name
+            };
 
             return result;
         }
 
-        internal static PropertyInfo GetIdProperty(this object obj)
+        private static Dictionary<string, object> GetAttributes(object model, IEnumerable<string> memberNames, IEnumerable<PropertyInfo> modelProperties, PropertyInfo idProperty)
         {
-            var objectType = obj.GetType();
-            var properties = objectType.GetProperties();
+            return modelProperties
+                .Where(p => p.Name != idProperty.Name)
+                .Where(p => memberNames.All(m => m != p.Name.ToLowerInvariant()))
+                .ToDictionary(p => p.Name, p => p.GetValue(model));
+        }
 
+        private static PropertyInfo GetIdProperty(Type objectType, PropertyInfo[] properties)
+        {
             var idProperty = properties.SingleOrDefault(p => p.Name == "Id");
             if (idProperty != null)
                 return idProperty;
@@ -99,20 +128,12 @@ namespace FluentHateoas.Handling
                 throw new Exception("JsonApiResponse: Unable to determine id");
 
             return keyProperties.First();
+
         }
 
-        internal static Dictionary<string, object> AsJsonApiAttributes(this object obj, params PropertyInfo[] skipMembers)
+        private static HttpResponseMessage CreateResponse(HttpRequestMessage request, JsonApiResponse response, System.Net.HttpStatusCode statusCode)
         {
-            var result = new Dictionary<string, object>();
-            var properties = obj
-                .GetType()
-                .GetProperties()
-                .Where(p => skipMembers.All(s => s.Name != p.Name))
-                .ToList();
-
-            properties.ForEach(p => result.Add(p.Name, p.GetValue(obj, null)));
-
-            return result;
+            return request.CreateResponse(statusCode, response);
         }
     }
 }

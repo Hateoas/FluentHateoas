@@ -11,19 +11,19 @@ namespace FluentHateoas.Handling
         public List<JsonApiRelation> Includes { get; set; }
     }
 
-    public class JsonApiEntity
+    public class JsonApiEntity : JsonApiRelation
     {
-        public string Type { get; set; }
-        public string Id { get; set; }
         public Dictionary<string, JsonApiRelation> Relationships { get; set; }
         public Dictionary<string, string> Links { get; set; }
-        public Dictionary<string, object> Attributes { get; set; }
     }
 
-    public class JsonApiRelation
+    public class JsonApiRelation : JsonApiSimpleRelation
+    {
+        public Dictionary<string, object> Attributes { get; set; }
+    }
+    public class JsonApiSimpleRelation
     {
         public string Type { get; set; }
         public string Id { get; set; }
-        public Dictionary<string, object> Attributes { get; set; }
     }
 }

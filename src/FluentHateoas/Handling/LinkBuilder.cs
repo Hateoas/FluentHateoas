@@ -26,9 +26,16 @@ namespace FluentHateoas.Handling
 
             var result = new HateoasLink
             {
-                Relation = Relation,
-                IsMember = IsMember
+                Relation = Relation
             };
+
+            if (IsMember)
+            {
+                result.IsMember = IsMember;
+                result.MemberId = Arguments.ContainsKey("id")
+                    ? Arguments["id"]
+                    : new Argument {Name = "id", Value = "no-id"};
+            }
 
             if (IsTemplate)
                 result.Template = Arguments.Any(p => p.Value.IsTemplateArgument)
