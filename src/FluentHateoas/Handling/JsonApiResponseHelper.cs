@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.UI;
+using FluentHateoas.Builder.Model;
 using FluentHateoas.Helpers;
 
 namespace FluentHateoas.Handling
@@ -101,29 +102,20 @@ namespace FluentHateoas.Handling
             Array.ForEach(links, hateoasLink =>
             {
                 var property = properties.Single(p => p.Name == hateoasLink.Relation);
+                var propertyValue = property.GetValue(model);
 
                 JsonApiRelationship relation;
                 if (property.PropertyType.IsOrImplementsIEnumerable())
                 {
-                    var propertyValue = property.GetValue(model);
-                    relation = new CollectionRelation
-                    {
-                        Data = propertyValue == null
-                            ? null
-                            : CreateRelations(property.GetValue(model), property.PropertyType.GenericTypeArguments[0]).ToList()
-                    };
+                    relation = CreateRelations(propertyValue, property.PropertyType.GenericTypeArguments[0], hateoasLink);
                 }
                 else
                 {
-                    relation = new SingleRelation
-                    {
-                        Data = CreateRelation(property.GetValue(model), GetIdProperty(property.PropertyType, property.PropertyType.GetProperties()))
-                    };
+                    relation = CreateRelation(property.GetValue(model), GetIdProperty(property.PropertyType, property.PropertyType.GetProperties()), hateoasLink);
                 }
 
                 result.Add(hateoasLink.Relation, relation);
             });
-
             return result;
         }
 
@@ -161,27 +153,46 @@ namespace FluentHateoas.Handling
             }).ToList();
         }
 
-        private static JsonApiData CreateRelation(object model, PropertyInfo property)
+        private static SingleRelation CreateRelation(object model, PropertyInfo property, IHateoasLink hateoasLink)
         {
-            return new JsonApiData
+            if (model == null)
+                return new SingleRelation { Data = new JsonApiEntity {Type = property.DeclaringType.Name } };
+
+            var id = property.GetValue(model).ToString();
+
+            return new SingleRelation
             {
-                Type = model.GetType().Name,
-                Id = property.GetValue(model).ToString()
+                Links = new Dictionary<string, string> {{"self", hateoasLink.LinkPath ?? hateoasLink.Template.Replace("{id}", id) }},
+                Data = new JsonApiData
+                {
+                    Type = model.GetType().Name,
+                    Id = id
+                }
             };
         }
 
-        private static IEnumerable<JsonApiData> CreateRelations(object model, Type propertyType)
+        private static CollectionRelation CreateRelations(object model, Type propertyType, IHateoasLink hateoasLink)
         {
+            var result = new CollectionRelation
+            {
+                Links = new Dictionary<string, string> { { "self", hateoasLink.LinkPath } },
+            };
+
+            if (model == null)
+                return result;
+
             var collection = ((IEnumerable<object>)model).ToList();
             if (!collection.Any())
-                return new List<JsonApiData>();
+                return result;
 
             var idProperty = GetIdProperty(propertyType, propertyType.GetProperties());
-            return collection.Select(p => new JsonApiData
+            result.Data = collection.Select(p => new JsonApiData
             {
                 Type = propertyType.Name,
                 Id = GetValueFromModel(p, idProperty)
-            });
+            }).ToList();
+
+            return result;
         }
 
         private static TModel CreateRelation<TModel>(object model, Type objectType, PropertyInfo idProperty, PropertyInfo[] properties, params string[] memberNames) where TModel : JsonApiData, new()
