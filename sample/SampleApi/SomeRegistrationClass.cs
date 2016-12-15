@@ -202,6 +202,10 @@
                 .Register<Person>(p => p.RelatedPersons)
                 .Get<AddressController>(p => p.Get);
 
+            container
+                .Register<Person>(p => p.Mom)
+                .Get<AddressController>(p => p.Get);
+
             //  {
             //      "rel": "dad"
             //      "href": "/api/person/C1B837B0-5FDC-495F-9847-3ABF68E0B96E"

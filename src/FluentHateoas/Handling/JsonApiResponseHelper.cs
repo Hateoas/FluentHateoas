@@ -117,7 +117,7 @@ namespace FluentHateoas.Handling
                 {
                     relation = new SingleRelation
                     {
-                        Data = CreateRelation(property, hateoasLink)
+                        Data = CreateRelation(property.GetValue(model), GetIdProperty(property.PropertyType, property.PropertyType.GetProperties()))
                     };
                 }
 
@@ -161,12 +161,12 @@ namespace FluentHateoas.Handling
             }).ToList();
         }
 
-        private static JsonApiData CreateRelation(PropertyInfo property, IHateoasLink hateoasLink)
+        private static JsonApiData CreateRelation(object model, PropertyInfo property)
         {
             return new JsonApiData
             {
-                Type = property.PropertyType.Name,
-                Id = hateoasLink.MemberId.Value.ToString()
+                Type = model.GetType().Name,
+                Id = property.GetValue(model).ToString()
             };
         }
 
