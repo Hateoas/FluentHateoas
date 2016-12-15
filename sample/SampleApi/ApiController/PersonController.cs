@@ -67,7 +67,8 @@ namespace SampleApi.ApiController
                     Dad = new Person
                     {
                         Id = Guid.Parse("E89006B3-DE81-47E2-9E1B-B202B8B107A6")
-                    }
+                    },
+                    MomId = Guid.Parse("E25F122B-8D8E-44FB-840E-57F582F7221C")
                 },
                 new Person
                 {

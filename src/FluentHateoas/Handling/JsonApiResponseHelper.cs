@@ -32,7 +32,7 @@ namespace FluentHateoas.Handling
 
             var memberNames = linksArray
                 .Where(p => p.IsMember)
-                .Select(p => new { origin = p.MemberId.Origin.ToLowerInvariant(), relation = p.Relation.ToLowerInvariant() })
+                .Select(p => new { origin = (p.MemberId.Origin ?? p.MemberId.Name).ToLowerInvariant(), relation = p.Relation.ToLowerInvariant() })
                 .ToArray();
 
             var idProperty = GetIdProperty(objectType, properties);

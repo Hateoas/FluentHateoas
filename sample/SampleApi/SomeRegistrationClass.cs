@@ -143,6 +143,11 @@
                 .Get<PersonController>()
                 .AsTemplate(p => p.Id);
 
+            container
+                .RegisterCollection<Person>(p => p.Mom, p => p.MomId)
+                .Get<PersonController>()
+                .AsTemplate(p => p.Id);
+
             //  {
             //      "rel": "item"
             //      "href": "/api/person/:id/:slug"
