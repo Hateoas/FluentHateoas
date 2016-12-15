@@ -42,7 +42,7 @@ namespace FluentHateoas.Handling
                 includes.AddRange(GetIncludes(item, memberNames.Select(p => p.relation).ToArray()));
 
                 entity.Links = CreateLinks(linksArray);
-                entity.Relationships = CreateRelationships(item, properties, linksArray);
+                entity.Relationships = CreateRelationships(item, linksArray);
 
                 return entity;
             }).ToList();
@@ -50,14 +50,20 @@ namespace FluentHateoas.Handling
             return new CollectionResponse
             {
                 Data = entities,
-                Includes = includes.DistinctBy(p => new { p.Id, p.Type }).ToList()
+                Includes = includes.Where(p => p != null).DistinctBy(p => new { p.Id, p.Type }).ToList()
             };
         }
 
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
-            var seenKeys = new HashSet<TKey>();
-            return source.Where(p => seenKeys.Add(keySelector(p)));
+            HashSet<TKey> seenKeys = new HashSet<TKey>();
+            foreach (TSource element in source)
+            {
+                if (seenKeys.Add(keySelector(element)))
+                {
+                    yield return element;
+                }
+            }
         }
 
         private static JsonApiResponse CreateResponse(object model, IEnumerable<IHateoasLink> links)
@@ -77,19 +83,20 @@ namespace FluentHateoas.Handling
             var includes = GetIncludes(model, memberNames.Select(p => p.relation).ToArray());
 
             entity.Links = CreateLinks(linksArray);
-            entity.Relationships = CreateRelationships(model, properties, linksArray);
+            entity.Relationships = CreateRelationships(model, linksArray);
 
             return new SingleResponse
             {
                 Data = entity,
-                Includes = includes.DistinctBy(p => new { p.Id, p.Type }).ToList()
+                Includes = includes.Where(p => p != null).DistinctBy(p => new { p.Id, p.Type }).ToList()
             };
         }
 
-        private static Dictionary<string, JsonApiRelationship> CreateRelationships(object model, IEnumerable<PropertyInfo> properties, IHateoasLink[] linksArray)
+        private static Dictionary<string, JsonApiRelationship> CreateRelationships(object model, IHateoasLink[] linksArray)
         {
             var result = new Dictionary<string, JsonApiRelationship>();
             var links = linksArray.Where(p => p.IsMember).ToArray();
+            var properties = model.GetType().GetProperties();
 
             Array.ForEach(links, hateoasLink =>
             {
@@ -98,9 +105,12 @@ namespace FluentHateoas.Handling
                 JsonApiRelationship relation;
                 if (property.PropertyType.IsOrImplementsIEnumerable())
                 {
+                    var propertyValue = property.GetValue(model);
                     relation = new CollectionRelation
                     {
-                        Data = CreateRelations(property.GetValue(model), property.PropertyType.GenericTypeArguments[0]).ToList()
+                        Data = propertyValue == null
+                            ? null
+                            : CreateRelations(property.GetValue(model), property.PropertyType.GenericTypeArguments[0]).ToList()
                     };
                 }
                 else
@@ -135,7 +145,7 @@ namespace FluentHateoas.Handling
             return properties.SelectMany(p =>
             {
                 var propertyModel = p.GetValue(model);
-                if (propertyModel.IsOrImplementsIEnumerable())
+                if (p.PropertyType.IsOrImplementsIEnumerable())
                 {
                     var elementType = p.PropertyType.GenericTypeArguments[0];
                     var propertyProperties = elementType.GetProperties();
@@ -176,6 +186,9 @@ namespace FluentHateoas.Handling
 
         private static TModel CreateRelation<TModel>(object model, Type objectType, PropertyInfo idProperty, PropertyInfo[] properties, params string[] memberNames) where TModel : JsonApiData, new()
         {
+            if (model == null)
+                return null;
+
             var result = new TModel
             {
                 Id = GetValueFromModel(model, idProperty),
