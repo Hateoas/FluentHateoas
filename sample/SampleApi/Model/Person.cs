@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SampleApi.Model
 {
@@ -18,6 +19,7 @@ namespace SampleApi.Model
         public Person Mom { get; set; }
         public Guid DadId { get; set; }
         public Person Dad { get; set; }
+        public IEnumerable<Person> RelatedPersons { get; set; }
     }
 
     [ExcludeFromCodeCoverage]

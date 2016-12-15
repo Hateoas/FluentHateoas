@@ -50,7 +50,7 @@ namespace FluentHateoas.Registration
         /// <param name="registration">HATEOAS registration</param>
         public static void UpdateRegistration(this IHttpConfiguration configuration, IHateoasRegistration registration)
         {
-            var definition = configuration.GetRegistrationFor(registration.Model, registration.Relation);
+            var definition = configuration.GetRegistrationFor(registration.Model, registration.Relation, registration.IsCollection);
             if (definition == null)
             {
                 configuration.AddRegistration(registration);
@@ -67,11 +67,12 @@ namespace FluentHateoas.Registration
         /// <param name="configuration">HTTP configuration</param>
         /// <param name="model">The model to get an HATEOAS registration for</param>
         /// <param name="relation">Relation to the model</param>
+        /// <param name="isCollection">Indicates wether the source registration is s collection</param>
         /// <returns>HATEOAS registration for the model and relation specified</returns>
-        public static IHateoasRegistration GetRegistrationFor(this IHttpConfiguration configuration, Type model, string relation)
+        public static IHateoasRegistration GetRegistrationFor(this IHttpConfiguration configuration, Type model, string relation, bool isCollection)
         {
             var definitions = configuration.GetRegistrationsFor(model);
-            var definition = definitions.SingleOrDefault(def => def.Model == model && def.Relation == relation && def.IsCollection == model.IsOrImplementsIEnumerable());
+            var definition = definitions.SingleOrDefault(def => def.Model == model && def.Relation == relation && def.IsCollection == isCollection);
 
             //if (definition == null)
             //{

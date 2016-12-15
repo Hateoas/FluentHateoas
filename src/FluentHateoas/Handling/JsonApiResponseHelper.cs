@@ -14,8 +14,8 @@ namespace FluentHateoas.Handling
     {
         public static HttpResponseMessage Ok(HttpRequestMessage request, object model, IEnumerable<IHateoasLink> links)
         {
-            return CreateResponse(request, model.IsOrImplementsIEnumerable() 
-                ? CreateCollectionResponse(model as IEnumerable<object>, links) 
+            return CreateResponse(request, model.IsOrImplementsIEnumerable()
+                ? CreateCollectionResponse(model as IEnumerable<object>, links)
                 : CreateResponse(model, links), System.Net.HttpStatusCode.OK);
         }
 
@@ -24,7 +24,7 @@ namespace FluentHateoas.Handling
             var objectType = model.GetType().GenericTypeArguments[0];
             var collectionType = objectType.MakeIEnumerableOfType();
 
-            var array = ((IEnumerable<object>) model).ToArray();
+            var array = ((IEnumerable<object>)model).ToArray();
             var properties = objectType.GetProperties();
 
             var linksArray = links.ToArray();
@@ -35,10 +35,10 @@ namespace FluentHateoas.Handling
                 .ToArray();
 
             var idProperty = GetIdProperty(objectType, properties);
-            var includes = new List<JsonApiRelation>();
+            var includes = new List<JsonApiData>();
             var entities = array.Select(item =>
             {
-                var entity = CreateRelation<JsonApiEntity>(item, objectType, idProperty, properties, memberNames.SelectMany(p => new[] {p.origin, p.relation}).ToArray());
+                var entity = CreateRelation<JsonApiEntity>(item, objectType, idProperty, properties, memberNames.SelectMany(p => new[] { p.origin, p.relation }).ToArray());
                 includes.AddRange(GetIncludes(item, memberNames.Select(p => p.relation).ToArray()));
 
                 entity.Links = CreateLinks(linksArray);
@@ -47,23 +47,17 @@ namespace FluentHateoas.Handling
                 return entity;
             }).ToList();
 
-            return new JsonApiResponse
+            return new CollectionResponse
             {
                 Data = entities,
                 Includes = includes.DistinctBy(p => new { p.Id, p.Type }).ToList()
             };
         }
 
-        public static IEnumerable<TSource> DistinctBy<TSource, TKey> (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
-            HashSet<TKey> seenKeys = new HashSet<TKey>();
-            foreach (TSource element in source)
-            {
-                if (seenKeys.Add(keySelector(element)))
-                {
-                    yield return element;
-                }
-            }
+            var seenKeys = new HashSet<TKey>();
+            return source.Where(p => seenKeys.Add(keySelector(p)));
         }
 
         private static JsonApiResponse CreateResponse(object model, IEnumerable<IHateoasLink> links)
@@ -75,7 +69,7 @@ namespace FluentHateoas.Handling
 
             var memberNames = linksArray
                 .Where(p => p.IsMember)
-                .Select(p => new { origin = p.MemberId.Origin.ToLowerInvariant(), relation = p.Relation.ToLowerInvariant() })
+                .Select(p => new { origin = (p.MemberId.Origin ?? p.MemberId.Name).ToLowerInvariant(), relation = p.Relation.ToLowerInvariant() })
                 .ToArray();
 
             var idProperty = GetIdProperty(objectType, properties);
@@ -85,20 +79,40 @@ namespace FluentHateoas.Handling
             entity.Links = CreateLinks(linksArray);
             entity.Relationships = CreateRelationships(model, properties, linksArray);
 
-            return new JsonApiResponse
+            return new SingleResponse
             {
                 Data = entity,
                 Includes = includes.DistinctBy(p => new { p.Id, p.Type }).ToList()
             };
         }
 
-        private static Dictionary<string, JsonApiRelation> CreateRelationships(object model, IEnumerable<PropertyInfo> properties, IHateoasLink[] linksArray)
+        private static Dictionary<string, JsonApiRelationship> CreateRelationships(object model, IEnumerable<PropertyInfo> properties, IHateoasLink[] linksArray)
         {
-            var result = new Dictionary<string, JsonApiRelation>();
-
+            var result = new Dictionary<string, JsonApiRelationship>();
             var links = linksArray.Where(p => p.IsMember).ToArray();
 
-            Array.ForEach(links, hateoasLink => result.Add(hateoasLink.Relation, CreateRelation(properties.Single(p => p.Name == hateoasLink.Relation), hateoasLink)));
+            Array.ForEach(links, hateoasLink =>
+            {
+                var property = properties.Single(p => p.Name == hateoasLink.Relation);
+
+                JsonApiRelationship relation;
+                if (property.PropertyType.IsOrImplementsIEnumerable())
+                {
+                    relation = new CollectionRelation
+                    {
+                        Data = CreateRelations(property.GetValue(model), property.PropertyType.GenericTypeArguments[0]).ToList()
+                    };
+                }
+                else
+                {
+                    relation = new SingleRelation
+                    {
+                        Data = CreateRelation(property, hateoasLink)
+                    };
+                }
+
+                result.Add(hateoasLink.Relation, relation);
+            });
 
             return result;
         }
@@ -110,7 +124,7 @@ namespace FluentHateoas.Handling
                 .ToDictionary(p => p.Relation, p => p.LinkPath ?? p.Template);
         }
 
-        private static List<JsonApiRelation> GetIncludes(object model, params string[] memberNames)
+        private static List<JsonApiData> GetIncludes(object model, params string[] memberNames)
         {
             var properties = model
                 .GetType()
@@ -118,41 +132,58 @@ namespace FluentHateoas.Handling
                 .Where(p => memberNames.Any(m => m == p.Name.ToLowerInvariant()))
                 .ToList();
 
-            return properties.Select(p =>
+            return properties.SelectMany(p =>
             {
                 var propertyModel = p.GetValue(model);
-                var propertyProperties = p.PropertyType.GetProperties();
-                var idProperty = GetIdProperty(p.PropertyType, propertyProperties);
-
-                return CreateRelation<JsonApiRelation>(propertyModel, p.PropertyType, idProperty, propertyProperties);
+                if (propertyModel.IsOrImplementsIEnumerable())
+                {
+                    var elementType = p.PropertyType.GenericTypeArguments[0];
+                    var propertyProperties = elementType.GetProperties();
+                    var idProperty = GetIdProperty(elementType, propertyProperties);
+                    return ((IEnumerable<object>)propertyModel).Select(m => CreateRelation<JsonApiData>(m, elementType, idProperty, propertyProperties));
+                }
+                else
+                {
+                    var propertyProperties = p.PropertyType.GetProperties();
+                    var idProperty = GetIdProperty(p.PropertyType, propertyProperties);
+                    return new[] { CreateRelation<JsonApiData>(propertyModel, p.PropertyType, idProperty, propertyProperties) };
+                }
             }).ToList();
         }
 
-        private static JsonApiRelation CreateRelation(PropertyInfo property, IHateoasLink hateoasLink)
+        private static JsonApiData CreateRelation(PropertyInfo property, IHateoasLink hateoasLink)
         {
-            return new JsonApiRelation
+            return new JsonApiData
             {
                 Type = property.PropertyType.Name,
                 Id = hateoasLink.MemberId.Value.ToString()
             };
         }
 
-        private static TModel CreateRelation<TModel>(object model, Type objectType, PropertyInfo idProperty, PropertyInfo[] properties, params string[] memberNames) where TModel : JsonApiRelation, new()
+        private static IEnumerable<JsonApiData> CreateRelations(object model, Type propertyType)
         {
-            var result = CreateSimpleRelation<TModel>(model, objectType, idProperty, properties);
+            var collection = ((IEnumerable<object>)model).ToList();
+            if (!collection.Any())
+                return new List<JsonApiData>();
 
-            var attributes = GetAttributes(model, memberNames, properties, idProperty);
-            result.Attributes = attributes;
-
-            return result;
+            var idProperty = GetIdProperty(propertyType, propertyType.GetProperties());
+            return collection.Select(p => new JsonApiData
+            {
+                Type = propertyType.Name,
+                Id = GetValueFromModel(p, idProperty)
+            });
         }
-        private static TModel CreateSimpleRelation<TModel>(object model, Type objectType, PropertyInfo idProperty, PropertyInfo[] properties) where TModel : JsonApiSimpleRelation, new()
+
+        private static TModel CreateRelation<TModel>(object model, Type objectType, PropertyInfo idProperty, PropertyInfo[] properties, params string[] memberNames) where TModel : JsonApiData, new()
         {
             var result = new TModel
             {
                 Id = GetValueFromModel(model, idProperty),
-                Type = objectType.Name
+                Type = objectType.Name,
             };
+
+            var attributes = GetAttributes(model, memberNames, properties, idProperty);
+            result.Attributes = attributes;
 
             return result;
         }

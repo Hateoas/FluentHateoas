@@ -43,7 +43,8 @@ namespace SampleApi.ApiController
                 Id = Guid.Parse("96D74B0D-4456-4643-A5FD-D0A31AF0C284"),
                 HouseId = Guid.Parse("46B18438-A460-4C65-BFC7-8538E7F93568"),
                 DadId = Guid.Parse("E89006B3-DE81-47E2-9E1B-B202B8B107A6"),
-                Dad = new Person { Id = Guid.Parse("E89006B3-DE81-47E2-9E1B-B202B8B107A6") }
+                Dad = new Person { Id = Guid.Parse("E89006B3-DE81-47E2-9E1B-B202B8B107A6") },
+                RelatedPersons = GetParents()
             };
         }
 

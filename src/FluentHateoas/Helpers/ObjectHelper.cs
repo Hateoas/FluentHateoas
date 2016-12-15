@@ -32,7 +32,7 @@ namespace FluentHateoas.Helpers
             return method.Invoke(null, new[] { source });
         }
 
-        public static bool IsOrImplementsIEnumerable(Type contentType)
+        public static bool IsOrImplementsIEnumerable(this Type contentType)
         {
             if (contentType.IsSimpleType())
                 return false;

@@ -8,7 +8,7 @@ namespace FluentHateoas.Helpers
     {
         public static bool TryGetSingleItemType(this Type potentialEnumerableType, out Type singleItemType)
         {
-            if (ObjectHelper.IsOrImplementsIEnumerable(potentialEnumerableType))
+            if (potentialEnumerableType.IsOrImplementsIEnumerable())
             {
                 singleItemType = potentialEnumerableType.IsArray
                     ? potentialEnumerableType.GetElementType()

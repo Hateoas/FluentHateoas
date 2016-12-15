@@ -3,27 +3,45 @@ using System.Collections.Specialized;
 
 namespace FluentHateoas.Handling
 {
-    public class JsonApiResponse
+    public abstract class JsonApiResponse
     {
-        internal JsonApiResponse() { }
-
-        public object Data { get; set; }
-        public List<JsonApiRelation> Includes { get; set; }
+        public List<JsonApiData> Includes { get; set; }
     }
 
-    public class JsonApiEntity : JsonApiRelation
+    public class CollectionResponse : JsonApiResponse
     {
-        public Dictionary<string, JsonApiRelation> Relationships { get; set; }
+        public ICollection<JsonApiEntity> Data { get; set; }
+    }
+
+    public class SingleResponse : JsonApiResponse
+    {
+        public JsonApiEntity Data { get; set; }
+    }
+
+    public class JsonApiEntity : JsonApiData
+    {
+        public Dictionary<string, JsonApiRelationship> Relationships { get; set; }
         public Dictionary<string, string> Links { get; set; }
     }
 
-    public class JsonApiRelation : JsonApiSimpleRelation
+    public abstract class JsonApiRelationship
     {
-        public Dictionary<string, object> Attributes { get; set; }
+        public Dictionary<string, string> Links { get; set; }
     }
-    public class JsonApiSimpleRelation
+
+    public class SingleRelation : JsonApiRelationship
+    {
+        public JsonApiData Data { get; set; }
+    }
+    public class CollectionRelation : JsonApiRelationship
+    {
+        public ICollection<JsonApiData> Data { get; set; }
+    }
+
+    public class JsonApiData
     {
         public string Type { get; set; }
         public string Id { get; set; }
+        public Dictionary<string, object> Attributes { get; set; }
     }
 }
