@@ -238,7 +238,7 @@ namespace FluentHateoas.Handling
             var keyProperties = properties.Where(p => p.GetCustomAttribute<KeyAttribute>() != null).ToList();
 
             if (!keyProperties.Any() || keyProperties.Count() > 1)
-                throw new Exception("JsonApiResponse: Unable to determine id");
+                throw new Exception($"JsonApi: Unable to determine an ID-field. Please provide an ID-field by adding \"Id\", \"{objectType.Name}Id\" or adding a [Key]-attribute to a property");
 
             return keyProperties.First();
 
