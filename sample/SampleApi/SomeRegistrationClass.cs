@@ -20,7 +20,7 @@
                     HrefStyle = HrefStyle.Relative,
                     LinkStyle = LinkStyle.Array,
                     TemplateStyle = TemplateStyle.Rendered,
-                    ResponseStyle = ResponseStyle.JsonApi,
+                    ResponseStyle = ResponseStyle.Hateoas,
                     NullValueHandling = NullValueHandling.Ignore
                 });
 
@@ -88,8 +88,9 @@
             //  get single person link
             // =======================================================================================================================
             container
-                .Register<Person>("get-by-id", p => p.Id)
-                .Get<PersonController>();
+                .RegisterCollection<Person>("get-by-id", p => p.Id)
+                .Get<PersonController>()
+                .AsTemplate(p => p.Id);
 
             //  {
             //      "rel": "self"
@@ -142,12 +143,13 @@
             container
                 .RegisterCollection<Person>(p => p.Dad, p => p.DadId)
                 .Get<PersonController>()
-                .AsTemplate(p => p.Id);
+                .AsTemplate(p => p.DadId);
 
             container
-                .RegisterCollection<Person>(p => p.Mom, p => p.MomId)
+                .RegisterCollection<Person>(p => p.Mom)
                 .Get<PersonController>()
-                .AsTemplate(p => p.Id);
+                .AsTemplate(p => p.MomId);
+
 
             //  {
             //      "rel": "item"

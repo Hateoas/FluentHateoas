@@ -11,12 +11,14 @@ namespace FluentHateoas.Builder.Handlers
 
         protected static string GetKey<TModel>(TModel data, MemberInfo member, bool isCollection = false)
         {
-            var keyName = member.Name;
-            var valueType = isCollection ? data.GetType().GetGenericArguments()[0] : data.GetType();
-            var key = keyName == "Id"
-                ? valueType.Name.Substring(0, 1).ToLowerInvariant() + valueType.Name.Substring(1) + keyName // PersonInfo.Id becomes personInfoId
-                : keyName.Substring(0, 1).ToLowerInvariant() + keyName.Substring(1);
-            return key;
+            return member.Name.Substring(0, 1).ToLowerInvariant() + member.Name.Substring(1);
+
+            //var keyName = member.Name;
+            //var valueType = isCollection ? data.GetType().GetGenericArguments()[0] : data.GetType();
+            //var key = keyName == "Id"
+            //    ? valueType.Name.Substring(0, 1).ToLowerInvariant() + valueType.Name.Substring(1) + keyName // PersonInfo.Id becomes personInfoId
+            //    : keyName.Substring(0, 1).ToLowerInvariant() + keyName.Substring(1);
+            //return key;
         }
     }
 }

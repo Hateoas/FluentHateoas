@@ -86,8 +86,11 @@ namespace FluentHateoasTest.Handling
         }
 
         [TestMethod]
+        [Ignore]
         public void ProcessShouldAddKeyedParameterToLinkBuilderWhenArgumentsAroundAlreadyUsingTemplateParameters()
         {
+            // todo: Possible unwanted behaviour
+
             // arrange
             var expressionMock = new Mock<IHateoasExpression<Person>>(MockBehavior.Strict);
             expressionMock.SetupGet(e => e.TemplateParameters).Returns(new Expression<Func<Person, object>>[] { p => p.Id });

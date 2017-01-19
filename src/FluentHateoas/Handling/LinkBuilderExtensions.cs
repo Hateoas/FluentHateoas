@@ -11,12 +11,12 @@ namespace FluentHateoas.Handling
     {
         public static string GetPathAsTemplate(this ILinkBuilder linkBuilder)
         {
-            return RouteFromMethod(linkBuilder.Action);
+            return RouteFromMethod(linkBuilder);
         }
 
         public static string GetPath(this ILinkBuilder linkBuilder)
         {
-            return RouteFromMethod(linkBuilder.Action)
+            return RouteFromMethod(linkBuilder)
                 .FormatArguments(linkBuilder.Arguments);
             //.HaackFormat(linkBuilder.Data);
         }
@@ -26,20 +26,20 @@ namespace FluentHateoas.Handling
             return dict.Keys.Aggregate(source, (current, key) => current.Replace($"{{{key}}}", dict[key].Value.ToString()));
         }
 
-        private static string RouteFromMethod(MethodInfo methodInfo)
+        private static string RouteFromMethod(ILinkBuilder linkBuilder)
         {
             var apiPrefixSetting = ConfigurationKeys.ApiPrefix;
             var apiPrefix = string.IsNullOrWhiteSpace(apiPrefixSetting)
                 ? "/"
                 : $"/{apiPrefixSetting}/";
 
-            var controllerAttribute = methodInfo.DeclaringType.GetCustomAttribute<System.Web.Http.RoutePrefixAttribute>();
-            var actionAttribute = methodInfo.GetCustomAttribute<System.Web.Http.RouteAttribute>();
+            var controllerAttribute = linkBuilder.Action.DeclaringType.GetCustomAttribute<System.Web.Http.RoutePrefixAttribute>();
+            var actionAttribute = linkBuilder.Action.GetCustomAttribute<System.Web.Http.RouteAttribute>();
 
             var hasPrefix = !string.IsNullOrWhiteSpace(controllerAttribute?.Prefix);
             var hasTemplate = !string.IsNullOrWhiteSpace(actionAttribute?.Template);
 
-            var controllerType = methodInfo.DeclaringType;
+            var controllerType = linkBuilder.Action.DeclaringType;
             var controllerTypeName = controllerType == null ? string.Empty : controllerType.Name;
 
             var prefix = !hasPrefix
@@ -49,16 +49,17 @@ namespace FluentHateoas.Handling
             if (hasTemplate)
                 return $"{prefix}/{actionAttribute.Template}";
 
-            return $"{prefix}{GetParameterString(methodInfo)?.Trim()}";
+            return $"{prefix}{GetParameterString(linkBuilder)?.Trim()}";
         }
 
-        private static string GetParameterString(MethodInfo methodInfo)
+        private static string GetParameterString(ILinkBuilder linkBuilder)
         {
-            var parameters = methodInfo.GetParameters();
-            var parameterString = parameters.Any(p => p.Name == "id")
-                ? "/{id}"
-                : "";
-            return parameterString;
+            var parameters = linkBuilder.Action.GetParameters();
+            var parameterString = parameters.SingleOrDefault(p => p.Name == "id");
+            if (parameterString == null)
+                return string.Empty;
+
+            return $"/{{{linkBuilder.Arguments["id"].Origin}}}";
         }
     }
 }
