@@ -3,24 +3,27 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.UI;
 using FluentHateoas.Builder.Model;
 using FluentHateoas.Helpers;
+using FluentHateoas.Registration;
 
 namespace FluentHateoas.Handling
 {
     public static class JsonApiResponseHelper
     {
-        public static HttpResponseMessage Ok(HttpRequestMessage request, object model, IEnumerable<IHateoasLink> links)
+        public static HttpResponseMessage Ok(HttpRequestMessage request, object model, IEnumerable<IHateoasLink> links, NullValueHandling nullValueHandling)
         {
-            return CreateResponse(request, model.IsOrImplementsIEnumerable()
-                ? CreateCollectionResponse(model as IEnumerable<object>, links)
-                : CreateResponse(model, links), System.Net.HttpStatusCode.OK);
+            return CreateResponse(
+                request, 
+                model.IsOrImplementsIEnumerable() ? CreateCollectionResponse(model as IEnumerable<object>, links, nullValueHandling) : CreateResponse(model, links, nullValueHandling), 
+                System.Net.HttpStatusCode.OK);
         }
 
-        private static JsonApiResponse CreateCollectionResponse<TModel>(IEnumerable<TModel> model, IEnumerable<IHateoasLink> links)
+        private static JsonApiResponse CreateCollectionResponse<TModel>(IEnumerable<TModel> model, IEnumerable<IHateoasLink> links, NullValueHandling nullValueHandling)
         {
             var objectType = model.GetType().GenericTypeArguments[0];
             var collectionType = objectType.MakeIEnumerableOfType();
@@ -39,8 +42,8 @@ namespace FluentHateoas.Handling
             var includes = new List<JsonApiData>();
             var entities = array.Select(item =>
             {
-                var entity = CreateRelation<JsonApiEntity>(item, objectType, idProperty, properties, memberNames.SelectMany(p => new[] { p.origin, p.relation }).ToArray());
-                includes.AddRange(GetIncludes(item, memberNames.Select(p => p.relation).ToArray()));
+                var entity = CreateRelation<JsonApiEntity>(item, objectType, idProperty, properties, nullValueHandling, memberNames.SelectMany(p => new[] { p.origin, p.relation }).ToArray());
+                includes.AddRange(GetIncludes(item, nullValueHandling, memberNames.Select(p => p.relation).ToArray()));
 
                 entity.Links = CreateLinks(linksArray);
                 entity.Relationships = CreateRelationships(item, linksArray);
@@ -67,7 +70,7 @@ namespace FluentHateoas.Handling
             }
         }
 
-        private static JsonApiResponse CreateResponse(object model, IEnumerable<IHateoasLink> links)
+        private static JsonApiResponse CreateResponse(object model, IEnumerable<IHateoasLink> links, NullValueHandling nullValueHandling)
         {
             var objectType = model.GetType();
             var properties = objectType.GetProperties();
@@ -80,8 +83,8 @@ namespace FluentHateoas.Handling
                 .ToArray();
 
             var idProperty = GetIdProperty(objectType, properties);
-            var entity = CreateRelation<JsonApiEntity>(model, objectType, idProperty, properties, memberNames.SelectMany(p => new[] { p.origin, p.relation }).ToArray());
-            var includes = GetIncludes(model, memberNames.Select(p => p.relation).ToArray());
+            var entity = CreateRelation<JsonApiEntity>(model, objectType, idProperty, properties, nullValueHandling, memberNames.SelectMany(p => new[] { p.origin, p.relation }).ToArray());
+            var includes = GetIncludes(model, nullValueHandling, memberNames.Select(p => p.relation).ToArray());
 
             entity.Links = CreateLinks(linksArray);
             entity.Relationships = CreateRelationships(model, linksArray);
@@ -126,7 +129,7 @@ namespace FluentHateoas.Handling
                 .ToDictionary(p => p.Relation, p => p.LinkPath ?? p.Template);
         }
 
-        private static List<JsonApiData> GetIncludes(object model, params string[] memberNames)
+        private static List<JsonApiData> GetIncludes(object model, NullValueHandling nullValueHandling, params string[] memberNames)
         {
             var properties = model
                 .GetType()
@@ -142,13 +145,13 @@ namespace FluentHateoas.Handling
                     var elementType = p.PropertyType.GenericTypeArguments[0];
                     var propertyProperties = elementType.GetProperties();
                     var idProperty = GetIdProperty(elementType, propertyProperties);
-                    return ((IEnumerable<object>)propertyModel).Select(m => CreateRelation<JsonApiData>(m, elementType, idProperty, propertyProperties));
+                    return ((IEnumerable<object>)propertyModel).Select(m => CreateRelation<JsonApiData>(m, elementType, idProperty, propertyProperties, nullValueHandling));
                 }
                 else
                 {
                     var propertyProperties = p.PropertyType.GetProperties();
                     var idProperty = GetIdProperty(p.PropertyType, propertyProperties);
-                    return new[] { CreateRelation<JsonApiData>(propertyModel, p.PropertyType, idProperty, propertyProperties) };
+                    return new[] { CreateRelation<JsonApiData>(propertyModel, p.PropertyType, idProperty, propertyProperties, nullValueHandling) };
                 }
             }).ToList();
         }
@@ -195,7 +198,7 @@ namespace FluentHateoas.Handling
             return result;
         }
 
-        private static TModel CreateRelation<TModel>(object model, Type objectType, PropertyInfo idProperty, PropertyInfo[] properties, params string[] memberNames) where TModel : JsonApiData, new()
+        private static TModel CreateRelation<TModel>(object model, Type objectType, PropertyInfo idProperty, PropertyInfo[] properties, NullValueHandling nullValueHandling, params string[] memberNames) where TModel : JsonApiData, new()
         {
             if (model == null)
                 return null;
@@ -206,7 +209,7 @@ namespace FluentHateoas.Handling
                 Type = objectType.Name,
             };
 
-            var attributes = GetAttributes(model, memberNames, properties, idProperty);
+            var attributes = GetAttributes(model, memberNames, properties, idProperty, nullValueHandling);
             result.Attributes = attributes;
 
             return result;
@@ -217,12 +220,16 @@ namespace FluentHateoas.Handling
             return model.GetType().GetProperty(idProperty.Name).GetValue(model).ToString();
         }
 
-        private static Dictionary<string, object> GetAttributes(object model, IEnumerable<string> memberNames, IEnumerable<PropertyInfo> modelProperties, PropertyInfo idProperty)
+        private static Dictionary<string, object> GetAttributes(object model, IEnumerable<string> memberNames, IEnumerable<PropertyInfo> modelProperties, PropertyInfo idProperty, NullValueHandling nullValueHandling)
         {
-            return model.GetType().GetProperties()
+            var result = model.GetType().GetProperties()
                 .Where(p => p.Name != idProperty.Name)
                 .Where(p => memberNames.All(m => m != p.Name.ToLowerInvariant()))
                 .ToDictionary(p => p.Name, p => p.GetValue(model));
+
+            return nullValueHandling == NullValueHandling.Ignore
+                ? result.Where(p => p.Value != null).ToDictionary(p => p.Key, p => p.Value)
+                : result;
         }
 
         private static PropertyInfo GetIdProperty(Type objectType, PropertyInfo[] properties)
@@ -244,7 +251,7 @@ namespace FluentHateoas.Handling
 
         }
 
-        private static HttpResponseMessage CreateResponse(HttpRequestMessage request, JsonApiResponse response, System.Net.HttpStatusCode statusCode)
+        private static HttpResponseMessage CreateResponse(HttpRequestMessage request, JsonApiResponse response, HttpStatusCode statusCode)
         {
             return request.CreateResponse(statusCode, response);
         }

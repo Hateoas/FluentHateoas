@@ -44,6 +44,11 @@ namespace FluentHateoas.Handling
             return _httpConfiguration.GetConfiguration().ResponseStyle;
         }
 
+        public NullValueHandling GetNullValueHandling()
+        {
+            return _httpConfiguration.GetConfiguration().NullValueHandling;
+        }
+
         public IEnumerable<IHateoasLink> GetLinksFor(Type contentType, object content)
         {
             // TODO Dynamically creating/caching those link functions is heavy and should move to the registration phase.

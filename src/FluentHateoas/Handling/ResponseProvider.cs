@@ -27,7 +27,7 @@ namespace FluentHateoas.Handling
             switch (_configurationProvider.GetResponseStyle())
             {
                 case ResponseStyle.JsonApi:
-                    return JsonApiResponseHelper.Ok(request, ((ObjectContent)response.Content).Value, links);
+                    return JsonApiResponseHelper.Ok(request, ((ObjectContent)response.Content).Value, links, _configurationProvider.GetNullValueHandling());
                 default:
                     return HateoasResponseHelper.Ok(request, ((ObjectContent)response.Content).Value, links);
             }

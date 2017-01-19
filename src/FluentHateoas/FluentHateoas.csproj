@@ -165,6 +165,7 @@
     <Compile Include="Registration\HttpConfigurationExtensions.cs" />
     <Compile Include="Interfaces\IHateoasConfiguration.cs" />
     <Compile Include="Registration\LinkStyle.cs" />
+    <Compile Include="Registration\NullValueHandling.cs" />
     <Compile Include="Registration\ResponseStyle.cs" />
     <Compile Include="Registration\TemplateStyle.cs" />
     <Compile Include="ResponseMessageExtensions.cs" />
