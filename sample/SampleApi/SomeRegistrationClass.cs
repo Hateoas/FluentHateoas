@@ -20,7 +20,8 @@
                     HrefStyle = HrefStyle.Relative,
                     LinkStyle = LinkStyle.Array,
                     TemplateStyle = TemplateStyle.Rendered,
-                    ResponseStyle = ResponseStyle.JsonApi
+                    ResponseStyle = ResponseStyle.JsonApi,
+                    NullValueHandling = NullValueHandling.Ignore
                 });
 
             ////

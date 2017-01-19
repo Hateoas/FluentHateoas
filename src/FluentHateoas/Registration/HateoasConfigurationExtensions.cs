@@ -18,6 +18,7 @@ namespace FluentHateoas.Registration
             TryExtend(configuration, varsDictionary, c => c.LinkStyle);
             TryExtend(configuration, varsDictionary, c => c.TemplateStyle);
             TryExtend(configuration, varsDictionary, c => c.ResponseStyle);
+            TryExtend(configuration, varsDictionary, c => c.NullValueHandling);
         }
 
         private static void TryExtend<T>(Interfaces.IHateoasConfiguration configuration, IDictionary<string, object> varsDictionary, Expression<Func<Interfaces.IHateoasConfiguration, T>> expression) where T : struct
