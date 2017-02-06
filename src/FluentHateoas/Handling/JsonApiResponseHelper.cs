@@ -125,7 +125,7 @@ namespace FluentHateoas.Handling
         private static Dictionary<string, string> CreateLinks(IHateoasLink[] linksArray)
         {
             return linksArray
-                .Where(p => !p.IsMember && string.IsNullOrWhiteSpace(p.Template) && (string.IsNullOrWhiteSpace(p.Method) || p.Method == "GET"))
+                .Where(p => !p.IsMember && string.IsNullOrWhiteSpace(p.Template))
                 .ToDictionary(p => p.Relation, p => p.LinkPath ?? p.Template);
         }
 
