@@ -20,7 +20,7 @@
                     HrefStyle = HrefStyle.Relative,
                     LinkStyle = LinkStyle.Array,
                     TemplateStyle = TemplateStyle.Rendered,
-                    ResponseStyle = ResponseStyle.Hateoas,
+                    ResponseStyle = ResponseStyle.JsonApi,
                     NullValueHandling = NullValueHandling.Ignore
                 });
 

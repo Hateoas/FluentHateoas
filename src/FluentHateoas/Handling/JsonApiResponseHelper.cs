@@ -168,7 +168,7 @@ namespace FluentHateoas.Handling
 
             return new SingleRelation
             {
-                Links = new Dictionary<string, string> {{"self", hateoasLink.LinkPath ?? hateoasLink.Template.Replace("{id}", id) }},
+                Links = new Dictionary<string, string> {{"self", hateoasLink.LinkPath ?? hateoasLink.Template.HenriFormat(model) }},
                 Data = new JsonApiData
                 {
                     Type = model.GetType().Name,
