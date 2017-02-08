@@ -59,7 +59,7 @@ namespace FluentHateoas.Handling
             if (parameterString == null)
                 return string.Empty;
 
-            return $"/{{{linkBuilder.Arguments["id"].Origin}}}";
+            return $"/{{{linkBuilder.Arguments["id"].Origin ?? linkBuilder.Arguments["id"].Name}}}";
         }
     }
 }

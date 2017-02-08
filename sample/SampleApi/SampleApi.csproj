@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiController\AddressController.cs" />
+    <Compile Include="ApiController\CarController.cs" />
     <Compile Include="ApiController\PersonController.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Model\Car.cs" />
     <Compile Include="Model\Person.cs" />
     <Compile Include="Model\PersonPostCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
