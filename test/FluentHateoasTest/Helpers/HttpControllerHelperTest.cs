@@ -248,7 +248,7 @@ namespace FluentHateoasTest.Helpers
             // act & assert
             action
                 .ShouldThrow<Exception>()
-                .And.Message.Should().Be($"There are multiple actions supporting {method}, try specifying explicit");
+                .And.Message.Should().Be($"Unable to create relation 'self' There are multiple actions supporting GET on TestController, try specifying explicit by using Get<TestController>(p => p.DoSomethingWithId) or Get<TestController>(p => p.DoSomethingWithAnotherId)");
         }
 
         private class TestController
