@@ -361,7 +361,7 @@
 
             container
                 .RegisterCollection<Car>("get-by-id", p => p.Id)
-                .Get<CarController>()
+                .Get<CarController>(p => p.GetById)
                 .AsTemplate(p => p.Id);
         }
     }
