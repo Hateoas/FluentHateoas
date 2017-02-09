@@ -358,6 +358,11 @@
             container
                 .Register<Person>("cars", p => p.Id)
                 .Get<CarController>(p => p.GetByPersonId);
+
+            container
+                .RegisterCollection<Car>("get-by-id", p => p.Id)
+                .Get<CarController>()
+                .AsTemplate(p => p.Id);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace FluentHateoas.Handling
         {
             var apiPrefixSetting = ConfigurationKeys.ApiPrefix;
             var apiPrefix = string.IsNullOrWhiteSpace(apiPrefixSetting)
-                ? "/"
+                ? ""
                 : $"/{apiPrefixSetting}";
 
             var controllerAttribute = linkBuilder.Action.DeclaringType.GetCustomAttribute<System.Web.Http.RoutePrefixAttribute>();

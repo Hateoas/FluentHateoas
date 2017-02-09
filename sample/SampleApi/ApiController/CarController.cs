@@ -16,6 +16,7 @@ namespace SampleApi.ApiController
             return new List<Car>();
         }
 
+        [Route("car/{id}")]
         public Car GetById(Guid id)
         {
             return new Car();
@@ -24,7 +25,10 @@ namespace SampleApi.ApiController
         [Route("person/{id}/cars")]
         public IEnumerable<Car> GetByPersonId(Guid id)
         {
-            return new List<Car>();
+            return new List<Car>
+            {
+                new Car {Id = Guid.Parse("E60F3D19-3847-4380-9B3C-AD9777AC3042"), Name = "Test vehice", PersonId = id}
+            };
         }
     }
 }
