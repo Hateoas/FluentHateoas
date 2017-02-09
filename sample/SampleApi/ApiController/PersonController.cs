@@ -11,7 +11,7 @@ namespace SampleApi.ApiController
     using SampleApi.Model;
 
     [ExcludeFromCodeCoverage]
-    [RoutePrefix("api/person")]
+    [RoutePrefix("person")]
     public class PersonController : ApiController
     {
         public IEnumerable<Person> Get()

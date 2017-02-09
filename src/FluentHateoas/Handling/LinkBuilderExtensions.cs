@@ -31,7 +31,7 @@ namespace FluentHateoas.Handling
             var apiPrefixSetting = ConfigurationKeys.ApiPrefix;
             var apiPrefix = string.IsNullOrWhiteSpace(apiPrefixSetting)
                 ? "/"
-                : $"/{apiPrefixSetting}/";
+                : $"/{apiPrefixSetting}";
 
             var controllerAttribute = linkBuilder.Action.DeclaringType.GetCustomAttribute<System.Web.Http.RoutePrefixAttribute>();
             var actionAttribute = linkBuilder.Action.GetCustomAttribute<System.Web.Http.RouteAttribute>();
@@ -39,17 +39,27 @@ namespace FluentHateoas.Handling
             var hasPrefix = !string.IsNullOrWhiteSpace(controllerAttribute?.Prefix);
             var hasTemplate = !string.IsNullOrWhiteSpace(actionAttribute?.Template);
 
-            var controllerType = linkBuilder.Action.DeclaringType;
-            var controllerTypeName = controllerType == null ? string.Empty : controllerType.Name;
+            string prefix;
 
-            var prefix = !hasPrefix
-                ? apiPrefix + controllerTypeName.Substring(0, controllerTypeName.IndexOf("Controller", StringComparison.Ordinal)).ToLower()
-                : apiPrefix + controllerAttribute.Prefix;
+            if (!hasPrefix)
+            {
+                var controllerType = linkBuilder.Action.DeclaringType;
+                var controllerTypeName = controllerType?.Name ?? string.Empty;
 
-            if (hasTemplate)
-                return $"{prefix}/{actionAttribute.Template}";
+                prefix = $"{apiPrefix}/" + controllerTypeName.Substring(0, controllerTypeName.IndexOf("Controller", StringComparison.Ordinal)).ToLower();
+            }
+            else
+            {
+                prefix = $"{apiPrefix}/" + controllerAttribute.Prefix;
+            }
 
-            return $"{prefix}{GetParameterString(linkBuilder)?.Trim()}";
+
+            if (!hasTemplate)
+                return $"{prefix}{GetParameterString(linkBuilder)?.Trim()}";
+
+            return actionAttribute.Template[0] != '{' 
+                ? $"{apiPrefix}/{actionAttribute.Template}" 
+                : $"{prefix}/{actionAttribute.Template}";
         }
 
         private static string GetParameterString(ILinkBuilder linkBuilder)

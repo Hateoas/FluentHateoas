@@ -355,9 +355,9 @@
 
             // store container
 
-            //container
-            //    .Register<Person>("cars", p => p.Id)
-            //    .Get<CarController>(p => p.GetByPersonId);
+            container
+                .Register<Person>("cars", p => p.Id)
+                .Get<CarController>(p => p.GetByPersonId);
         }
     }
 }
