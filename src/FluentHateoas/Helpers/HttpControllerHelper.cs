@@ -128,11 +128,11 @@ namespace FluentHateoas.Helpers
                     .Where(p => p.methodInfo.GetCustomAttribute<RouteAttribute>() == null)
                     .ToList();
 
-                if (withoutRoute.Count > 1)
-                    throw new Exception($"There are multiple actions supporting {method}, try specifying explicit");
-
                 if (withoutRoute.Count == 1)
                     return withoutRoute.Single().methodInfo;
+
+                throw new Exception($"Unable to create relation '{relation}' There are multiple actions supporting {method} on {actionsWithEqualArguments.First().methodInfo.DeclaringType?.Name}, " +
+                                    $"try specifying explicit by using { string.Join(" or ", actionsWithEqualArguments.Select(p => $"Get<{actionsWithEqualArguments.First().methodInfo.DeclaringType?.Name}>(p => p.{p.methodInfo.Name})"))}");
             }
 
             return actionsWithEqualArguments.Any() 
