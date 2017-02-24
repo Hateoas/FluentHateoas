@@ -18,12 +18,11 @@ namespace FluentHateoas.Handling
 {
     public static class JsonApiResponseHelper
     {
-        public static HttpResponseMessage Ok(HttpRequestMessage request, object model, IEnumerable<IHateoasLink> links, NullValueHandling nullValueHandling)
+        public static JsonApiResponse Ok(HttpRequestMessage request, object model, IEnumerable<IHateoasLink> links, NullValueHandling nullValueHandling)
         {
-            return CreateResponse(
-                request, 
-                model.IsOrImplementsIEnumerable() ? CreateCollectionResponse(model as IEnumerable<object>, links, nullValueHandling) : CreateResponse(model, links, nullValueHandling), 
-                System.Net.HttpStatusCode.OK);
+            return model.IsOrImplementsIEnumerable()
+                ? CreateCollectionResponse(model as IEnumerable<object>, links, nullValueHandling)
+                : CreateResponse(model, links, nullValueHandling);
         }
 
         private static JsonApiResponse CreateCollectionResponse<TModel>(IEnumerable<TModel> model, IEnumerable<IHateoasLink> links, NullValueHandling nullValueHandling)
@@ -252,11 +251,6 @@ namespace FluentHateoas.Handling
 
             return keyProperties.First();
 
-        }
-
-        private static HttpResponseMessage CreateResponse(HttpRequestMessage request, JsonApiResponse response, HttpStatusCode statusCode)
-        {
-            return request.CreateResponse(statusCode, response);
         }
     }
 
