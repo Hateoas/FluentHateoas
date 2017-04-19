@@ -41,11 +41,11 @@ namespace FluentHateoas.Handling
                 .ToArray();
 
             var idProperty = GetIdProperty(objectType, properties);
-            var includes = new List<JsonApiData>();
+            //var includes = new List<JsonApiData>();
             var entities = array.Select(item =>
             {
                 var entity = CreateRelation<JsonApiEntity>(item, objectType, idProperty, properties, nullValueHandling, memberNames.SelectMany(p => new[] { p.origin, p.relation }).ToArray());
-                includes.AddRange(GetIncludes(item, nullValueHandling, memberNames.Select(p => p.relation).ToArray()));
+                //includes.AddRange(GetIncludes(item, nullValueHandling, memberNames.Select(p => p.relation).ToArray()));
 
                 entity.Links = CreateLinks(linksArray, item);
                 entity.Relationships = CreateRelationships(item, linksArray);
@@ -56,7 +56,7 @@ namespace FluentHateoas.Handling
             return new CollectionResponse
             {
                 Data = entities,
-                Includes = includes.Where(p => p != null).DistinctBy(p => new { p.Id, p.Type }).ToList()
+                //Includes = includes.Where(p => p != null).DistinctBy(p => new { p.Id, p.Type }).ToList()
             };
         }
 
@@ -86,7 +86,7 @@ namespace FluentHateoas.Handling
 
             var idProperty = GetIdProperty(objectType, properties);
             var entity = CreateRelation<JsonApiEntity>(model, objectType, idProperty, properties, nullValueHandling, memberNames.SelectMany(p => new[] { p.origin, p.relation }).ToArray());
-            var includes = GetIncludes(model, nullValueHandling, memberNames.Select(p => p.relation).ToArray());
+            //var includes = GetIncludes(model, nullValueHandling, memberNames.Select(p => p.relation).ToArray());
 
             entity.Links = CreateLinks(linksArray, model);
             entity.Relationships = CreateRelationships(model, linksArray);
@@ -94,7 +94,7 @@ namespace FluentHateoas.Handling
             return new SingleResponse
             {
                 Data = entity,
-                Includes = includes.Where(p => p != null).DistinctBy(p => new { p.Id, p.Type }).ToList()
+                //Includes = includes.Where(p => p != null).DistinctBy(p => new { p.Id, p.Type }).ToList()
             };
         }
 
