@@ -132,7 +132,7 @@ namespace FluentHateoas.Helpers
                     return withoutRoute.Single().methodInfo;
 
                 throw new Exception($"Unable to create relation '{relation}' There are multiple actions supporting {method} on {actionsWithEqualArguments.First().methodInfo.DeclaringType?.Name}, " +
-                                    $"try specifying explicit by using { string.Join(" or ", actionsWithEqualArguments.Select(p => $"Get<{actionsWithEqualArguments.First().methodInfo.DeclaringType?.Name}>(p => p.{p.methodInfo.Name})"))}");
+                                    $"try specifying explicit by using { string.Join(" or ", actionsWithEqualArguments.Select(p => $"{method.ToString().ToUpper().Substring(0, 1) + method.ToString().ToLower().Substring(1)}<{actionsWithEqualArguments.First().methodInfo.DeclaringType?.Name}>(p => p.{p.methodInfo.Name})"))}");
             }
 
             return actionsWithEqualArguments.Any() 

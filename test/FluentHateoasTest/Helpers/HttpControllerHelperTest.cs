@@ -271,7 +271,7 @@ namespace FluentHateoasTest.Helpers
             // act & assert
             action
                 .ShouldThrow<Exception>()
-                .And.Message.Should().Be($"Unable to create relation 'self' There are multiple actions supporting DELETE on TestController, try specifying explicit by using Get<TestController>(p => p.Delete) or Get<TestController>(p => p.DeleteWithCorrespondingParamter)");
+                .And.Message.Should().Be($"Unable to create relation 'self' There are multiple actions supporting DELETE on TestController, try specifying explicit by using Delete<TestController>(p => p.Delete) or Delete<TestController>(p => p.DeleteWithCorrespondingParamter)");
         }
 
         private class TestController
