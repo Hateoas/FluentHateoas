@@ -251,6 +251,29 @@ namespace FluentHateoasTest.Helpers
                 .And.Message.Should().Be($"Unable to create relation 'self' There are multiple actions supporting GET on TestController, try specifying explicit by using Get<TestController>(p => p.DoSomethingWithId) or Get<TestController>(p => p.DoSomethingWithAnotherId)");
         }
 
+        [TestMethod]
+        [TestCategory("UnitTest")]
+        public void GetActionShouldThrowExceptionIfMoreThanOneMethodWithMatchingParametersAndMethodFound()
+        {
+            // arrange
+            var method = HttpMethod.Delete;
+            var source = typeof(TestController);
+            var relation = "self";
+            var arguments = new Dictionary<string, Argument>
+            {
+                {"id", new Argument {Name = "id", Origin = "id", IsTemplateArgument = false, Type = typeof(int), Value = 1}}
+            };
+
+
+            Action action = () => HttpControllerHelper
+                .GetAction(source, relation, method, arguments);
+
+            // act & assert
+            action
+                .ShouldThrow<Exception>()
+                .And.Message.Should().Be($"Unable to create relation 'self' There are multiple actions supporting DELETE on TestController, try specifying explicit by using Get<TestController>(p => p.Delete) or Get<TestController>(p => p.DeleteWithCorrespondingParamter)");
+        }
+
         private class TestController
         {
             public void Post(int id)
@@ -258,13 +281,21 @@ namespace FluentHateoasTest.Helpers
 
             }
 
+            [Route("/somethingelse/{id}/test")]
             public void Delete(int id)
             {
 
             }
 
+            //[HttpDelete]
+            //public void DeleteWithoutParameter()
+            //{
+
+            //}
+
             [HttpDelete]
-            public void DeleteWithoutParameter()
+            [Route("/test/{id}")]
+            public void DeleteWithCorrespondingParamter(int id)
             {
 
             }

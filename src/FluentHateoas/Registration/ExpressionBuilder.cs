@@ -87,9 +87,9 @@ namespace FluentHateoas.Registration
             return this;
         }
 
-        public IGetExpressionBuilder<TModel> Get<TController>(LambdaExpression methodSelector = null) where TController : IHttpController
+        public IGetExpressionBuilder<TModel> Get<TController>() where TController : IHttpController
         {
-            _expression.SetMethod<TController>(HttpMethod.Get, methodSelector);
+            _expression.SetMethod<TController>(HttpMethod.Get, null);
             _registration.Update();
             return this;
         }
@@ -101,23 +101,23 @@ namespace FluentHateoas.Registration
             return this;
         }
 
-        public IPostExpressionBuilder<TModel> Post<TController>(LambdaExpression methodSelector = null) where TController : IHttpController
+        public IPostExpressionBuilder<TModel> Post<TController>() where TController : IHttpController
         {
             _expression.SetMethod<TController>(HttpMethod.Post, null);
             _registration.Update();
             return this;
         }
 
-        public IPutExpressionBuilder<TModel> Put<TController>(LambdaExpression methodSelector = null) where TController : IHttpController
+        public IPutExpressionBuilder<TModel> Put<TController>() where TController : IHttpController
         {
-            _expression.SetMethod<TController>(HttpMethod.Put, methodSelector);
+            _expression.SetMethod<TController>(HttpMethod.Put, null);
             _registration.Update();
             return this;
         }
 
-        public IDeleteExpressionBuilder<TModel> Delete<TController>(LambdaExpression methodSelector = null) where TController : IHttpController
+        public IDeleteExpressionBuilder<TModel> Delete<TController>() where TController : IHttpController
         {
-            _expression.SetMethod<TController>(HttpMethod.Delete, methodSelector);
+            _expression.SetMethod<TController>(HttpMethod.Delete, null);
             _registration.Update();
             return this;
         }
