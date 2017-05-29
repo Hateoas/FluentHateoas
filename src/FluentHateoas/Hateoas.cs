@@ -19,7 +19,8 @@ namespace FluentHateoas
         public static void Startup<TRegistrationClass>(
             HttpConfiguration configuration,
             IAuthorizationProvider authorizationProvider = null,
-            IDependencyResolver dependencyResolver = null)
+            IDependencyResolver dependencyResolver = null,
+            IList<IMessageSerializer> messageSerializers = null)
             where TRegistrationClass : IHateoasRegistrationProfile, new()
         {
             var configurationWrapper = new HttpConfigurationWrapper(configuration);
@@ -27,27 +28,31 @@ namespace FluentHateoas
             Startup<TRegistrationClass>(
                 configurationWrapper,
                 authorizationProvider,
-                dependencyResolver);
+                dependencyResolver,
+                messageSerializers);
         }
 
         public static void Startup<TRegistrationClass>(
             IHttpConfiguration configuration,
             IAuthorizationProvider authorizationProvider = null,
-            IDependencyResolver dependencyResolver = null)
+            IDependencyResolver dependencyResolver = null,
+            IList<IMessageSerializer> messageSerializers = null)
             where TRegistrationClass : IHateoasRegistrationProfile, new()
         {
             Startup(
                 new TRegistrationClass(), 
                 configuration, 
                 authorizationProvider, 
-                dependencyResolver);
+                dependencyResolver,
+                messageSerializers);
         }
 
         public static void Startup<TRegistrationClass>(
             TRegistrationClass registrationClass,
             IHttpConfiguration configuration,
             IAuthorizationProvider authorizationProvider = null,
-            IDependencyResolver dependencyResolver = null)
+            IDependencyResolver dependencyResolver = null,
+            IList<IMessageSerializer> messageSerializers = null)
             where TRegistrationClass : IHateoasRegistrationProfile
         {
             var linkBuilderFactory = new LinkBuilderFactory();
@@ -81,7 +86,7 @@ namespace FluentHateoas
                 getLinksForMethodCache);
 
             var responseProvider = new ResponseProvider(configurationProvider);
-            var handler = new HateoasHttpHandler(responseProvider);
+            var handler = new HateoasHttpHandler(responseProvider, messageSerializers ?? new List<IMessageSerializer>());
             configuration.MessageHandlers.Add(handler);
 
             var container = HateoasContainerFactory.Create(configuration);

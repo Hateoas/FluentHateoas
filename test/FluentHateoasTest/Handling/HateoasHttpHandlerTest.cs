@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Net.Http;
@@ -43,7 +44,7 @@ namespace FluentHateoasTest.Handling
 
         private class HateoasHttpHandlerMock : HateoasHttpHandler
         {
-            public HateoasHttpHandlerMock(IResponseProvider responseProvider) : base(responseProvider)
+            public HateoasHttpHandlerMock(IResponseProvider responseProvider) : base(responseProvider, new List<IMessageSerializer>())
             {
                 
             }
