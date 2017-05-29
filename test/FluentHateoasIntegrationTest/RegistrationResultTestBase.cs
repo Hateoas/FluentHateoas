@@ -15,8 +15,10 @@ using FluentHateoas;
 using FluentHateoas.Builder.Handlers;
 using FluentHateoas.Contracts;
 using FluentHateoas.Handling;
+using FluentHateoas.Handling.Handlers;
 using FluentHateoas.Helpers;
 using FluentHateoas.Registration;
+using FluentHateoasTest.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -52,7 +54,7 @@ namespace FluetHateoasIntegrationTest
             RegistrationClass = new TestRegistrationClass();
 
             // request & response
-            Request = new HttpRequestMessage();
+            Request = new HttpRequestMessage(HttpMethod.Get, "http://hateoas.net");
             Request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
             Request.Properties.Add(HttpPropertyKeys.HttpConfigurationKey, _httpConfigurationWrapper.HttpConfiguration);
             Response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -84,8 +86,16 @@ namespace FluetHateoasIntegrationTest
         protected async Task<TestResult> RegisterGetAndAssertResponse(bool isHateoasResponse, object data, int linkCount, int commandCount)
         {
             Hateoas.Startup(RegistrationClass, _httpConfigurationWrapper, _authorizationProviderMock.Object, _dependencyResolver.Object);
-            var response = _responseProvider.Create(Request, Response);
-            var testResult = new TestResult(response);
+
+            var handler = new HateoasHttpHandler(_responseProvider, new List<IMessageSerializer>())
+            {
+                InnerHandler = new TestHandler((request, cancellationToken) => Response)
+            };
+
+            var client = new HttpClient(handler);
+            var result = await client.SendAsync(Request);
+
+            var testResult = new TestResult(result);
             await testResult.GetResponseString();
 
             // assert

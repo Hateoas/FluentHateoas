@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using System.Net.Http;
 
 namespace FluentHateoas.Handling
 {
     public interface IResponseProvider
     {
-        HttpResponseMessage Create(HttpRequestMessage request, HttpResponseMessage response);
+        IEnumerable<IHateoasLink> CreateLinks(HttpResponseMessage response);
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Web;
+﻿using System.Collections.Generic;
+using System.Net.Http;
+using System.Web;
 
 namespace FluentHateoas.Handling
 {
@@ -6,7 +8,7 @@ namespace FluentHateoas.Handling
     {
         bool HandlesContentType(string contentType);
 
-        object OnRequest(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken);
-        object OnResponse(System.Net.Http.HttpRequestMessage request, System.Net.Http.HttpResponseMessage response);
+        HttpRequestMessage OnRequest(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken);
+        HttpResponseMessage OnResponse<TModel>(HttpRequestMessage request, HttpResponseMessage response, TModel model, IEnumerable<IHateoasLink> links);
     }
 }

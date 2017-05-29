@@ -106,6 +106,7 @@
     <Compile Include="Contracts\IHateoasRegistrationProfile.cs" />
     <Compile Include="Handling\ConfigurationProvider.cs" />
     <Compile Include="Handling\ConfigurationProviderGetLinksForFuncProvider.cs" />
+    <Compile Include="Handling\DefaultMessageSerializer.cs" />
     <Compile Include="Handling\HateoasLink.cs" />
     <Compile Include="Handling\HateOasResponse.cs" />
     <Compile Include="Handling\HttpConfigurationWrapper.cs" />

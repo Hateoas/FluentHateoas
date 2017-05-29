@@ -153,6 +153,7 @@
     <Compile Include="Handling\UseHandlerTest.cs" />
     <Compile Include="HateoasTest.cs" />
     <Compile Include="Helpers\HttpControllerHelperTest.cs" />
+    <Compile Include="Helpers\TestHandler.cs" />
     <Compile Include="Registration\HateoasContainerTest.cs" />
     <Compile Include="Helpers\DynamicObjectHelperTest.cs" />
     <Compile Include="Registration\HateoasContainerExtensionsTest.cs" />

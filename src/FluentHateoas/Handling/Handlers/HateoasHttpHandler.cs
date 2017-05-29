@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Web;
 
 namespace FluentHateoas.Handling.Handlers
 {
-    public class HateoasHttpHandler : System.Net.Http.DelegatingHandler
+    public class HateoasHttpHandler : DelegatingHandler
     {
         private readonly IResponseProvider _responseProvider;
         private readonly IList<IMessageSerializer> _messageSerializers;
@@ -15,14 +16,15 @@ namespace FluentHateoas.Handling.Handlers
             _messageSerializers = messageSerializers;
         }
 
-        protected override async System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> SendAsync(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
+        protected override async System.Threading.Tasks.Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
         {
-            var serializer = _messageSerializers.FirstOrDefault(p => p.HandlesContentType(HttpContext.Current.Request.ContentType));
+            var serializer = _messageSerializers.FirstOrDefault(p => p.HandlesContentType(HttpContext.Current.Request.ContentType)) ?? new DefaultMessageSerializer();
 
+            request = serializer.OnRequest(request, cancellationToken);
             var response = await base.SendAsync(request, cancellationToken);
-            var result = _responseProvider.Create(request, response); // TODO Async?!
+            var links = _responseProvider.CreateLinks(response); // TODO Async?! Why?!
 
-            return result;
-        }
+            return serializer.OnResponse(request, response, ((ObjectContent)response.Content).Value, links);
+        }   
     }
 }

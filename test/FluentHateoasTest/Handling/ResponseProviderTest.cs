@@ -30,7 +30,7 @@ namespace FluentHateoasTest.Handling
         }
 
         [TestMethod]
-        public void CreateShouldCreateResponse()
+        public void CreateShouldCreateLinks()
         {
             // arrange
             var person = new Person();
@@ -49,31 +49,28 @@ namespace FluentHateoasTest.Handling
 
             // act
             var content = _responseProvider
-                .Create(request, response).Content;
+                .CreateLinks(response);
 
             // assert
-            content.Should().NotBeNull().And.BeOfType<ObjectContent<HateoasResponse>>();
-            ((ObjectContent<HateoasResponse>) content).Value
-                .Should().BeOfType<HateoasResponse>()
-                .And.Match((HateoasResponse r) => person.Equals(r.Data))
-                .And.Match((HateoasResponse r) => 0.Equals(r.Links.Count()))
-                .And.Match((HateoasResponse r) => 0.Equals(r.Commands.Count()));
+            content.Should().NotBeNull()
+                .And.BeOfType<List<IHateoasLink>>()
+                .And.HaveCount(0);
         }
 
         [TestMethod]
         public void CreateShouldReturnOriginalResponseOnNoSuccessReturnCode()
         {
-            // arrange
-            var request = new HttpRequestMessage();
-            var response = new HttpResponseMessage(HttpStatusCode.BadRequest)
-            {
-                Content = new ObjectContent(typeof(Person), default(Person), new JsonMediaTypeFormatter(), "application/json")
-            };
+            // todo: add to serializer tests
+            //// arrange
+            //var response = new HttpResponseMessage(HttpStatusCode.BadRequest)
+            //{
+            //    Content = new ObjectContent(typeof(Person), default(Person), new JsonMediaTypeFormatter(), "application/json")
+            //};
 
-            // act & assert
-            _responseProvider
-                .Create(request, response)
-                .Should().BeSameAs(response);
+            //// act & assert
+            //_responseProvider
+            //    .CreateLinks(response)
+            //    .Should().BeSameAs(response);
 
         }
     }
