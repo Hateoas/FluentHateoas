@@ -17,23 +17,4 @@
             return result;
         }
     }
-
-    // TODO HateoasConfiguration already exists, a bit confusing ;)
-    //public class HateOasConfiguration : IHateOasConfiguration
-    //{
-    //    private readonly HttpConfiguration _configuration;
-
-    //    private readonly IHateoasContainer _container;
-
-    //    public HateOasConfiguration(HttpConfiguration configuration, IHateoasContainer container)
-    //    {
-    //        _configuration = configuration;
-    //        _container = container;
-    //    }
-
-    //}
-
-    //public interface IHateOasConfiguration
-    //{
-    //}
 }
