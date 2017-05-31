@@ -36,7 +36,6 @@ namespace FluentHateoasTest.Handling
             var person = new Person();
 
             _configurationProviderMock.Setup(cp => cp.GetLinksFor(typeof(Person), person)).Returns(new List<IHateoasLink>());
-            _configurationProviderMock.Setup(cp => cp.GetResponseStyle()).Returns(ResponseStyle.Hateoas);
 
             var request = new HttpRequestMessage();
 

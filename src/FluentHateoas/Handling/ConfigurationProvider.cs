@@ -39,11 +39,6 @@ namespace FluentHateoas.Handling
             return _linkFactory.CreateLinks(registrations, data);
         }
 
-        public ResponseStyle GetResponseStyle()
-        {
-            return _httpConfiguration.GetConfiguration().ResponseStyle;
-        }
-
         public NullValueHandling GetNullValueHandling()
         {
             return _httpConfiguration.GetConfiguration().NullValueHandling;

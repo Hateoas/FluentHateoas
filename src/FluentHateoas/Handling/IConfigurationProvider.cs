@@ -10,7 +10,6 @@ namespace FluentHateoas.Handling
 
         IEnumerable<IHateoasLink> GetLinksFor<TModel>(TModel data);
         IEnumerable<IHateoasLink> GetLinksFor<TModel>(IEnumerable<TModel> data);
-        ResponseStyle GetResponseStyle();
         NullValueHandling GetNullValueHandling();
     }
 }

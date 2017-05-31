@@ -17,7 +17,6 @@ namespace FluentHateoas.Registration
             TryExtend(configuration, varsDictionary, c => c.HrefStyle);
             TryExtend(configuration, varsDictionary, c => c.LinkStyle);
             TryExtend(configuration, varsDictionary, c => c.TemplateStyle);
-            TryExtend(configuration, varsDictionary, c => c.ResponseStyle);
             TryExtend(configuration, varsDictionary, c => c.NullValueHandling);
         }
 
