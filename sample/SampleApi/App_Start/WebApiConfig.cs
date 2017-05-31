@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Web.Http;
 using System.Web.Mvc;
+using Fluenthateoas.JsonApi;
 using FluentHateoas;
+using FluentHateoas.Handling;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -26,7 +28,9 @@ namespace SampleApi
             GlobalConfiguration.Configuration.DependencyResolver = new Microsoft.Practices.Unity.WebApi.UnityDependencyResolver(container);
 
             // Web API configuration and services
-            Hateoas.Startup<SomeRegistrationClass>(config, dependencyResolver: GlobalConfiguration.Configuration.DependencyResolver);
+            Hateoas.Startup<SomeRegistrationClass>(config, 
+                dependencyResolver: GlobalConfiguration.Configuration.DependencyResolver,
+                messageSerializers: new List<IMessageSerializer> {new JsonApiMessageSerializer()});
 
             // Web API routes
             config.MapHttpAttributeRoutes();

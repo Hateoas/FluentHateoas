@@ -183,6 +183,10 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Fluenthateoas.JsonApi\Fluenthateoas.JsonApi.csproj">
+      <Project>{15BF1F61-7603-4D94-90C7-6C4B2C88661C}</Project>
+      <Name>Fluenthateoas.JsonApi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\FluentHateoas\FluentHateoas.csproj">
       <Project>{f7857e78-29ae-4edf-99b6-147113462ba4}</Project>
       <Name>FluentHateoas</Name>
