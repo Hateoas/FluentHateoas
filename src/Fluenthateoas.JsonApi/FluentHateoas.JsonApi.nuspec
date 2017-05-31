@@ -1,17 +1,18 @@
 ﻿<?xml version="1.0"?>
 <package>
   <metadata>
-    <id>FluentHateoas</id>
+    <id>FluentHateoas.JsonApi</id>
     <version>1.0.0</version>
     <authors>Inkredible, Interest IT</authors>
     <owners>Inkredible, Interest IT</owners>
     <projectUrl>http://www.hateoas.net</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Fluent library for registration and generation of HATEOAS-responses.</description>
+    <description>JsonApi serializer for FluentHateoas.</description>
     <releaseNotes></releaseNotes>
     <copyright>Interest IT, Inkredible 2017</copyright>
-    <tags>HATEOAS</tags>
+    <tags>HATEOAS,JSON API, JsonApi</tags>
     <dependencies>
+      <dependency id="FluentHateoas" />
     </dependencies>
   </metadata>
 </package>
