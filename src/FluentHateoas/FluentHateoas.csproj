@@ -122,8 +122,6 @@
     <Compile Include="Handling\InMemoryCache.cs" />
     <Compile Include="Handling\IRegistrationLinkHandler.cs" />
     <Compile Include="Handling\IResponseProvider.cs" />
-    <Compile Include="Handling\JsonApiResponse.cs" />
-    <Compile Include="Handling\JsonApiResponseHelper.cs" />
     <Compile Include="Handling\LinkBuilder.cs" />
     <Compile Include="Handling\LinkBuilderExtensions.cs" />
     <Compile Include="Handling\LinkBuilderFactory.cs" />

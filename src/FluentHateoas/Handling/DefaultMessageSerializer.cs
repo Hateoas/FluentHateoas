@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace FluentHateoas.Handling
 {
-    public abstract class MessageSerializeBase : IMessageSerializer
+    public abstract class MessageSerializerBase : IMessageSerializer
     {
         public abstract bool HandlesContentType(string contentType);
         public abstract HttpRequestMessage OnRequest(HttpRequestMessage request, CancellationToken cancellationToken);
@@ -17,7 +17,7 @@ namespace FluentHateoas.Handling
         }
     }
 
-    public class DefaultMessageSerializer : MessageSerializeBase
+    public class DefaultMessageSerializer : MessageSerializerBase
     {
         public override bool HandlesContentType(string contentType)
         {

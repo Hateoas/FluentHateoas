@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using System.Collections.Specialized;
 
-namespace FluentHateoas.Handling
+namespace Fluenthateoas.JsonApi.Handlers
 {
     public abstract class JsonApiResponse
     {
