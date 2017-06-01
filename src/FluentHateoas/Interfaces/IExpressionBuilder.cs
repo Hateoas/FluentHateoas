@@ -15,6 +15,7 @@
         IGetExpressionBuilder<TModel> Get<TController>() where TController : IHttpController;
         IPostExpressionBuilder<TModel> Post<TController>() where TController : IHttpController;
         IPostExpressionBuilder<TModel> Post<TController>(Expression<Func<TController, Action<TModel>>> methodSelector) where TController : IHttpController;
+        IPostExpressionBuilder<TModel> Post<TController, TRequest, TResult>(Expression<Func<TController, Func<TRequest, TResult>>> methodSelector) where TController : IHttpController;
         IPutExpressionBuilder<TModel> Put<TController>() where TController : IHttpController;
         IDeleteExpressionBuilder<TModel> Delete<TController>() where TController : IHttpController;
         IDeleteExpressionBuilder<TModel> Delete<TController>(Expression<Func<TController, Action<TModel>>> methodSelector) where TController : IHttpController;

@@ -101,6 +101,13 @@ namespace FluentHateoas.Registration
             return this;
         }
 
+        public IPostExpressionBuilder<TModel> Post<TController, TRequest, TResult>(Expression<Func<TController, Func<TRequest, TResult>>> methodSelector) where TController : IHttpController
+        {
+            _expression.SetMethod<TController>(HttpMethod.Post, methodSelector);
+            _registration.Update();
+            return this;
+        }
+
         public IPostExpressionBuilder<TModel> Post<TController>() where TController : IHttpController
         {
             _expression.SetMethod<TController>(HttpMethod.Post, null);

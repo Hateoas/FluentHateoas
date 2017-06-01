@@ -231,6 +231,10 @@
                 .Register<Person>("create")
                 .Post<PersonController>();
 
+            container
+                .Register<Person>("create-method")
+                .Post<PersonController, CreatePersonRequest, Person>(p => p.Post);
+
             //  {
             //      "rel": "create"
             //      "href": "/api/person/EADCB057-A41D-448B-B10D-94F99162AD4E"
