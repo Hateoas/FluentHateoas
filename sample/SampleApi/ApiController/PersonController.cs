@@ -94,6 +94,12 @@ namespace SampleApi.ApiController
             return new Person { Id = Guid.Parse("625E3C75-2330-423D-9D2B-2E9A883706EC") };
         }
 
+        [HttpPost]
+        [Route("wakeup")]
+        public void WakeUp(Guid id)
+        {
+        }
+
         public Person Put(UpdatePersonRequest request)
         {
             return new Person { Id = Guid.Parse("82878C8F-083F-4741-BA84-BCDE4EE51697") };

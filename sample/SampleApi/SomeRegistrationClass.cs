@@ -1,4 +1,6 @@
-﻿namespace SampleApi
+﻿using System;
+
+namespace SampleApi
 {
     using System.Diagnostics.CodeAnalysis;
 
@@ -234,6 +236,10 @@
             container
                 .Register<Person>("create-method")
                 .Post<PersonController, CreatePersonRequest, Person>(p => p.Post);
+
+            container
+                .Register<Person>("wake-up")
+                .Post<PersonController, Guid>(p => p.WakeUp);
 
             //  {
             //      "rel": "create"
