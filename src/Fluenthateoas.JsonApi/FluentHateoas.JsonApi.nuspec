@@ -8,8 +8,9 @@
     <projectUrl>http://www.hateoas.net</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>JsonApi serializer for FluentHateoas.</description>
+    <iconUrl>https://fluenthateoas.com/assets/images/icon.png</iconUrl>
     <releaseNotes></releaseNotes>
-    <copyright>Interest IT, Inkredible 2017</copyright>
+    <copyright>Inkredible, Interest IT 2017</copyright>
     <tags>HATEOAS,JSON API, JsonApi</tags>
     <dependencies>
       <dependency id="FluentHateoas" />
