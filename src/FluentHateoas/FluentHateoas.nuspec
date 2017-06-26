@@ -8,7 +8,7 @@
     <projectUrl>http://www.hateoas.net</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Fluent library for registration and generation of HATEOAS-responses.</description>
-    <iconUrl>https://fluenthateoas.com/assets/images/icon.png</iconUrl>
+    <iconUrl>http://fluenthateoas.com/assets/images/icon.png</iconUrl>
     <releaseNotes></releaseNotes>
     <copyright>Inkredible, Interest IT 2017</copyright>
     <tags>HATEOAS</tags>
